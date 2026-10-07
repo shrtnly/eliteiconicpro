@@ -31,10 +31,14 @@ import {
   Database,
   Plus,
   ArrowUpRight,
+  ArrowLeft,
+  ArrowRight,
   Home,
   Check
 } from 'lucide-react'
 import './App.css'
+import FounderDirectorSection from './components/FounderDirectorSection'
+import CorporateAboutPage from './components/CorporateAboutPage'
 
 // Comprehensive Translations (Bangla & English)
 const translations = {
@@ -42,13 +46,12 @@ const translations = {
     langBtn: "English",
     topNotice: "রাজউক নিবন্ধন নং: RAJUK/DC/REDMR 001262/24 | বীরুলিয়া সেতু সংলগ্ন ঢাকা আইকন সিটিতে প্লট বুকিং চলছে | ডাউন পেমেন্ট মাত্র ২০%",
     companyName: "এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিঃ",
-    companyTagline: "BUILDING TRUST, CREATING VALUE",
     navHome: "হোম",
     navAbout: "আমাদের সম্পর্কে",
     navLeadership: "লিডারশিপ টিম",
     navGallery: "গ্যালারি",
     navContact: "যোগাযোগ",
-    bookVisitBtn: "সাইট ভিজিট বুক করুন",
+    bookVisitBtn: "ভিজিট শিডিউল",
     
     // Hero Section
     heroBadge: "রাজউক নিবন্ধিত মেগা প্লটেড টাউনশিপ",
@@ -76,7 +79,7 @@ const translations = {
     // Pricing Section
     pricingTag: "PHASE 1 বর্তমান অফার মূল্য",
     pricingTitle: "ঢাকা আইকন সিটি প্লটের মূল্যতালিকা",
-    pricingSubtitle: "অফারটি সীমিত সময়ের জন্য, মূল্য বৃদ্ধির পূর্বেই আপনার পছন্দের প্লটটি নিশ্চিত করুন। ডাউন পেমেন্ট মোট মূল্যের মাত্র ২০%।",
+    pricingSubtitle: "PHASE 1 এর জন্য অফারটি সীমিত সময়ের জন্য, মূল্য বৃদ্ধির পূর্বেই আপনার পছন্দের প্লটটি নিশ্চিত করুন। ডাউন পেমেন্ট মোট মূল্যের মাত্র ২০%।",
     kathaUnit: "/কাঠা",
     downPaymentNotice: "• ডাউন পেমেন্ট মোট মূল্যের ২০%। • এককালীন ও স্বল্প/দীর্ঘমেয়াদি কিস্তি সুবিধা। • কোম্পানী যে কোন সময় মূল্য পরিবর্তনের অধিকার সংরক্ষণ করে।",
 
@@ -97,10 +100,14 @@ const translations = {
     calcMonthly: "আনুমানিক মাসিক কিস্তি",
     btnBookCalculated: "এই প্লটটি এখনই বুক করুন",
 
+    // Leadership Team
+    leadershipTitle: "Leadership Team",
+    leadershipSubtitle: "সঠিক পরিচালনা, কৌশলগত দিকনির্দেশনা এবং সেরা সেবার মাধ্যমে আমাদের লক্ষ্য বাস্তবায়নে কর্মরত নেতৃত্বের সাথে পরিচিত হোন।",
+
     // Masterplan
     masterplanTitle: "আধুনিক মাস্টার প্ল্যান ও রোড নেটওয়ার্ক",
     masterplanDesc: "১০০ ফুট প্রধান এভিনিউ, ৮০ ফুট লেক ভিউ রোড, ৬০ ফুট এভিনিউ, ৪০ ফুট বুলেভার্ড এবং ৩০ ও ২৫ ফুট প্রশস্ত অভ্যন্তরীণ রাস্তা সমন্বয়ে পরিকল্পিত আধুনিক গ্রিন সিটি।",
-    viewFullMasterplan: "পূর্ণাঙ্গ মাস্টার প্ল্যান দেখুন",
+    viewFullMasterplan: "প্ল্যান দেখুন",
 
     // Location & Connectivity
     locTag: "কানেক্টিভিটি ও অবস্থান",
@@ -147,7 +154,6 @@ const translations = {
     langBtn: "বাংলা",
     topNotice: "RAJUK Registration: RAJUK/DC/REDMR 001262/24 | Plot Booking Open at Dhaka Icon City | 20% Down Payment Only",
     companyName: "Elite Iconic Properties & Construction Ltd.",
-    companyTagline: "BUILDING TRUST, CREATING VALUE",
     navHome: "Home",
     navAbout: "About Us",
     navLeadership: "Leadership Team",
@@ -181,7 +187,7 @@ const translations = {
     // Pricing Section
     pricingTag: "PHASE 1 CURRENT PRICING",
     pricingTitle: "Dhaka Icon City Official Price List",
-    pricingSubtitle: "Limited time launch offer before price revision. Secure your prime plot with only 20% down payment.",
+    pricingSubtitle: "Phase 1 limited-time launch offer before price revision. Secure your prime plot with only 20% down payment.",
     kathaUnit: "/Katha",
     downPaymentNotice: "• Down payment is 20% of total price. • Lump-sum & flexible short/long-term installment options available. • Company reserves rights to revise rates.",
 
@@ -202,10 +208,14 @@ const translations = {
     calcMonthly: "Estimated Monthly EMI",
     btnBookCalculated: "Book This Selected Plot Now",
 
+    // Leadership Team
+    leadershipTitle: "Leadership Team",
+    leadershipSubtitle: "Meet the team driving our vision through strategic leadership and sustainable growth.",
+
     // Masterplan
     masterplanTitle: "Master Plan & Strategic Road Network",
     masterplanDesc: "Integrated township featuring 100-foot Main Avenue #01, 80-foot Lake View Road, 60-foot Avenue, 40-foot Boulevard, and 30 & 25-foot internal road grids along the central lake & park promenade.",
-    viewFullMasterplan: "View High-Res Master Plan",
+    viewFullMasterplan: "View Plan",
 
     // Location & Connectivity
     locTag: "Prime Location & Strategic Connectivity",
@@ -432,6 +442,94 @@ const nearbyUnis = [
   "Green University of Bangladesh"
 ]
 
+// Leadership Team Profiles (Comprehensive Corporate Leadership)
+const leadershipTeam = [
+  {
+    id: 1,
+    nameBn: "ইঞ্জি. মোঃ রফিকুল ইসলাম",
+    nameEn: "Engr. Md. Rafiqul Islam",
+    roleBn: "ব্যবস্থাপনা পরিচালক ও সিইও",
+    roleEn: "Managing Director & CEO",
+    departmentBn: "নির্বাহী পর্ষদ",
+    departmentEn: "Executive Board",
+    qualification: "B.Sc. Civil Engr (BUET), FIEB",
+    experience: "20+ Years Exp.",
+    bioBn: "মেগা অবকাঠামো ও আবাসন খাতে দীর্ঘ ২ দশকের অভিজ্ঞ নেতৃত্বে পরিচালিত। আধুনিক ও পরিকল্পিত মেগা উপশহর নির্মাণের স্বপ্নদ্রষ্টা।",
+    bioEn: "Over 2 decades of visionary leadership in mega real estate and planned township development across Bangladesh.",
+    image: "/leader-1.jpg"
+  },
+  {
+    id: 2,
+    nameBn: "ফারহানা রহমান চৌধুরী",
+    nameEn: "Farhana Rahman Chowdhury",
+    roleBn: "পরিচালক, পরিচালনা ও নগর পরিকল্পনা",
+    roleEn: "Director, Operations & Town Planning",
+    departmentBn: "অপারেশনস ও প্ল্যানিং",
+    departmentEn: "Operations & Planning",
+    qualification: "MURP, B.Arch (BUET)",
+    experience: "15+ Years Exp.",
+    bioBn: "টেকসই মাস্টারপ্ল্যান ও আধুনিক সবুজ আবাসন নকশায় বিশেষজ্ঞ। প্রকল্পের সময়ানুবর্তিতা ও সামগ্রিক ব্যবস্থাপনা নিয়ন্ত্রণ করেন।",
+    bioEn: "Specializes in sustainable urban planning, master layout compliance, and efficient project operational delivery.",
+    image: "/leader-2.jpg"
+  },
+  {
+    id: 3,
+    nameBn: "স্থপতি সৈয়দ আনোয়ার হোসেন",
+    nameEn: "Ar. Syed Anwar Hossain",
+    roleBn: "প্রধান স্থপতি ও টেকনিক্যাল হেড",
+    roleEn: "Chief Architect & Technical Head",
+    departmentBn: "আর্কিটেকচার ও ডিজাইন",
+    departmentEn: "Architecture & Design",
+    qualification: "M.Arch, MIAB",
+    experience: "16+ Years Exp.",
+    bioBn: "আন্তর্জাতিক মানের স্থাপত্যশৈলী ও আধুনিক রিভারফ্রন্ট ওয়াকওয়ে এবং অ্যাভিনিউ রোড অবকাঠামো বাস্তবায়নে অভিজ্ঞ।",
+    bioEn: "Award-winning design architect overseeing world-class waterfront boulevards, lake parks, and urban landscape architecture.",
+    image: "/leader-3.jpg"
+  },
+  {
+    id: 4,
+    nameBn: "প্রিয়া শর্মা, এফসিএ",
+    nameEn: "Priya Sharma, FCA",
+    roleBn: "পরিচালক, অর্থ ও বিনিয়োগ",
+    roleEn: "Director, Finance & Investment",
+    departmentBn: "অর্থ ও অডিট",
+    departmentEn: "Finance & Accounts",
+    qualification: "FCA, MBA (Finance, DU)",
+    experience: "14+ Years Exp.",
+    bioBn: "গ্রাহকদের নিরাপদ বিনিয়োগ, সহজ কিস্তি ব্যবস্থাপনা ও কর্পোরেট আর্থিক স্বচ্ছতা নিশ্চিতকরণে দায়িত্বপ্রাপ্ত।",
+    bioEn: "Leads strategic financial modeling, flexible installment structuring, and transparent asset protection for buyers.",
+    image: "/leader-4.jpg"
+  },
+  {
+    id: 5,
+    nameBn: "এডভোকেট মোঃ মাহবুবুর রহমান",
+    nameEn: "Adv. Md. Mahbubur Rahman",
+    roleBn: "প্রধান আইন উপদেষ্টা ও ভূমি বিশেষজ্ঞ",
+    roleEn: "Head of Legal & Land Affairs",
+    departmentBn: "আইন ও দলিল বিভাগ",
+    departmentEn: "Legal & Land Title",
+    qualification: "LL.B (Hon's), LL.M (DU), SC Bar",
+    experience: "22+ Years Exp.",
+    bioBn: "রাজউক অনুমোদন, ভূমি মিউটেশন ও শতভাগ নিষ্কণ্টক আইনি দলিল নিশ্চিতকরণে সার্বক্ষণিক নজরদারি পরিচালনা করেন।",
+    bioEn: "Specializes in RAJUK statutory compliance, flawless freehold title registration, and land registry vetting.",
+    image: "/leader-5.jpg"
+  },
+  {
+    id: 6,
+    nameBn: "ইঞ্জি. তানভীর আহমেদ",
+    nameEn: "Engr. Tanvir Ahmed",
+    roleBn: "প্রধান প্রকল্প ও অবকাঠামো প্রকৌশলী",
+    roleEn: "Chief Infrastructure & Site Engineer",
+    departmentBn: "সাইট ডেভেলপমেন্ট",
+    departmentEn: "Site Infrastructure",
+    qualification: "B.Sc. Civil Engr (BUET)",
+    experience: "13+ Years Exp.",
+    bioBn: "১০০ ফুট প্রধান এভিনিউ, মাটি ভরাট মান ও রিভারফ্রন্ট ড্রেনেজ নেটওয়ার্কের অন-সাইট বাস্তবায়ন তদারক করেন।",
+    bioEn: "Leading civil development, road network grading, storm drainage construction, and earth filling supervision on-site.",
+    image: "/leader-6.jpg"
+  }
+]
+
 // Custom dropdown with a polished option list (replaces native <select> list)
 function CustomSelect({ id, value, onChange, options, ariaLabel, className = '' }) {
   const [open, setOpen] = useState(false)
@@ -494,8 +592,20 @@ function CustomSelect({ id, value, onChange, options, ariaLabel, className = '' 
 }
 
 function App() {
-  const [lang, setLang] = useState('bn') // 'bn' | 'en'
+  const [lang, setLang] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dz_lang')
+      if (saved === 'bn' || saved === 'en') return saved
+    }
+    return 'en'
+  })
   const t = translations[lang]
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang
+    }
+  }, [lang])
 
   // Header Scroll State
   const [headerScrolled, setHeaderScrolled] = useState(false)
@@ -539,6 +649,66 @@ function App() {
   })
   const [visitSubmitting, setVisitSubmitting] = useState(false)
   const [visitSuccess, setVisitSuccess] = useState(false)
+
+  // Routing State ('home' | 'leadership-team' | 'corporate-about')
+  const [currentRoute, setCurrentRoute] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase()
+      const path = window.location.pathname.toLowerCase()
+      if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
+        return 'corporate-about'
+      }
+      if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
+        return 'leadership-team'
+      }
+    }
+    return 'home'
+  })
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const hash = window.location.hash.toLowerCase()
+      const path = window.location.pathname.toLowerCase()
+      if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
+        setCurrentRoute('corporate-about')
+        window.scrollTo(0, 0)
+      } else if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
+        setCurrentRoute('leadership-team')
+        window.scrollTo(0, 0)
+      } else {
+        setCurrentRoute('home')
+      }
+    }
+    window.addEventListener('hashchange', handleRouteChange)
+    window.addEventListener('popstate', handleRouteChange)
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange)
+      window.removeEventListener('popstate', handleRouteChange)
+    }
+  }, [])
+
+  const navigateTo = (route, targetHash = '') => {
+    if (route === 'corporate-about') {
+      window.location.hash = '#corporate-about'
+      setCurrentRoute('corporate-about')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (route === 'leadership-team') {
+      window.location.hash = '#leadership-team'
+      setCurrentRoute('leadership-team')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      window.location.hash = targetHash ? `#${targetHash}` : '#'
+      setCurrentRoute('home')
+      if (targetHash) {
+        setTimeout(() => {
+          const el = document.getElementById(targetHash)
+          if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 80)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+  }
 
   // Developer Console state (preserved for debugging & Supabase link)
   const [showDevConsole, setShowDevConsole] = useState(false)
@@ -740,7 +910,7 @@ function App() {
       <header className={`elite-header ${headerScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           {/* Brand Logo */}
-          <a href="#" className="elite-brand-box">
+          <a href="#" className="elite-brand-box" onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>
             <div className="elite-logo-wrapper">
               <img src="/Logo.png" alt="Elite Iconic Properties & Construction Limited" className="brand-logo-img" />
             </div>
@@ -753,11 +923,11 @@ function App() {
           {/* Desktop Navigation */}
           <nav className="elite-desktop-nav">
             <ul className="elite-nav-list">
-              <li><a href="#" className="nav-link active">{t.navHome}</a></li>
-              <li><a href="#corporate-about" className="nav-link">{t.navAbout}</a></li>
-              <li><a href="#leadership-team" className="nav-link">{t.navLeadership}</a></li>
-              <li><a href="#site-gallery" className="nav-link">{t.navGallery}</a></li>
-              <li><a href="#booking-form-section" className="nav-link">{t.navContact}</a></li>
+              <li><a href="#" className={`nav-link ${currentRoute === 'home' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>{t.navHome}</a></li>
+              <li><a href="#corporate-about" className={`nav-link ${currentRoute === 'corporate-about' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
+              <li><a href="#leadership-team" className={`nav-link ${currentRoute === 'leadership-team' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+              <li><a href="#site-gallery" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'site-gallery'); }}>{t.navGallery}</a></li>
+              <li><a href="#booking-form-section" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
             </ul>
           </nav>
 
@@ -766,12 +936,18 @@ function App() {
             <button 
               type="button"
               className="round-lang-toggle"
-              onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
+              onClick={() => {
+                const nextLang = lang === 'en' ? 'bn' : 'en'
+                setLang(nextLang)
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('dz_lang', nextLang)
+                }
+              }}
               title={lang === 'bn' ? 'Switch to English' : 'বাংলায় দেখুন'}
               aria-label="Toggle language"
             >
               <span className="round-toggle-inner">
-                {lang === 'bn' ? 'EN' : 'বাং'}
+                {lang === 'bn' ? 'EN' : 'BN'}
               </span>
             </button>
 
@@ -791,11 +967,10 @@ function App() {
           would otherwise make position:fixed relative to the header) */}
       <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`} aria-hidden={!mobileMenuOpen}>
           <div className="mobile-drawer-header">
-            <div className="mobile-drawer-brand">
+            <div className="mobile-drawer-brand" onClick={() => { setMobileMenuOpen(false); navigateTo('home'); }} style={{ cursor: 'pointer' }}>
               <img src="/Logo.png" alt="Elite Iconic" className="mobile-logo" />
               <div>
                 <strong>ELITE ICONIC</strong>
-                <p>BUILDING TRUST, CREATING VALUE</p>
               </div>
             </div>
             <button className="drawer-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close Menu">
@@ -803,22 +978,12 @@ function App() {
             </button>
           </div>
 
-          <div className="mobile-drawer-lang-strip">
-            <span>Language / ভাষা:</span>
-            <button 
-              className="drawer-lang-btn"
-              onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
-            >
-              🌐 {lang === 'bn' ? 'Switch to English' : 'বাংলায় দেখুন'}
-            </button>
-          </div>
-
           <ul className="mobile-nav-links">
-            <li><a href="#" onClick={() => setMobileMenuOpen(false)}>{t.navHome}</a></li>
-            <li><a href="#corporate-about" onClick={() => setMobileMenuOpen(false)}>{t.navAbout}</a></li>
-            <li><a href="#leadership-team" onClick={() => setMobileMenuOpen(false)}>{t.navLeadership}</a></li>
-            <li><a href="#site-gallery" onClick={() => setMobileMenuOpen(false)}>{t.navGallery}</a></li>
-            <li><a href="#booking-form-section" onClick={() => setMobileMenuOpen(false)}>{t.navContact}</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home'); }}>{t.navHome}</a></li>
+            <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
+            <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+            <li><a href="#site-gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'site-gallery'); }}>{t.navGallery}</a></li>
+            <li><a href="#booking-form-section" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
           </ul>
 
           <div className="mobile-drawer-footer">
@@ -881,8 +1046,76 @@ function App() {
         </button>
       </div>
 
-      {/* 3. HERO SHOWCASE - DHAKA ICON CITY */}
-      <section className="hero-showcase-section" id="dhaka-icon-city">
+      {currentRoute === 'corporate-about' ? (
+        <CorporateAboutPage 
+          lang={lang} 
+          onScheduleVisit={() => setVisitModalOpen(true)}
+          navigateTo={navigateTo}
+        />
+      ) : currentRoute === 'leadership-team' ? (
+        <main className="leadership-page-main">
+          {/* Dedicated Page Hero */}
+          <section className="leadership-page-hero">
+            <div className="section-container">
+              <div className="leadership-hero-content">
+                <h1 className="leadership-page-title">{t.leadershipTitle}</h1>
+                <div className="section-divider-line" />
+                <p className="leadership-page-subtitle">{t.leadershipSubtitle}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Full Leadership Team Grid */}
+          <section className="leadership-full-roster-section">
+            <div className="section-container">
+              <div className="leadership-grid leadership-page-grid">
+                {leadershipTeam.map((leader) => (
+                  <div key={leader.id} className="leader-card">
+                    <div className="leader-image-wrap">
+                      <img 
+                        src={leader.image} 
+                        alt={lang === 'bn' ? leader.nameBn : leader.nameEn} 
+                        className="leader-img" 
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="leader-info">
+                      <h3 className="leader-name">{lang === 'bn' ? leader.nameBn : leader.nameEn}</h3>
+                      <p className="leader-role">{lang === 'bn' ? leader.roleBn : leader.roleEn}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* New Section below Leadership Team: Founder director */}
+          <FounderDirectorSection lang={lang} />
+
+          {/* Consultation CTA Banner */}
+          <section className="leadership-cta-section">
+            <div className="section-container">
+              <div className="leadership-cta-box">
+                <div className="lead-cta-text">
+                  <h3>{lang === 'bn' ? 'সরাসরি আমাদের বিশেষজ্ঞ টিমের সাথে পরামর্শ করতে চান?' : 'Want to Consult Directly with Our Leadership Team?'}</h3>
+                  <p>{lang === 'bn' ? 'ঢাকা আইকন সিটির ভবিষ্যৎ সম্ভাবনা ও নিরাপদ প্লট ক্রয়ে বিশেষজ্ঞ পরামর্শ ও সাইট ভিজিট বুক করুন।' : 'Book a priority VIP site visit or executive consultation at our Gulshan corporate office.'}</p>
+                </div>
+                <button 
+                  className="btn-lead-schedule-visit"
+                  onClick={() => setVisitModalOpen(true)}
+                >
+                  <Calendar size={18} />
+                  <span>{lang === 'bn' ? 'ভিজিট শিডিউল করুন' : 'Schedule VIP Consultation'}</span>
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      ) : (
+        <>
+          {/* 3. HERO SHOWCASE - DHAKA ICON CITY */}
+          <section className="hero-showcase-section" id="dhaka-icon-city">
         <div className="hero-bg-anim-container">
           <div className="hero-bg-image"></div>
           <div className="hero-bg-overlay"></div>
@@ -913,7 +1146,7 @@ function App() {
               </button>
 
               <a 
-                href="/brochure.pdf"
+                href="https://drive.google.com/file/d/13BJkWKW6Uo8pIsr9mKlIqs2XPHOevF3c/view?usp=sharing"
                 className="btn-hero-secondary"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -969,7 +1202,6 @@ function App() {
         <div className="section-container">
           
           <div className="section-header-center">
-            <span className="section-tag-badge">{t.pricingTag}</span>
             <h2 className="section-main-heading">{t.pricingTitle}</h2>
             <div className="section-divider-line" />
             <p className="section-sub-desc">{t.pricingSubtitle}</p>
@@ -1037,7 +1269,7 @@ function App() {
                     selectPlotForBooking(lang === 'bn' ? plot.titleBn : plot.titleEn, calcKatha)
                   }}
                 >
-                  <span>{lang === 'bn' ? 'এই প্লটটি বুক করুন' : 'Book This Plot'}</span>
+                  <span>Book Now</span>
                   <ArrowUpRight size={16} />
                 </button>
               </div>
@@ -1055,7 +1287,6 @@ function App() {
                 <Calculator size={26} className="text-emerald" />
                 <div>
                   <h3>{t.calcTitle}</h3>
-                  <p>{t.calcSubtitle}</p>
                 </div>
               </div>
             </div>
@@ -1178,12 +1409,55 @@ function App() {
         </div>
       </section>
 
-      {/* 5. MASTER PLAN SECTION & ROAD NETWORK */}
+      {/* 5. LEADERSHIP TEAM PREVIEW */}
+      <section className="leadership-section" id="leadership-preview">
+        <div className="section-container">
+          <div className="section-header-center">
+            <h2 className="section-main-heading">{t.leadershipTitle}</h2>
+            <div className="section-divider-line" />
+            <p className="section-sub-desc">{t.leadershipSubtitle}</p>
+          </div>
+
+          <div className="leadership-grid">
+            {leadershipTeam.slice(0, 4).map((leader) => (
+              <div key={leader.id} className="leader-card">
+                <div className="leader-image-wrap">
+                  <img 
+                    src={leader.image} 
+                    alt={lang === 'bn' ? leader.nameBn : leader.nameEn} 
+                    className="leader-img" 
+                    loading="lazy"
+                  />
+                </div>
+                <div className="leader-info">
+                  <h3 className="leader-name">{lang === 'bn' ? leader.nameBn : leader.nameEn}</h3>
+                  <p className="leader-role">{lang === 'bn' ? leader.roleBn : leader.roleEn}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="leadership-see-more-wrap">
+            <a 
+              href="#leadership-team"
+              className="btn-leadership-see-more"
+              onClick={(e) => {
+                e.preventDefault()
+                navigateTo('leadership-team')
+              }}
+            >
+              <span>{lang === 'bn' ? 'সকল টিম মেম্বার দেখুন (See More)' : 'See Full Leadership Team'}</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. MASTER PLAN SECTION & ROAD NETWORK */}
       <section className="masterplan-section" id="masterplan">
         <div className="section-container">
           <div className="masterplan-grid">
             <div className="masterplan-content-col">
-              <span className="section-tag-badge">MASTER PLAN SPECIFICATIONS</span>
               <h2 className="masterplan-heading">{t.masterplanTitle}</h2>
               <div className="section-divider-line" />
               <p className="masterplan-desc-text">{t.masterplanDesc}</p>
@@ -1251,7 +1525,6 @@ function App() {
       <section className="connectivity-section" id="connectivity-location">
         <div className="section-container">
           <div className="section-header-center">
-            <span className="section-tag-badge">{t.locTag}</span>
             <h2 className="section-main-heading">{t.locTitle}</h2>
             <div className="section-divider-line" />
             <p className="section-sub-desc">{t.locDesc}</p>
@@ -1299,10 +1572,6 @@ function App() {
           {/* 17 Renowned Universities Section */}
           <div className="universities-showcase-box">
             <div className="unis-header">
-              <span className="unis-distance-chip">
-                <GraduationCap size={15} />
-                {lang === 'bn' ? '১৭টি স্বনামধন্য বিশ্ববিদ্যালয় (৩-৫ কিমি)' : '17 Renowned Universities (Within 3-5 KM)'}
-              </span>
               <h3>{lang === 'bn' ? 'প্রকল্পের ৩ থেকে ৫ কিলোমিটারের মধ্যে রয়েছে ১৭টি স্বনামধন্য বিশ্ববিদ্যালয়' : '17 Renowned Universities Located Within 3 to 5 KM'}</h3>
               <p>{lang === 'bn' ? 'আধুনিক শিক্ষানগরীর প্রাণকেন্দ্রে আপনার সন্তানের নিশ্চিত ও নিরাপদ ভবিষ্যৎ গড়ে তুলুন।' : 'Invest in the heart of Dhaka’s upcoming premier education hub for your family.'}</p>
             </div>
@@ -1340,7 +1609,6 @@ function App() {
       <section className="amenities-section" id="civic-amenities">
         <div className="section-container">
           <div className="section-header-center">
-            <span className="section-tag-badge">{t.amenitiesTag}</span>
             <h2 className="section-main-heading">{t.amenitiesTitle}</h2>
             <div className="section-divider-line" />
             <p className="section-sub-desc">{t.amenitiesSubtitle}</p>
@@ -1377,7 +1645,6 @@ function App() {
       <section className="gallery-section" id="site-gallery">
         <div className="section-container">
           <div className="section-header-center">
-            <span className="section-tag-badge">{t.galleryTag}</span>
             <h2 className="section-main-heading">{t.galleryTitle}</h2>
             <div className="section-divider-line" />
             <p className="section-sub-desc">{t.gallerySubtitle}</p>
@@ -1428,8 +1695,7 @@ function App() {
         <div className="section-container">
           <div className="governance-card-grid">
             {/* Left Box: Corporate Profile, Leadership & Approvals */}
-            <div className="governance-info-card" id="leadership-team">
-              <span className="section-tag-badge">{t.govTag}</span>
+            <div className="governance-info-card" id="corporate-governance">
               <h2 className="gov-main-title">{t.govTitle}</h2>
               <div className="section-divider-line" />
 
@@ -1664,6 +1930,8 @@ function App() {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* 12. CORPORATE FOOTER */}
       <footer className="elite-corporate-footer">
@@ -1676,7 +1944,6 @@ function App() {
                 <div>
                   <h3 className="footer-brand-title">ELITE ICONIC</h3>
                   <p className="footer-brand-sub">properties & Construction limited</p>
-                  <span className="footer-brand-slogan">BUILDING TRUST, CREATING VALUE</span>
                 </div>
               </div>
               <p className="footer-about-text">
@@ -1694,12 +1961,11 @@ function App() {
             <div className="footer-links-col">
               <h4 className="footer-heading">ঢাকা আইকন সিটি</h4>
               <ul className="footer-links-list">
-                <li><a href="#dhaka-icon-city">প্রকল্পের সারসংক্ষেপ</a></li>
-                <li><a href="#pricing-calculator">Phase 1 মূল্যতালিকা</a></li>
-                <li><a href="#pricing-calculator">কিস্তি ক্যালকুলেটর</a></li>
-                <li><a href="#masterplan">মাস্টার প্ল্যান ভিউ</a></li>
-                <li><a href="#connectivity-location">দূরত্ব ও যাতায়াত</a></li>
-                <li><a href="#civic-amenities">১২টি নাগরিক সুবিধা</a></li>
+                <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</a></li>
+                <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{lang === 'bn' ? 'লিডারশিপ টিম' : 'Leadership Team'}</a></li>
+                <li><a href="#pricing-calculator" onClick={(e) => { e.preventDefault(); navigateTo('home', 'pricing-calculator'); }}>{lang === 'bn' ? 'ইন্টারেক্টিভ ক্যালকুলেটর' : 'Interactive Calculator'}</a></li>
+                <li><a href="#connectivity-location" onClick={(e) => { e.preventDefault(); navigateTo('home', 'connectivity-location'); }}>{lang === 'bn' ? 'দূরত্ব ও যাতায়াত' : 'Connectivity & Location'}</a></li>
+                <li><a href="#civic-amenities" onClick={(e) => { e.preventDefault(); navigateTo('home', 'civic-amenities'); }}>{lang === 'bn' ? '১২টি নাগরিক সুবিধা' : '12 Civic Amenities'}</a></li>
               </ul>
             </div>
 
@@ -1726,22 +1992,11 @@ function App() {
                 • DD REG (Dhaka Developers & Real Estate Group)<br />
                 • Real Estate & Housing Association
               </p>
-              <div className="footer-dev-btn-wrap">
-                <button 
-                  className="footer-dev-console-btn"
-                  onClick={() => setShowDevConsole(true)}
-                  title="Developer Supabase Portal (Ctrl+Shift+D)"
-                >
-                  <Terminal size={14} />
-                  <span>Dev Diagnostics ({connectionStatus})</span>
-                </button>
-              </div>
             </div>
           </div>
 
           <div className="footer-bottom-bar">
             <p>© {new Date().getFullYear()} Elite Iconic Properties & Construction Limited. All rights reserved.</p>
-            <p>Official Website: <a href="https://www.eliteiconic.com" target="_blank" rel="noopener noreferrer">www.eliteiconic.com</a></p>
           </div>
         </div>
       </footer>

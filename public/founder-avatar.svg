@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="avatarBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#008450" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#022c1b" stop-opacity="0.22" />
+    </linearGradient>
+    <linearGradient id="avatarSilhouette" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#008450" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#avatarBg)" stroke="#cbd5e1" stroke-width="2" />
+  <!-- Inner subtle ring -->
+  <circle cx="60" cy="60" r="54" fill="none" stroke="#008450" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="3 3" />
+  <!-- Head -->
+  <circle cx="60" cy="46" r="20" fill="url(#avatarSilhouette)" />
+  <!-- Shoulders / Suit -->
+  <path d="M26 102 C28 78, 42 70, 60 70 C78 70, 92 78, 94 102 Z" fill="url(#avatarSilhouette)" />
+  <!-- Collar / Tie detail -->
+  <path d="M54 70 L60 82 L66 70 Z" fill="#ffffff" opacity="0.9" />
+  <path d="M58 82 L62 82 L61 95 L59 95 Z" fill="#d97706" />
+</svg>
