@@ -34,7 +34,10 @@ import {
   ArrowLeft,
   ArrowRight,
   Home,
-  Check
+  Check,
+  User,
+  Users,
+  TrendingUp
 } from 'lucide-react'
 import './App.css'
 import FounderDirectorSection from './components/FounderDirectorSection'
@@ -442,93 +445,199 @@ const nearbyUnis = [
   "Green University of Bangladesh"
 ]
 
-// Leadership Team Profiles (Comprehensive Corporate Leadership)
+// Leadership Team Profiles (Executive & Board of Directors)
 const leadershipTeam = [
   {
     id: 1,
-    nameBn: "ইঞ্জি. মোঃ রফিকুল ইসলাম",
-    nameEn: "Engr. Md. Rafiqul Islam",
-    roleBn: "ব্যবস্থাপনা পরিচালক ও সিইও",
-    roleEn: "Managing Director & CEO",
-    departmentBn: "নির্বাহী পর্ষদ",
-    departmentEn: "Executive Board",
-    qualification: "B.Sc. Civil Engr (BUET), FIEB",
-    experience: "20+ Years Exp.",
-    bioBn: "মেগা অবকাঠামো ও আবাসন খাতে দীর্ঘ ২ দশকের অভিজ্ঞ নেতৃত্বে পরিচালিত। আধুনিক ও পরিকল্পিত মেগা উপশহর নির্মাণের স্বপ্নদ্রষ্টা।",
-    bioEn: "Over 2 decades of visionary leadership in mega real estate and planned township development across Bangladesh.",
-    image: "/leader-1.jpg"
+    sl: "1",
+    nameEn: "MUKSUDUR RAHAMAN",
+    nameBn: "মকসুদুর রহমান",
+    roleEn: "Chairman",
+    roleBn: "চেয়ারম্যান",
+    phone: "01621728528"
   },
   {
     id: 2,
-    nameBn: "ফারহানা রহমান চৌধুরী",
-    nameEn: "Farhana Rahman Chowdhury",
-    roleBn: "পরিচালক, পরিচালনা ও নগর পরিকল্পনা",
-    roleEn: "Director, Operations & Town Planning",
-    departmentBn: "অপারেশনস ও প্ল্যানিং",
-    departmentEn: "Operations & Planning",
-    qualification: "MURP, B.Arch (BUET)",
-    experience: "15+ Years Exp.",
-    bioBn: "টেকসই মাস্টারপ্ল্যান ও আধুনিক সবুজ আবাসন নকশায় বিশেষজ্ঞ। প্রকল্পের সময়ানুবর্তিতা ও সামগ্রিক ব্যবস্থাপনা নিয়ন্ত্রণ করেন।",
-    bioEn: "Specializes in sustainable urban planning, master layout compliance, and efficient project operational delivery.",
-    image: "/leader-2.jpg"
+    sl: "2",
+    nameEn: "ASHA KHAN",
+    nameBn: "আশা খান",
+    roleEn: "Vice Chairman",
+    roleBn: "ভাইস চেয়ারম্যান",
+    phone: "01749438260"
   },
   {
     id: 3,
-    nameBn: "স্থপতি সৈয়দ আনোয়ার হোসেন",
-    nameEn: "Ar. Syed Anwar Hossain",
-    roleBn: "প্রধান স্থপতি ও টেকনিক্যাল হেড",
-    roleEn: "Chief Architect & Technical Head",
-    departmentBn: "আর্কিটেকচার ও ডিজাইন",
-    departmentEn: "Architecture & Design",
-    qualification: "M.Arch, MIAB",
-    experience: "16+ Years Exp.",
-    bioBn: "আন্তর্জাতিক মানের স্থাপত্যশৈলী ও আধুনিক রিভারফ্রন্ট ওয়াকওয়ে এবং অ্যাভিনিউ রোড অবকাঠামো বাস্তবায়নে অভিজ্ঞ।",
-    bioEn: "Award-winning design architect overseeing world-class waterfront boulevards, lake parks, and urban landscape architecture.",
-    image: "/leader-3.jpg"
+    sl: "3",
+    nameEn: "ABUL KALAM AZAD",
+    nameBn: "আবুল কালাম আজাদ",
+    roleEn: "Managing Director",
+    roleBn: "ব্যবস্থাপনা পরিচালক",
+    phone: "01615500815"
   },
   {
     id: 4,
-    nameBn: "প্রিয়া শর্মা, এফসিএ",
-    nameEn: "Priya Sharma, FCA",
-    roleBn: "পরিচালক, অর্থ ও বিনিয়োগ",
-    roleEn: "Director, Finance & Investment",
-    departmentBn: "অর্থ ও অডিট",
-    departmentEn: "Finance & Accounts",
-    qualification: "FCA, MBA (Finance, DU)",
-    experience: "14+ Years Exp.",
-    bioBn: "গ্রাহকদের নিরাপদ বিনিয়োগ, সহজ কিস্তি ব্যবস্থাপনা ও কর্পোরেট আর্থিক স্বচ্ছতা নিশ্চিতকরণে দায়িত্বপ্রাপ্ত।",
-    bioEn: "Leads strategic financial modeling, flexible installment structuring, and transparent asset protection for buyers.",
-    image: "/leader-4.jpg"
+    sl: "4",
+    nameEn: "MOBAROK HOSSAIN MUNSHI",
+    nameBn: "মোবারক হোসেন মুন্সী",
+    roleEn: "Deputy Managing Director",
+    roleBn: "উপ-ব্যবস্থাপনা পরিচালক",
+    phone: "01913387933"
   },
   {
     id: 5,
-    nameBn: "এডভোকেট মোঃ মাহবুবুর রহমান",
-    nameEn: "Adv. Md. Mahbubur Rahman",
-    roleBn: "প্রধান আইন উপদেষ্টা ও ভূমি বিশেষজ্ঞ",
-    roleEn: "Head of Legal & Land Affairs",
-    departmentBn: "আইন ও দলিল বিভাগ",
-    departmentEn: "Legal & Land Title",
-    qualification: "LL.B (Hon's), LL.M (DU), SC Bar",
-    experience: "22+ Years Exp.",
-    bioBn: "রাজউক অনুমোদন, ভূমি মিউটেশন ও শতভাগ নিষ্কণ্টক আইনি দলিল নিশ্চিতকরণে সার্বক্ষণিক নজরদারি পরিচালনা করেন।",
-    bioEn: "Specializes in RAJUK statutory compliance, flawless freehold title registration, and land registry vetting.",
-    image: "/leader-5.jpg"
+    sl: "5",
+    nameEn: "SHAHABUDDIN",
+    nameBn: "শাহাবুদ্দিন",
+    roleEn: "Finance Director",
+    roleBn: "ফাইন্যান্স ডিরেক্টর",
+    phone: "01684188884"
   },
   {
     id: 6,
-    nameBn: "ইঞ্জি. তানভীর আহমেদ",
-    nameEn: "Engr. Tanvir Ahmed",
-    roleBn: "প্রধান প্রকল্প ও অবকাঠামো প্রকৌশলী",
-    roleEn: "Chief Infrastructure & Site Engineer",
-    departmentBn: "সাইট ডেভেলপমেন্ট",
-    departmentEn: "Site Infrastructure",
-    qualification: "B.Sc. Civil Engr (BUET)",
-    experience: "13+ Years Exp.",
-    bioBn: "১০০ ফুট প্রধান এভিনিউ, মাটি ভরাট মান ও রিভারফ্রন্ট ড্রেনেজ নেটওয়ার্কের অন-সাইট বাস্তবায়ন তদারক করেন।",
-    bioEn: "Leading civil development, road network grading, storm drainage construction, and earth filling supervision on-site.",
-    image: "/leader-6.jpg"
+    sl: "6",
+    nameEn: "MD. MOSHARROF HOSSAIN",
+    nameBn: "মোঃ মোশাররফ হোসেন",
+    roleEn: "Marketing Director",
+    roleBn: "মার্কেটিং ডিরেক্টর",
+    phone: "01671749583"
+  },
+  {
+    id: 7,
+    sl: "7",
+    nameEn: "BIPLOB KUMAR BARMA",
+    nameBn: "বিপ্লব কুমার বর্মা",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01313596048"
+  },
+  {
+    id: 8,
+    sl: "8",
+    nameEn: "MD. NAYEEM",
+    nameBn: "মোঃ নাঈম",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01722105259"
+  },
+  {
+    id: 9,
+    sl: "9",
+    nameEn: "MD. KABIR HOSSAIN",
+    nameBn: "মোঃ কবির হোসেন",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01758240309"
+  },
+  {
+    id: 10,
+    sl: "10",
+    nameEn: "MD. ABUL BASAR",
+    nameBn: "মোঃ আবুল বাশার",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01604493384"
+  },
+  {
+    id: 11,
+    sl: "11",
+    nameEn: "MD. ABDUS SALAM",
+    nameBn: "মোঃ আব্দুস সালাম",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01712117734"
+  },
+  {
+    id: 12,
+    sl: "12",
+    nameEn: "ZAHIDUL ISLAM",
+    nameBn: "জাহিদুল ইসলাম",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01886330164"
+  },
+  {
+    id: 13,
+    sl: "13",
+    nameEn: "MD. AZHARUL ISLAM",
+    nameBn: "মোঃ আজহারুল ইসলাম",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01786433760"
+  },
+  {
+    id: 14,
+    sl: "14",
+    nameEn: "MD. MOHSIN",
+    nameBn: "মোঃ মহসিন",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01733707557"
+  },
+  {
+    id: 15,
+    sl: "15",
+    nameEn: "MD. SAIFULLAH SHARIF",
+    nameBn: "মোঃ সাইফুল্লাহ শরীফ",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: "01711005310"
+  },
+  {
+    id: 16,
+    sl: "—",
+    nameEn: "KAZI MAKSUDUR RAHMAN",
+    nameBn: "কাজী মাকসুদুর রহমান",
+    roleEn: "Director",
+    roleBn: "পরিচালক",
+    phone: ""
   }
 ]
+
+// Single reusable Leader Card with default avatar and interactive phone link
+function LeaderCard({ leader, lang }) {
+  const isBn = lang === 'bn'
+  const hasPhone = leader.phone && leader.phone !== 'xxxxx' && leader.phone.trim() !== ''
+
+  return (
+    <div className="leader-card">
+      <div className="leader-card-header">
+        <span className="leader-sl-tag" title={isBn ? `ক্রমিক নং: ${leader.sl}` : `SL No: ${leader.sl}`}>
+          {leader.sl === '—' ? '—' : `#${leader.sl}`}
+        </span>
+      </div>
+
+      <div className="leader-avatar-wrap">
+        <div className="leader-default-avatar">
+          <User size={38} className="leader-avatar-icon" strokeWidth={1.75} />
+        </div>
+      </div>
+
+      <div className="leader-info">
+        <h3 className="leader-name">
+          {isBn ? leader.nameBn : leader.nameEn}
+        </h3>
+        <span className="leader-role-badge">
+          {isBn ? leader.roleBn : leader.roleEn}
+        </span>
+
+        {hasPhone ? (
+          <a 
+            href={`tel:${leader.phone}`} 
+            className="leader-phone-link"
+            title={isBn ? `সরাসরি কল করুন: ${leader.phone}` : `Call directly: ${leader.phone}`}
+          >
+            <Phone size={13} className="leader-phone-icon" />
+            <span>{leader.phone}</span>
+          </a>
+        ) : (
+          <div className="leader-phone-placeholder">
+            <span className="leader-phone-na">{isBn ? 'ফোন: প্রযোজ্য নয়' : 'Phone: On Request'}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 // Custom dropdown with a polished option list (replaces native <select> list)
 function CustomSelect({ id, value, onChange, options, ariaLabel, className = '' }) {
@@ -1070,20 +1179,7 @@ function App() {
             <div className="section-container">
               <div className="leadership-grid leadership-page-grid">
                 {leadershipTeam.map((leader) => (
-                  <div key={leader.id} className="leader-card">
-                    <div className="leader-image-wrap">
-                      <img 
-                        src={leader.image} 
-                        alt={lang === 'bn' ? leader.nameBn : leader.nameEn} 
-                        className="leader-img" 
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="leader-info">
-                      <h3 className="leader-name">{lang === 'bn' ? leader.nameBn : leader.nameEn}</h3>
-                      <p className="leader-role">{lang === 'bn' ? leader.roleBn : leader.roleEn}</p>
-                    </div>
-                  </div>
+                  <LeaderCard key={leader.id} leader={leader} lang={lang} />
                 ))}
               </div>
             </div>
@@ -1191,6 +1287,158 @@ function App() {
               <div className="stat-text-wrap">
                 <div className="stat-value">{t.statLegal}</div>
                 <div className="stat-label">{t.statLegalLbl}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. OUR PROJECTS HIGHLIGHT SECTION */}
+      <section className="project-highlight-section" id="featured-project">
+        <div className="section-container">
+          <div className="project-highlight-grid">
+            {/* Left Narrative Column */}
+            <div className="project-highlight-content">
+              <div className="project-highlight-kicker">
+                <span className="kicker-dash">—</span>
+                <span className="kicker-text">{lang === 'bn' ? 'আমাদের প্রকল্পসমূহ' : 'OUR PROJECTS'}</span>
+              </div>
+              
+              <h2 className="project-highlight-title">
+                {lang === 'bn' ? 'ঢাকা আইকন সিটি' : 'Dhaka Icon City'}
+              </h2>
+              
+              <p className="project-highlight-subtitle">
+                {lang === 'bn' ? 'ফিউচার স্মার্ট ওনারশিপ সিটি' : 'Future Smart Ownership City'}
+              </p>
+              
+              <p className="project-highlight-desc">
+                {lang === 'bn' 
+                  ? 'আধুনিক সকল নাগরিক সুযোগ-সুবিধা, সম্পূর্ণ নিষ্কণ্টক আইনি দলিল এবং আপনার ও আপনার পরিবারের নিরাপদ ভবিষ্যৎ বিনির্মাণে এক আধুনিক মেগা টাউনশিপ।'
+                  : 'A modern township with modern facilities, secure investment and a better tomorrow for you and your family.'}
+              </p>
+              
+              <div className="project-highlight-btn-wrap">
+                <a 
+                  href="#masterplan" 
+                  className="btn-project-highlight"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const el = document.getElementById('masterplan')
+                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                >
+                  <span>{lang === 'bn' ? 'সকল প্রকল্প দেখুন' : 'View All Projects'}</span>
+                  <ChevronRight size={17} />
+                </a>
+              </div>
+            </div>
+
+            {/* Right Media Card Column */}
+            <div className="project-highlight-media">
+              <div className="project-media-card">
+                <img 
+                  src="/dhaka_icon_township.jpg" 
+                  alt={lang === 'bn' ? 'ঢাকা আইকন সিটি মেগা টাউনশিপ' : 'Dhaka Icon City Master Township'} 
+                  className="project-media-img"
+                  loading="lazy"
+                />
+                
+                {/* Curved Trusted Partner Badge */}
+                <div className="project-trusted-badge">
+                  <span className="badge-line-sub">{lang === 'bn' ? 'আপনার' : 'Your'}</span>
+                  <strong className="badge-line-main">{lang === 'bn' ? 'বিশ্বস্ত অংশীদার' : 'Trusted Partner'}</strong>
+                  <span className="badge-line-sub">{lang === 'bn' ? 'রিয়েল এস্টেট খাতে' : 'in Real Estate'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. WHY CHOOSE US SECTION */}
+      <section className="why-choose-us-section" id="why-choose-us">
+        <div className="section-container">
+          <div className="why-choose-grid">
+            {/* Left Narrative Column */}
+            <div className="why-choose-content">
+              <h2 className="why-choose-title">
+                {lang === 'bn' ? 'কেন আমাদের নির্বাচন করবেন?' : 'Why Choose Us?'}
+              </h2>
+              
+              <h3 className="why-choose-subtitle">
+                {lang === 'bn' ? 'আপনার স্বপ্ন, আমাদের অঙ্গীকার' : 'Your Dream, Our Commitment'}
+              </h3>
+              
+              <p className="why-choose-desc">
+                {lang === 'bn' 
+                  ? 'এলিট আইকনিকে আমরা বিশ্বাস করি আস্থা, স্বচ্ছতা এবং দীর্ঘমেয়াদী মূল্যায়নে। আমরা সুন্দর আগামীর জন্য শতভাগ নিষ্কণ্টক, অনুমোদিত ও সুপরিকল্পিত রিয়েল এস্টেট সমাধান নিশ্চিত করি।'
+                  : 'At Elite Iconic, we believe in trust, transparency and long-term value. We provide secure, verified and well-planned real estate solutions for a better future.'}
+              </p>
+            </div>
+
+            {/* Right 6-Feature Card Grid */}
+            <div className="why-choose-features-card">
+              <div className="why-features-grid">
+                {/* 1. RAJUK Registered & Approved */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <ShieldCheck size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'রাজউক নিবন্ধিত ও অনুমোদিত' : 'RAJUK Registered & Approved'}
+                  </h4>
+                </div>
+
+                {/* 2. Prime Location in Dhaka */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <MapPin size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'ঢাকার সন্নিকটে প্রাইম লোকেশন' : 'Prime Location in Dhaka'}
+                  </h4>
+                </div>
+
+                {/* 3. Transparent Process */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <CheckCircle2 size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'শতভাগ স্বচ্ছ প্রক্রিয়া' : 'Transparent Process'}
+                  </h4>
+                </div>
+
+                {/* 4. Trusted by Investors */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <Users size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'বিনিয়োগকারীদের আস্থা' : 'Trusted by Investors'}
+                  </h4>
+                </div>
+
+                {/* 5. Modern Infrastructure */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <Building2 size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'আধুনিক অবকাঠামো' : 'Modern Infrastructure'}
+                  </h4>
+                </div>
+
+                {/* 6. Future Appreciation */}
+                <div className="why-feature-item">
+                  <div className="why-icon-circle">
+                    <TrendingUp size={24} />
+                  </div>
+                  <h4 className="why-feature-name">
+                    {lang === 'bn' ? 'ভবিষ্যৎ মূল্যবৃদ্ধি' : 'Future Appreciation'}
+                  </h4>
+                </div>
               </div>
             </div>
           </div>
@@ -1420,20 +1668,7 @@ function App() {
 
           <div className="leadership-grid">
             {leadershipTeam.slice(0, 4).map((leader) => (
-              <div key={leader.id} className="leader-card">
-                <div className="leader-image-wrap">
-                  <img 
-                    src={leader.image} 
-                    alt={lang === 'bn' ? leader.nameBn : leader.nameEn} 
-                    className="leader-img" 
-                    loading="lazy"
-                  />
-                </div>
-                <div className="leader-info">
-                  <h3 className="leader-name">{lang === 'bn' ? leader.nameBn : leader.nameEn}</h3>
-                  <p className="leader-role">{lang === 'bn' ? leader.roleBn : leader.roleEn}</p>
-                </div>
-              </div>
+              <LeaderCard key={leader.id} leader={leader} lang={lang} />
             ))}
           </div>
 
@@ -1446,7 +1681,7 @@ function App() {
                 navigateTo('leadership-team')
               }}
             >
-              <span>{lang === 'bn' ? 'সকল টিম মেম্বার দেখুন (See More)' : 'See Full Leadership Team'}</span>
+              <span>See More</span>
               <ArrowRight size={16} />
             </a>
           </div>
