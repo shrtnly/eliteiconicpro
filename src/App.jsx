@@ -472,7 +472,8 @@ const leadershipTeam = [
     nameBn: "আবুল কালাম আজাদ",
     roleEn: "Managing Director",
     roleBn: "ব্যবস্থাপনা পরিচালক",
-    phone: "01615500815"
+    phone: "01615500815",
+    image: "/leaders/abul-kalam-azad.jpg"
   },
   {
     id: 4,
@@ -481,7 +482,8 @@ const leadershipTeam = [
     nameBn: "মোবারক হোসেন মুন্সী",
     roleEn: "Deputy Managing Director",
     roleBn: "উপ-ব্যবস্থাপনা পরিচালক",
-    phone: "01913387933"
+    phone: "01913387933",
+    image: "/leaders/mobarok-hossain-munshi.jpg"
   },
   {
     id: 5,
@@ -490,7 +492,8 @@ const leadershipTeam = [
     nameBn: "শাহাবুদ্দিন",
     roleEn: "Finance Director",
     roleBn: "ফাইন্যান্স ডিরেক্টর",
-    phone: "01684188884"
+    phone: "01684188884",
+    image: "/leaders/shahabuddin.jpg"
   },
   {
     id: 6,
@@ -499,88 +502,98 @@ const leadershipTeam = [
     nameBn: "মোঃ মোশাররফ হোসেন",
     roleEn: "Marketing Director",
     roleBn: "মার্কেটিং ডিরেক্টর",
-    phone: "01671749583"
+    phone: "01671749589",
+    image: "/leaders/md-mosharrof-hossain.jpg"
   },
   {
     id: 7,
     sl: "7",
     nameEn: "BIPLOB KUMAR BARMA",
     nameBn: "বিপ্লব কুমার বর্মা",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01313596048"
+    roleEn: "Director (Administration)",
+    roleBn: "পরিচালক (প্রশাসন)",
+    phone: "01313596048",
+    image: "/leaders/biplob-kumar-barma.jpg"
   },
   {
     id: 8,
     sl: "8",
     nameEn: "MD. NAYEEM",
     nameBn: "মোঃ নাঈম",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01722105259"
+    roleEn: "Director – IT & Digital Marketing",
+    roleBn: "পরিচালক – আইটি ও ডিজিটাল মার্কেটিং",
+    phone: "01722105259",
+    image: "/leaders/md-nayeem.jpg"
   },
   {
     id: 9,
     sl: "9",
     nameEn: "MD. KABIR HOSSAIN",
     nameBn: "মোঃ কবির হোসেন",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01758240309"
+    roleEn: "Director – Human Resources",
+    roleBn: "পরিচালক – মানবসম্পদ",
+    phone: "01758240309",
+    image: "/leaders/md-kabir-hossain.jpg"
   },
   {
     id: 10,
     sl: "10",
     nameEn: "MD. ABUL BASAR",
     nameBn: "মোঃ আবুল বাশার",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01604493384"
+    roleEn: "Director – Purchase",
+    roleBn: "পরিচালক – ক্রয়",
+    phone: "01604493384",
+    image: "/leaders/md-abul-basar.jpg"
   },
   {
     id: 11,
     sl: "11",
     nameEn: "MD. ABDUS SALAM",
     nameBn: "মোঃ আব্দুস সালাম",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01712117734"
+    roleEn: "Director – Legal Affairs",
+    roleBn: "পরিচালক – আইন বিষয়ক",
+    phone: "01712117734",
+    image: "/leaders/md-abdus-salam.jpg"
   },
   {
     id: 12,
     sl: "12",
     nameEn: "ZAHIDUL ISLAM",
     nameBn: "জাহিদুল ইসলাম",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01886330164"
+    roleEn: "Director – Customer Relations",
+    roleBn: "পরিচালক – গ্রাহক সম্পর্ক",
+    phone: "01886330164",
+    image: "/leaders/zahidul-islam.jpg"
   },
   {
     id: 13,
     sl: "13",
     nameEn: "MD. AZHARUL ISLAM",
     nameBn: "মোঃ আজহারুল ইসলাম",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01786433760"
+    roleEn: "Director – Land Acquisition",
+    roleBn: "পরিচালক – ভূমি অধিগ্রহণ",
+    phone: "01786433760",
+    image: "/leaders/md-azharul-islam.jpg"
   },
   {
     id: 14,
     sl: "14",
     nameEn: "MD. MOHSIN",
     nameBn: "মোঃ মহসিন",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01733707557"
+    roleEn: "Director – Business Development",
+    roleBn: "পরিচালক – ব্যবসায় উন্নয়ন",
+    phone: "01733707557",
+    image: "/leaders/md-mohsin.jpg"
   },
   {
     id: 15,
     sl: "15",
     nameEn: "MD. SAIFULLAH SHARIF",
     nameBn: "মোঃ সাইফুল্লাহ শরীফ",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: "01711005310"
+    roleEn: "Director – Accounts",
+    roleBn: "পরিচালক – হিসাব",
+    phone: "01711005310",
+    image: "/leaders/md-saifullah-sharif.jpg"
   },
   {
     id: 16,
@@ -597,6 +610,7 @@ const leadershipTeam = [
 function LeaderCard({ leader, lang }) {
   const isBn = lang === 'bn'
   const hasPhone = leader.phone && leader.phone !== 'xxxxx' && leader.phone.trim() !== ''
+  const [imgError, setImgError] = useState(false)
 
   return (
     <div className="leader-card">
@@ -607,9 +621,19 @@ function LeaderCard({ leader, lang }) {
       </div>
 
       <div className="leader-avatar-wrap">
-        <div className="leader-default-avatar">
-          <User size={38} className="leader-avatar-icon" strokeWidth={1.75} />
-        </div>
+        {leader.image && !imgError ? (
+          <img 
+            src={leader.image} 
+            alt={isBn ? leader.nameBn : leader.nameEn}
+            className="leader-avatar-img"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="leader-default-avatar">
+            <User size={38} className="leader-avatar-icon" strokeWidth={1.75} />
+          </div>
+        )}
       </div>
 
       <div className="leader-info">
@@ -1320,15 +1344,14 @@ function App() {
               
               <div className="project-highlight-btn-wrap">
                 <a 
-                  href="#masterplan" 
+                  href="#corporate-about" 
                   className="btn-project-highlight"
                   onClick={(e) => {
                     e.preventDefault()
-                    const el = document.getElementById('masterplan')
-                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                    navigateTo('corporate-about')
                   }}
                 >
-                  <span>{lang === 'bn' ? 'সকল প্রকল্প দেখুন' : 'View All Projects'}</span>
+                  <span>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</span>
                   <ChevronRight size={17} />
                 </a>
               </div>
