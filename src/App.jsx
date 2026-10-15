@@ -454,7 +454,8 @@ const leadershipTeam = [
     nameBn: "মকসুদুর রহমান",
     roleEn: "Chairman",
     roleBn: "চেয়ারম্যান",
-    phone: "01621728528"
+    phone: "01621728528",
+    image: "/leaders/muksudur-rahaman.png"
   },
   {
     id: 2,
