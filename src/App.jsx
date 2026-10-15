@@ -450,7 +450,7 @@ const leadershipTeam = [
   {
     id: 1,
     sl: "1",
-    nameEn: "MUKSUDUR RAHAMAN",
+    nameEn: "Muksudur Rahaman",
     nameBn: "মকসুদুর রহমান",
     roleEn: "Chairman",
     roleBn: "চেয়ারম্যান",
@@ -460,7 +460,7 @@ const leadershipTeam = [
   {
     id: 2,
     sl: "2",
-    nameEn: "ASHA KHAN",
+    nameEn: "Asha Khan",
     nameBn: "আশা খান",
     roleEn: "Vice Chairman",
     roleBn: "ভাইস চেয়ারম্যান",
@@ -469,7 +469,7 @@ const leadershipTeam = [
   {
     id: 3,
     sl: "3",
-    nameEn: "ABUL KALAM AZAD",
+    nameEn: "Abul Kalam Azad",
     nameBn: "আবুল কালাম আজাদ",
     roleEn: "Managing Director",
     roleBn: "ব্যবস্থাপনা পরিচালক",
@@ -479,7 +479,7 @@ const leadershipTeam = [
   {
     id: 4,
     sl: "4",
-    nameEn: "MOBAROK HOSSAIN MUNSHI",
+    nameEn: "Mobarok Hossain Munshi",
     nameBn: "মোবারক হোসেন মুন্সী",
     roleEn: "Deputy Managing Director",
     roleBn: "উপ-ব্যবস্থাপনা পরিচালক",
@@ -489,7 +489,7 @@ const leadershipTeam = [
   {
     id: 5,
     sl: "5",
-    nameEn: "SHAHABUDDIN",
+    nameEn: "Shahabuddin",
     nameBn: "শাহাবুদ্দিন",
     roleEn: "Finance Director",
     roleBn: "ফাইন্যান্স ডিরেক্টর",
@@ -499,7 +499,7 @@ const leadershipTeam = [
   {
     id: 6,
     sl: "6",
-    nameEn: "MD. MOSHARROF HOSSAIN",
+    nameEn: "Md. Mosharrof Hossain",
     nameBn: "মোঃ মোশাররফ হোসেন",
     roleEn: "Marketing Director",
     roleBn: "মার্কেটিং ডিরেক্টর",
@@ -509,9 +509,9 @@ const leadershipTeam = [
   {
     id: 7,
     sl: "7",
-    nameEn: "BIPLOB KUMAR BARMA",
+    nameEn: "Biplob Kumar Barma",
     nameBn: "বিপ্লব কুমার বর্মা",
-    roleEn: "Director (Administration)",
+    roleEn: "Director (Admin)",
     roleBn: "পরিচালক (প্রশাসন)",
     phone: "01313596048",
     image: "/leaders/biplob-kumar-barma.jpg"
@@ -519,7 +519,7 @@ const leadershipTeam = [
   {
     id: 8,
     sl: "8",
-    nameEn: "MD. NAYEEM",
+    nameEn: "Md. Nayeem",
     nameBn: "মোঃ নাঈম",
     roleEn: "Director – IT & Digital Marketing",
     roleBn: "পরিচালক – আইটি ও ডিজিটাল মার্কেটিং",
@@ -529,7 +529,7 @@ const leadershipTeam = [
   {
     id: 9,
     sl: "9",
-    nameEn: "MD. KABIR HOSSAIN",
+    nameEn: "Md. Kabir Hossain",
     nameBn: "মোঃ কবির হোসেন",
     roleEn: "Director – Human Resources",
     roleBn: "পরিচালক – মানবসম্পদ",
@@ -539,7 +539,7 @@ const leadershipTeam = [
   {
     id: 10,
     sl: "10",
-    nameEn: "MD. ABUL BASAR",
+    nameEn: "Md. Abul Basar",
     nameBn: "মোঃ আবুল বাশার",
     roleEn: "Director – Purchase",
     roleBn: "পরিচালক – ক্রয়",
@@ -549,7 +549,7 @@ const leadershipTeam = [
   {
     id: 11,
     sl: "11",
-    nameEn: "MD. ABDUS SALAM",
+    nameEn: "Md. Abdus Salam",
     nameBn: "মোঃ আব্দুস সালাম",
     roleEn: "Director – Legal Affairs",
     roleBn: "পরিচালক – আইন বিষয়ক",
@@ -559,7 +559,7 @@ const leadershipTeam = [
   {
     id: 12,
     sl: "12",
-    nameEn: "ZAHIDUL ISLAM",
+    nameEn: "Zahidul Islam",
     nameBn: "জাহিদুল ইসলাম",
     roleEn: "Director – Customer Relations",
     roleBn: "পরিচালক – গ্রাহক সম্পর্ক",
@@ -569,7 +569,7 @@ const leadershipTeam = [
   {
     id: 13,
     sl: "13",
-    nameEn: "MD. AZHARUL ISLAM",
+    nameEn: "Md. Azharul Islam",
     nameBn: "মোঃ আজহারুল ইসলাম",
     roleEn: "Director – Land Acquisition",
     roleBn: "পরিচালক – ভূমি অধিগ্রহণ",
@@ -579,7 +579,7 @@ const leadershipTeam = [
   {
     id: 14,
     sl: "14",
-    nameEn: "MD. MOHSIN",
+    nameEn: "Md. Mohsin",
     nameBn: "মোঃ মহসিন",
     roleEn: "Director – Business Development",
     roleBn: "পরিচালক – ব্যবসায় উন্নয়ন",
@@ -589,7 +589,7 @@ const leadershipTeam = [
   {
     id: 15,
     sl: "15",
-    nameEn: "MD. SAIFULLAH SHARIF",
+    nameEn: "Md. Saifullah Sharif",
     nameBn: "মোঃ সাইফুল্লাহ শরীফ",
     roleEn: "Director – Accounts",
     roleBn: "পরিচালক – হিসাব",
@@ -599,7 +599,7 @@ const leadershipTeam = [
   {
     id: 16,
     sl: "—",
-    nameEn: "KAZI MAKSUDUR RAHMAN",
+    nameEn: "Kazi Maksudur Rahman",
     nameBn: "কাজী মাকসুদুর রহমান",
     roleEn: "Director",
     roleBn: "পরিচালক",
@@ -607,7 +607,7 @@ const leadershipTeam = [
   }
 ]
 
-// Single reusable Leader Card with default avatar and interactive phone link
+// Single reusable Leader Card with portrait image, pure white background, and polished typography
 function LeaderCard({ leader, lang }) {
   const isBn = lang === 'bn'
   const hasPhone = leader.phone && leader.phone !== 'xxxxx' && leader.phone.trim() !== ''
@@ -615,11 +615,13 @@ function LeaderCard({ leader, lang }) {
 
   return (
     <div className="leader-card">
-      <div className="leader-card-header">
-        <span className="leader-sl-tag" title={isBn ? `ক্রমিক নং: ${leader.sl}` : `SL No: ${leader.sl}`}>
-          {leader.sl === '—' ? '—' : `#${leader.sl}`}
-        </span>
-      </div>
+      {leader.sl && leader.sl !== '—' && (
+        <div className="leader-card-header">
+          <span className="leader-sl-tag" title={isBn ? `ক্রমিক নং: ${leader.sl}` : `SL No: ${leader.sl}`}>
+            #{leader.sl}
+          </span>
+        </div>
+      )}
 
       <div className="leader-avatar-wrap">
         {leader.image && !imgError ? (
@@ -632,7 +634,7 @@ function LeaderCard({ leader, lang }) {
           />
         ) : (
           <div className="leader-default-avatar">
-            <User size={38} className="leader-avatar-icon" strokeWidth={1.75} />
+            <User size={54} className="leader-avatar-icon" strokeWidth={1.5} />
           </div>
         )}
       </div>
@@ -641,9 +643,9 @@ function LeaderCard({ leader, lang }) {
         <h3 className="leader-name">
           {isBn ? leader.nameBn : leader.nameEn}
         </h3>
-        <span className="leader-role-badge">
+        <div className="leader-role-badge">
           {isBn ? leader.roleBn : leader.roleEn}
-        </span>
+        </div>
 
         {hasPhone ? (
           <a 
