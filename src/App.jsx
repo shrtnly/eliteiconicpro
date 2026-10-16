@@ -42,6 +42,7 @@ import {
 import './App.css'
 import FounderDirectorSection from './components/FounderDirectorSection'
 import CorporateAboutPage from './components/CorporateAboutPage'
+import GalleryPage from './components/GalleryPage'
 
 // Comprehensive Translations (Bangla & English)
 const translations = {
@@ -786,7 +787,7 @@ function App() {
   const [visitSubmitting, setVisitSubmitting] = useState(false)
   const [visitSuccess, setVisitSuccess] = useState(false)
 
-  // Routing State ('home' | 'leadership-team' | 'corporate-about')
+  // Routing State ('home' | 'leadership-team' | 'corporate-about' | 'gallery')
   const [currentRoute, setCurrentRoute] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase()
@@ -796,6 +797,9 @@ function App() {
       }
       if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
         return 'leadership-team'
+      }
+      if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
+        return 'gallery'
       }
     }
     return 'home'
@@ -810,6 +814,9 @@ function App() {
         window.scrollTo(0, 0)
       } else if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
         setCurrentRoute('leadership-team')
+        window.scrollTo(0, 0)
+      } else if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
+        setCurrentRoute('gallery')
         window.scrollTo(0, 0)
       } else {
         setCurrentRoute('home')
@@ -831,6 +838,10 @@ function App() {
     } else if (route === 'leadership-team') {
       window.location.hash = '#leadership-team'
       setCurrentRoute('leadership-team')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (route === 'gallery') {
+      window.location.hash = '#gallery'
+      setCurrentRoute('gallery')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
       window.location.hash = targetHash ? `#${targetHash}` : '#'
@@ -1062,7 +1073,7 @@ function App() {
               <li><a href="#" className={`nav-link ${currentRoute === 'home' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>{t.navHome}</a></li>
               <li><a href="#corporate-about" className={`nav-link ${currentRoute === 'corporate-about' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
               <li><a href="#leadership-team" className={`nav-link ${currentRoute === 'leadership-team' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
-              <li><a href="#site-gallery" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'site-gallery'); }}>{t.navGallery}</a></li>
+              <li><a href="#gallery" className={`nav-link ${currentRoute === 'gallery' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{t.navGallery}</a></li>
               <li><a href="#booking-form-section" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
             </ul>
           </nav>
@@ -1115,10 +1126,10 @@ function App() {
           </div>
 
           <ul className="mobile-nav-links">
-            <li><a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home'); }}>{t.navHome}</a></li>
-            <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
-            <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
-            <li><a href="#site-gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'site-gallery'); }}>{t.navGallery}</a></li>
+            <li><a href="#" className={currentRoute === 'home' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home'); }}>{t.navHome}</a></li>
+            <li><a href="#corporate-about" className={currentRoute === 'corporate-about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
+            <li><a href="#leadership-team" className={currentRoute === 'leadership-team' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+            <li><a href="#gallery" className={currentRoute === 'gallery' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('gallery'); }}>{t.navGallery}</a></li>
             <li><a href="#booking-form-section" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
           </ul>
 
@@ -1235,6 +1246,12 @@ function App() {
             </div>
           </section>
         </main>
+      ) : currentRoute === 'gallery' ? (
+        <GalleryPage 
+          lang={lang}
+          onScheduleVisit={() => setVisitModalOpen(true)}
+          navigateTo={navigateTo}
+        />
       ) : (
         <>
           {/* 3. HERO SHOWCASE - DHAKA ICON CITY */}
@@ -1936,41 +1953,78 @@ function App() {
           </div>
 
           <div className="gallery-photos-grid">
-            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/dhaka-icon-progress-1.jpg')}>
-              <img src="/dhaka-icon-progress-1.jpg" alt="Active Sandfilling Pipeline Turag River" className="gallery-img" />
+            {/* 1. Turag River Dredging & Slurry Sand Filling */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/field-dredging-sandfilling-inspection.jpg')}>
+              <img src="/gallery/field-dredging-sandfilling-inspection.jpg" alt="Active Sandfilling Pipeline Turag River" className="gallery-img" />
               <div className="gallery-img-overlay">
                 <span className="gallery-badge">লাইভ প্রজেক্ট ওয়ার্ক</span>
                 <h4>{lang === 'bn' ? 'তুরাগ নদী সংলগ্ন বালু ভরাট ও ড্রেজিং পাইপলাইন' : 'Turag River Dredging & Slurry Sand Filling'}</h4>
-                <p>{lang === 'bn' ? 'সরেজমিনে দ্রুতগতিতে চলমান মাটি ও বালু ভরাটের দৃশ্য' : 'Active land elevation and infrastructure preparation'}</p>
+                <p>{lang === 'bn' ? 'তুরাগ নদীর পাড়ে পাইপলাইনে দ্রুতগতির বালু ভরাট ও সাইট উন্নয়ন' : 'Active land elevation and infrastructure preparation along Turag river'}</p>
               </div>
             </div>
 
-            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/dhaka-icon-progress-2.jpg')}>
-              <img src="/dhaka-icon-progress-2.jpg" alt="Investor Site Visit & Delegation" className="gallery-img" />
+            {/* 2. Investor & Client VIP Site Inspection Visit */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/vip-client-site-inspection-delegation.jpg')}>
+              <img src="/gallery/vip-client-site-inspection-delegation.jpg" alt="Investor & Client VIP Site Inspection Visit" className="gallery-img" />
               <div className="gallery-img-overlay">
                 <span className="gallery-badge">সাইট ভিজিট</span>
                 <h4>{lang === 'bn' ? 'সম্মানিত ক্রেতা ও বিনিয়োগকারীদের সাইট পরিদর্শন' : 'Investor & Client VIP Site Inspection Visit'}</h4>
-                <p>{lang === 'bn' ? 'কোম্পানির উচ্চপদস্থ কর্মকর্তাদের সাথে প্লট পর্যবেক্ষণ' : 'Direct on-site plot verification with company executives'}</p>
+                <p>{lang === 'bn' ? 'বার্ষিক মেলা ও সাইট ডেলিগেশনে সম্মানিত গ্রাহকদের সরাসরি পরিদর্শন' : 'Direct on-site plot verification with company executives and investors'}</p>
               </div>
             </div>
 
-            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/dhaka-icon-hero.jpg')}>
-              <img src="/dhaka-icon-hero.jpg" alt="Dhaka Icon City Grand Gate Perspective" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">ল্যান্ডমার্ক এন্ট্রান্স</span>
-                <h4>{lang === 'bn' ? 'ঢাকা আইকন সিটির রাজকীয় গ্র্যান্ড এন্ট্রান্স গেট' : 'Grand Architectural Monument Entrance Gate'}</h4>
-                <p>{lang === 'bn' ? '১০০ ফুট প্রশস্ত প্রধান এভিনিউ সংলগ্ন ওয়াটার ফাউন্টেন' : '100ft Wide Avenue with landscaped central fountains'}</p>
-              </div>
-            </div>
-
-            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/dhaka-icon-masterplan.jpg')}>
-              <img src="/dhaka-icon-masterplan.jpg" alt="Masterplan Aerial Visual" className="gallery-img" />
+            {/* 3. Dhaka Icon City Master Plan Pavilion */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/dhaka-icon-masterplan-pavilion.jpg')}>
+              <img src="/gallery/dhaka-icon-masterplan-pavilion.jpg" alt="Dhaka Icon City Master Plan Pavilion" className="gallery-img" />
               <div className="gallery-img-overlay">
                 <span className="gallery-badge">মাস্টার প্ল্যান</span>
-                <h4>{lang === 'bn' ? 'তুরাগ নদীর তীর ঘেঁষে আধুনিক টাউনশিপ পরিকল্পনা' : 'Modern Riverfront Plotted Township Layout'}</h4>
-                <p>{lang === 'bn' ? 'আবাসিক, বাণিজ্যিক ও সেন্ট্রাল পার্ক জোন বিন্যাস' : 'Integrated residential, commercial and central park zones'}</p>
+                <h4>{lang === 'bn' ? 'ঢাকা আইকন সিটি মেগা মাস্টারপ্ল্যান প্যাভিলিয়ন' : 'Dhaka Icon City Master Plan Pavilion'}</h4>
+                <p>{lang === 'bn' ? 'গ্রাহকদের সামনে প্রকল্পের পুঙ্খানুপুঙ্খ মাস্টারপ্ল্যান উপস্থাপন' : 'Interactive masterplan presentation & project layout consultation'}</p>
               </div>
             </div>
+
+            {/* 4. Executive Boardroom Meeting */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/corporate-boardroom-meeting.jpg')}>
+              <img src="/gallery/corporate-boardroom-meeting.jpg" alt="Corporate Boardroom Meeting" className="gallery-img" />
+              <div className="gallery-img-overlay">
+                <span className="gallery-badge">বোর্ডরুম বৈঠক</span>
+                <h4>{lang === 'bn' ? 'উচ্চপদস্থ পরিচালনা পর্ষদের কর্পোরেট বৈঠক' : 'Executive Boardroom Strategy & Management Meeting'}</h4>
+                <p>{lang === 'bn' ? 'চেয়ারম্যান মহোদয়ের সভাপতিত্বে প্রকল্প অগ্রগতি পর্যালোচনা' : 'Strategic project milestone reviews chaired by Company Leadership'}</p>
+              </div>
+            </div>
+
+            {/* 5. Turag Riverfront Sand Field Inspection */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/turag-riverfront-sandfield-visit.jpg')}>
+              <img src="/gallery/turag-riverfront-sandfield-visit.jpg" alt="Turag Riverfront Sand Reclaimed Field" className="gallery-img" />
+              <div className="gallery-img-overlay">
+                <span className="gallery-badge">মাঠ পরিদর্শন</span>
+                <h4>{lang === 'bn' ? 'তুরাগ নদীর তীরবর্তী বালু ভরাট ভূমিতে সরেজমিন পরিদর্শন' : 'Turag Riverfront Field Progress Inspection'}</h4>
+                <p>{lang === 'bn' ? 'নদীর পাড়ঘেঁষা ভরাটকৃত জমিতে সাইট ইঞ্জিনিয়ার ও গ্রাহকবৃন্দের যৌথ পরিদর্শন' : 'Site engineers and client delegation inspecting freshly leveled ground'}</p>
+              </div>
+            </div>
+
+            {/* 6. Internal Access Road Paving */}
+            <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/access-road-brick-paving-inspection.jpg')}>
+              <img src="/gallery/access-road-brick-paving-inspection.jpg" alt="Internal Access Road Brick Soling" className="gallery-img" />
+              <div className="gallery-img-overlay">
+                <span className="gallery-badge">অবকাঠামো</span>
+                <h4>{lang === 'bn' ? 'অভ্যন্তরীণ সংযোগ সড়ক ও ব্রিক সলিং পর্যবেক্ষণ' : 'Internal Access Road Paving & Infrastructure'}</h4>
+                <p>{lang === 'bn' ? 'প্রকল্পের প্রবেশ পথ ও অভ্যন্তরীণ সংযোগ সড়ক নির্মাণ কাজ পরিদর্শন' : 'Internal roadway development, brick soling and soil compaction'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Full Gallery CTA Button */}
+          <div className="gallery-section-cta-wrap">
+            <button 
+              type="button"
+              className="btn-view-full-gallery"
+              onClick={() => navigateTo('gallery')}
+            >
+              <Eye size={18} />
+              <span>{lang === 'bn' ? 'সম্পূর্ণ অফিসিয়াল ফটো গ্যালারি দেখুন (১২টি ছবি)' : 'Explore Full Corporate & Site Gallery (12+ Photos)'}</span>
+              <ChevronRight size={18} />
+            </button>
           </div>
         </div>
       </section>
@@ -2248,6 +2302,7 @@ function App() {
               <ul className="footer-links-list">
                 <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</a></li>
                 <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{lang === 'bn' ? 'লিডারশিপ টিম' : 'Leadership Team'}</a></li>
+                <li><a href="#gallery" onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{lang === 'bn' ? 'ফটো ও ইভেন্ট গ্যালারি' : 'Photo & Event Gallery'}</a></li>
                 <li><a href="#pricing-calculator" onClick={(e) => { e.preventDefault(); navigateTo('home', 'pricing-calculator'); }}>{lang === 'bn' ? 'ইন্টারেক্টিভ ক্যালকুলেটর' : 'Interactive Calculator'}</a></li>
                 <li><a href="#connectivity-location" onClick={(e) => { e.preventDefault(); navigateTo('home', 'connectivity-location'); }}>{lang === 'bn' ? 'দূরত্ব ও যাতায়াত' : 'Connectivity & Location'}</a></li>
                 <li><a href="#civic-amenities" onClick={(e) => { e.preventDefault(); navigateTo('home', 'civic-amenities'); }}>{lang === 'bn' ? '১২টি নাগরিক সুবিধা' : '12 Civic Amenities'}</a></li>
