@@ -455,7 +455,7 @@ const leadershipTeam = [
     roleEn: "Chairman",
     roleBn: "চেয়ারম্যান",
     phone: "01621728528",
-    image: "/leaders/muksudur-rahaman.png"
+    image: "/leaders/muksudur-rahaman.png?v=2"
   },
   {
     id: 2,
@@ -474,7 +474,7 @@ const leadershipTeam = [
     roleEn: "Managing Director",
     roleBn: "ব্যবস্থাপনা পরিচালক",
     phone: "01615500815",
-    image: "/leaders/abul-kalam-azad.jpg"
+    image: "/leaders/abul-kalam-azad.jpg?v=3"
   },
   {
     id: 4,
@@ -484,7 +484,7 @@ const leadershipTeam = [
     roleEn: "Deputy Managing Director",
     roleBn: "উপ-ব্যবস্থাপনা পরিচালক",
     phone: "01913387933",
-    image: "/leaders/mobarok-hossain-munshi.jpg"
+    image: "/leaders/mobarok-hossain-munshi.jpg?v=3"
   },
   {
     id: 5,
@@ -504,7 +504,7 @@ const leadershipTeam = [
     roleEn: "Marketing Director",
     roleBn: "মার্কেটিং ডিরেক্টর",
     phone: "01671749589",
-    image: "/leaders/md-mosharrof-hossain.jpg"
+    image: "/leaders/md-mosharrof-hossain.jpg?v=2"
   },
   {
     id: 7,
@@ -544,7 +544,7 @@ const leadershipTeam = [
     roleEn: "Director – Purchase",
     roleBn: "পরিচালক – ক্রয়",
     phone: "01604493384",
-    image: "/leaders/md-abul-basar.jpg"
+    image: "/leaders/md-abul-basar.jpg?v=2"
   },
   {
     id: 11,
@@ -584,7 +584,7 @@ const leadershipTeam = [
     roleEn: "Director – Business Development",
     roleBn: "পরিচালক – ব্যবসায় উন্নয়ন",
     phone: "01733707557",
-    image: "/leaders/md-mohsin.jpg"
+    image: "/leaders/md-mohsin.jpg?v=2"
   },
   {
     id: 15,
@@ -594,7 +594,7 @@ const leadershipTeam = [
     roleEn: "Director – Accounts",
     roleBn: "পরিচালক – হিসাব",
     phone: "01711005310",
-    image: "/leaders/md-saifullah-sharif.jpg"
+    image: "/leaders/md-saifullah-sharif.jpg?v=2"
   },
   {
     id: 16,
@@ -1244,39 +1244,63 @@ function App() {
           <div className="hero-bg-overlay"></div>
         </div>
         <div className="hero-main-container">
-          <div className="hero-text-content">
-            {/* Main Headline */}
-            <h1 className="hero-headline">
-              <span className="hero-headline-prefix">{t.heroTitlePrefix}</span>
-              <span className="hero-headline-highlight">{t.heroTitleHighlight}</span>
-            </h1>
+          <div className="hero-grid-layout">
+            <div className="hero-text-content">
+              {/* Main Headline */}
+              <h1 className="hero-headline">
+                <span className="hero-headline-prefix">{t.heroTitlePrefix}</span>
+                <span className="hero-headline-highlight">{t.heroTitleHighlight}</span>
+              </h1>
 
-            {/* Subtitle Description */}
-            <p className="hero-desc-paragraph">
-              {t.heroSubtitle}
-            </p>
+              {/* Subtitle Description */}
+              <p className="hero-desc-paragraph">
+                {t.heroSubtitle}
+              </p>
 
-            {/* Call To Action Buttons */}
-            <div className="hero-cta-buttons">
-              <button 
-                type="button"
-                className="btn-hero-primary"
-                onClick={() => setVisitModalOpen(true)}
-              >
-                <Calendar size={18} />
-                <span>{t.heroBtnBook}</span>
-                <ChevronRight size={18} />
-              </button>
+              {/* Call To Action Buttons */}
+              <div className="hero-cta-buttons">
+                <button 
+                  type="button"
+                  className="btn-hero-primary"
+                  onClick={() => setVisitModalOpen(true)}
+                >
+                  <Calendar size={18} />
+                  <span>{t.heroBtnBook}</span>
+                  <ChevronRight size={18} />
+                </button>
 
-              <a 
-                href="https://drive.google.com/file/d/13BJkWKW6Uo8pIsr9mKlIqs2XPHOevF3c/view?usp=sharing"
-                className="btn-hero-secondary"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Download size={17} />
-                <span>{t.heroBtnBrochure}</span>
-              </a>
+                <a 
+                  href="https://drive.google.com/file/d/13BJkWKW6Uo8pIsr9mKlIqs2XPHOevF3c/view?usp=sharing"
+                  className="btn-hero-secondary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Download size={17} />
+                  <span>{t.heroBtnBrochure}</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Hero Visual Showcase Card for All Devices */}
+            <div className="hero-visual-column">
+              <div className="hero-visual-card">
+                <div className="hero-card-media-wrap">
+                  <img 
+                    src="/dhaka-icon-dark-hero.jpg" 
+                    alt={lang === 'bn' ? 'ঢাকা আইকন সিটি - লাক্সারি স্মার্ট মেগা টাউনশিপ' : 'Dhaka Icon City - Luxury Smart Township'} 
+                    className="hero-card-img"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                  <div className="hero-card-overlay-gradient"></div>
+                  
+                  {/* Floating Top Status Badge */}
+                  <div className="hero-card-floating-badge top-badge">
+                    <span className="hero-pulse-dot"></span>
+                    <span>{lang === 'bn' ? 'ঢাকা আইকন সিটি • প্রিমিয়ার টাউনশিপ' : 'Dhaka Icon City • Premier Township'}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
