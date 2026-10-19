@@ -37,10 +37,13 @@ import {
   Check,
   User,
   Users,
-  TrendingUp
+  TrendingUp,
+  Briefcase,
+  Landmark
 } from 'lucide-react'
 import './App.css'
 import FounderDirectorSection from './components/FounderDirectorSection'
+import { founderDirectors } from './data/founderDirectorsData'
 import CorporateAboutPage from './components/CorporateAboutPage'
 import GalleryPage from './components/GalleryPage'
 
@@ -52,7 +55,7 @@ const translations = {
     companyName: "এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিঃ",
     navHome: "হোম",
     navAbout: "আমাদের সম্পর্কে",
-    navLeadership: "লিডারশিপ টিম",
+    navLeadership: "পরিচালনা পর্ষদ",
     navGallery: "গ্যালারি",
     navContact: "যোগাযোগ",
     bookVisitBtn: "ভিজিট শিডিউল",
@@ -104,9 +107,9 @@ const translations = {
     calcMonthly: "আনুমানিক মাসিক কিস্তি",
     btnBookCalculated: "এই প্লটটি এখনই বুক করুন",
 
-    // Leadership Team
-    leadershipTitle: "Leadership Team",
-    leadershipSubtitle: "সঠিক পরিচালনা, কৌশলগত দিকনির্দেশনা এবং সেরা সেবার মাধ্যমে আমাদের লক্ষ্য বাস্তবায়নে কর্মরত নেতৃত্বের সাথে পরিচিত হোন।",
+    // Board of Directors
+    leadershipTitle: "পরিচালনা পর্ষদ",
+    leadershipSubtitle: "সঠিক পরিচালনা, কৌশলগত দিকনির্দেশনা এবং সেরা সেবার মাধ্যমে আমাদের লক্ষ্য বাস্তবায়নে কর্মরত পরিচালনা পর্ষদের সাথে পরিচিত হোন।",
 
     // Masterplan
     masterplanTitle: "আধুনিক মাস্টার প্ল্যান ও রোড নেটওয়ার্ক",
@@ -160,7 +163,7 @@ const translations = {
     companyName: "Elite Iconic Properties & Construction Ltd.",
     navHome: "Home",
     navAbout: "About Us",
-    navLeadership: "Leadership Team",
+    navLeadership: "Board of Directors",
     navGallery: "Gallery",
     navContact: "Contact",
     bookVisitBtn: "Book VIP Site Visit",
@@ -212,9 +215,9 @@ const translations = {
     calcMonthly: "Estimated Monthly EMI",
     btnBookCalculated: "Book This Selected Plot Now",
 
-    // Leadership Team
-    leadershipTitle: "Leadership Team",
-    leadershipSubtitle: "Meet the team driving our vision through strategic leadership and sustainable growth.",
+    // Board of Directors
+    leadershipTitle: "Board of Directors",
+    leadershipSubtitle: "Meet the distinguished board members driving our vision through strategic leadership and sustainable growth.",
 
     // Masterplan
     masterplanTitle: "Master Plan & Strategic Road Network",
@@ -456,7 +459,9 @@ const leadershipTeam = [
     roleEn: "Chairman",
     roleBn: "চেয়ারম্যান",
     phone: "01621728528",
-    image: "/leaders/muksudur-rahaman.png?v=2"
+    image: "/leaders/muksudur-rahaman.png?v=2",
+    speechEn: "Muksudur Rahaman is the Chairman of Elite Iconic Properties & Construction Limited. He provides overall direction to the company and leads the board with clarity and experience. His role focuses on setting strategic priorities, ensuring strong governance, and supporting the leadership team in building a stable and forward-looking organization.",
+    speechBn: "মকসুদুর রহমান এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিমিটেড-এর সম্মানিত চেয়ারম্যান। তিনি প্রতিষ্ঠানটিকে সামগ্রিক দিকনির্দেশনা প্রদান করেন এবং অভিজ্ঞতা ও দূরদর্শিতার সাথে বোর্ড পরিচালনা করেন। তাঁর মূল ভূমিকা কৌশলগত অগ্রাধিকার নির্ধারণ, করপোরেট সুশাসন নিশ্চিতকরণ এবং ঢাকা আইকন সিটিকে একটি নির্ভরযোগ্য ও সমৃদ্ধ উপশহর হিসেবে গড়ে তোলা।"
   },
   {
     id: 2,
@@ -465,7 +470,10 @@ const leadershipTeam = [
     nameBn: "আশা খান",
     roleEn: "Vice Chairman",
     roleBn: "ভাইস চেয়ারম্যান",
-    phone: "01749438260"
+    phone: "01749438260",
+    image: "/leaders/asha-khan.jpg?v=1",
+    speechEn: "Asha Khan serves as the Vice Chairman of Elite Iconic Properties & Construction Limited. She brings thoughtful guidance, strategic oversight, and an unwavering commitment to sustainable township planning, ensuring that all corporate initiatives meet the highest benchmarks of quality and integrity.",
+    speechBn: "আশা খান এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিমিটেড-এর ভাইস চেয়ারম্যান হিসেবে দায়িত্ব পালন করছেন। তিনি কৌশলগত তদারকি, টেকসই প্রকল্প পরিকল্পনা ও অংশীদারিত্বে গুরুত্বপূর্ণ ভূমিকা রাখেন এবং প্রতিটি উদ্যোগ যেন আধুনিক নগর মানদণ্ড পূরণ করে তা নিশ্চিত করেন।"
   },
   {
     id: 3,
@@ -475,7 +483,9 @@ const leadershipTeam = [
     roleEn: "Managing Director",
     roleBn: "ব্যবস্থাপনা পরিচালক",
     phone: "01615500815",
-    image: "/leaders/abul-kalam-azad.jpg?v=3"
+    image: "/leaders/abul-kalam-azad.jpg?v=3",
+    speechEn: "Abul Kalam Azad serves as the Managing Director of Elite Iconic Properties & Construction Limited. He is responsible for the company’s daily operations and overall performance. With a practical and hands-on leadership style, he works closely with teams to drive growth, strengthen customer relationships, and turn the master plan vision into action.",
+    speechBn: "আবুল কালাম আজাদ এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিমিটেড-এর ব্যবস্থাপনা পরিচালক হিসেবে দায়িত্ব পালন করছেন। তিনি প্রতিষ্ঠানের সার্বিক দৈনন্দিন পরিচালনা ও প্রকল্প বাস্তবায়নে নেতৃত্ব দিচ্ছেন। তাঁর বাস্তবমুখী ও সক্রিয় পরিচালনায় ঢাকা আইকন সিটির মহাপরিকল্পনা দ্রুত বাস্তবায়িত হচ্ছে।"
   },
   {
     id: 4,
@@ -485,7 +495,9 @@ const leadershipTeam = [
     roleEn: "Deputy Managing Director",
     roleBn: "উপ-ব্যবস্থাপনা পরিচালক",
     phone: "01913387933",
-    image: "/leaders/mobarok-hossain-munshi.jpg?v=3"
+    image: "/leaders/mobarok-hossain-munshi.jpg?v=3",
+    speechEn: "Mobarok Hossain Munshi is the Deputy Managing Director of Elite Iconic Properties & Construction Limited. He actively steers executive coordination, on-site development progress, and stakeholder collaboration, working closely with all departments to maintain project momentum and service excellence.",
+    speechBn: "মোবারক হোসেন মুন্সী এলিট আইকনিক প্রপার্টিজ এন্ড কনস্ট্রাকশন লিমিটেড-এর উপ-ব্যবস্থাপনা পরিচালক। তিনি উন্নয়ন কার্যক্রমের গতি, মাঠপর্যায়ের সমন্বয় ও অংশীদারদের আস্থা অর্জনে নিবেদিতভাবে কাজ করছেন।"
   },
   {
     id: 5,
@@ -495,7 +507,9 @@ const leadershipTeam = [
     roleEn: "Finance Director",
     roleBn: "ফাইন্যান্স ডিরেক্টর",
     phone: "01684188884",
-    image: "/leaders/shahabuddin.jpg"
+    image: "/leaders/shahabuddin.jpg",
+    speechEn: "Shahabuddin is a valued member of the board serving as Finance Director. He provides prudent fiscal stewardship, capital management, and investment planning to ensure monetary discipline and sustainable resource allocation across all mega township initiatives.",
+    speechBn: "শাহাবুদ্দিন ফাইন্যান্স ডিরেক্টর হিসেবে প্রতিষ্ঠানের আর্থিক কৌশল, বিনিয়োগ পরিকল্পনা ও তহবিল ব্যবস্থাপনার দায়িত্ব পালন করছেন। তাঁর সুপরিকল্পিত আর্থিক নীতি ও বাজেট নিয়ন্ত্রণ প্রকল্পের টেকসই প্রবৃদ্ধি নিশ্চিত করে।"
   },
   {
     id: 6,
@@ -505,7 +519,9 @@ const leadershipTeam = [
     roleEn: "Marketing Director",
     roleBn: "মার্কেটিং ডিরেক্টর",
     phone: "01671749589",
-    image: "/leaders/md-mosharrof-hossain.jpg?v=2"
+    image: "/leaders/md-mosharrof-hossain.jpg?v=2",
+    speechEn: "Md. Mosharrof Hossain leads marketing and market expansion strategies. He focuses on building trusted relationships with plot buyers, maintaining transparent project communication, and elevating the corporate presence of Dhaka Icon City nationwide.",
+    speechBn: "মোঃ মোশাররফ হোসেন মার্কেটিং ডিরেক্টর হিসেবে বাজার সম্প্রসারণ ও বিপণন কৌশলে নেতৃত্ব দিচ্ছেন। গ্রাহকদের সাথে বিশ্বস্ত সম্পর্ক স্থাপন ও প্রকল্পের সুযোগ-সুবিধা তুলে ধরার মাধ্যমে তিনি ব্র্যান্ডের সুনাম বৃদ্ধি করছেন।"
   },
   {
     id: 7,
@@ -515,17 +531,21 @@ const leadershipTeam = [
     roleEn: "Director (Admin)",
     roleBn: "পরিচালক (প্রশাসন)",
     phone: "01313596048",
-    image: "/leaders/biplob-kumar-barma.jpg"
+    image: "/leaders/biplob-kumar-barma.jpg",
+    speechEn: "Biplob Kumar Barma is a valued member of the board overseeing administrative governance. He brings structured organizational guidance, helping streamline inter-departmental workflows and upholding rigorous standards of corporate protocol.",
+    speechBn: "বিপ্লব কুমার বর্মা পরিচালক (প্রশাসন) হিসেবে করপোরেট ব্যবস্থাপনা ও অভ্যন্তরীণ শৃঙ্খলা নিশ্চিত করছেন। তাঁর সুদক্ষ প্রশাসনিক পরিচালনায় প্রতিষ্ঠানের প্রতিটি বিভাগের কার্যক্রম সুশৃঙ্খলভাবে পরিচালিত হয়।"
   },
   {
     id: 8,
     sl: "8",
-    nameEn: "Md. Nayeem",
-    nameBn: "মোঃ নাঈম",
+    nameEn: "Md Nayeem Islam",
+    nameBn: "মোঃ নাঈম ইসলাম",
     roleEn: "Director – IT & Digital Marketing",
     roleBn: "পরিচালক – আইটি ও ডিজিটাল মার্কেটিং",
     phone: "01722105259",
-    image: "/leaders/md-nayeem.jpg"
+    image: "/leaders/md-nayeem.jpg",
+    speechEn: "Md. Nayeem Islam oversees the company's IT infrastructure and digital marketing strategies. He leverages advanced technology and digital platforms to connect real estate investors with high-value property opportunities, ensuring a seamless and modern property investment experience.",
+    speechBn: "মোঃ নাঈম ইসলাম প্রতিষ্ঠানের তথ্যপ্রযুক্তি অবকাঠামো এবং ডিজিটাল মার্কেটিং কৌশল তদারকি করছেন। তিনি উন্নত প্রযুক্তি ও ডিজিটাল প্ল্যাটফর্ম ব্যবহারের মাধ্যমে রিয়েল এস্টেট বিনিয়োগকারীদের সেরা প্রপার্টি সম্ভাবনার সাথে সংযুক্ত করেন, যা একটি আধুনিক ও নির্ভরযোগ্য বিনিয়োগ অভিজ্ঞতা নিশ্চিত করে।"
   },
   {
     id: 9,
@@ -535,7 +555,9 @@ const leadershipTeam = [
     roleEn: "Director – Human Resources",
     roleBn: "পরিচালক – মানবসম্পদ",
     phone: "01758240309",
-    image: "/leaders/md-kabir-hossain.jpg"
+    image: "/leaders/md-kabir-hossain.jpg",
+    speechEn: "Md. Kabir Hossain oversees human resource management and organizational talent development. He is committed to nurturing professional capabilities, employee welfare, and a collaborative work culture built upon excellence and accountability.",
+    speechBn: "মোঃ কবির হোসেন পরিচালক (মানবসম্পদ) হিসেবে প্রতিষ্ঠানের কর্মকর্তা-কর্মচারীদের পেশাগত দক্ষতা ও কল্যাণ নিশ্চিত করছেন। একটি গতিশীল ও সহযোগিতাপূর্ণ করপোরেট পরিবেশ বজায় রাখতে তিনি অঙ্গীকারবদ্ধ।"
   },
   {
     id: 10,
@@ -545,7 +567,9 @@ const leadershipTeam = [
     roleEn: "Director – Purchase",
     roleBn: "পরিচালক – ক্রয়",
     phone: "01604493384",
-    image: "/leaders/md-abul-basar.jpg?v=2"
+    image: "/leaders/md-abul-basar.jpg?v=2",
+    speechEn: "Md. Abul Basar manages strategic procurement and supply chain management. He ensures that all materials and infrastructure inputs meet the highest benchmarks of durability, safety, and cost efficiency for long-term township longevity.",
+    speechBn: "মোঃ আবুল বাশার পরিচালক (ক্রয়) হিসেবে মানসম্পন্ন নির্মাণ উপকরণ ও কাঁচামাল সংগ্রহের তদারকি করছেন। সাশ্রয়ী ও সর্বোচ্চ মানের যোগান নিশ্চিত করে তিনি উন্নয়ন কার্যক্রমে বিশেষ অবদান রাখছেন।"
   },
   {
     id: 11,
@@ -555,7 +579,9 @@ const leadershipTeam = [
     roleEn: "Director – Legal Affairs",
     roleBn: "পরিচালক – আইন বিষয়ক",
     phone: "01712117734",
-    image: "/leaders/md-abdus-salam.jpg"
+    image: "/leaders/md-abdus-salam.jpg",
+    speechEn: "Md. Abdus Salam oversees corporate legal compliance and land verification. With deep proficiency in RAJUK statutory standards, he guarantees undisputed land titles, transparent documentation, and complete legal security for every plot owner.",
+    speechBn: "মোঃ আব্দুস সালাম পরিচালক (আইন বিষয়ক) হিসেবে জমির নিষ্কণ্টক মালিকানা, বৈধ কাগজপত্র ও রাজউক সংশ্লিষ্ট সকল আইনগত প্রক্রিয়া তদারকি করে গ্রাহকদের শতভাগ আইনি সুরক্ষা নিশ্চিত করেন।"
   },
   {
     id: 12,
@@ -565,7 +591,9 @@ const leadershipTeam = [
     roleEn: "Director – Customer Relations",
     roleBn: "পরিচালক – গ্রাহক সম্পর্ক",
     phone: "01886330164",
-    image: "/leaders/zahidul-islam.jpg"
+    image: "/leaders/zahidul-islam.jpg",
+    speechEn: "Zahidul Islam is dedicated to customer relations and client satisfaction. He maintains responsive communication channels and ensures that every buyer receives attentive, courteous, and transparent guidance throughout their property journey.",
+    speechBn: "জাহিদুল ইসলাম পরিচালক (গ্রাহক সম্পর্ক) হিসেবে সম্মানিত প্লট ক্রেতাদের আন্তরিক সেবা ও সন্তুষ্টি বিধানে নিবেদিত। গ্রাহকদের প্রতিটি মতামতকে প্রাধান্য দিয়ে তিনি সেবার মান উত্তরোত্তর সমৃদ্ধ করছেন।"
   },
   {
     id: 13,
@@ -575,7 +603,9 @@ const leadershipTeam = [
     roleEn: "Director – Land Acquisition",
     roleBn: "পরিচালক – ভূমি অধিগ্রহণ",
     phone: "01786433760",
-    image: "/leaders/md-azharul-islam.jpg"
+    image: "/leaders/md-azharul-islam.jpg",
+    speechEn: "Md. Azharul Islam leads land acquisition and master layout demarcation. He plays an essential role in expanding the company’s 2,500+ Katha land bank with authentic land records, verified boundaries, and disciplined documentation.",
+    speechBn: "মোঃ আজহারুল ইসলাম পরিচালক (ভূমি অধিগ্রহণ) হিসেবে ২,৫০০+ কাঠার সুবিশাল ল্যান্ড ব্যাংক সম্প্রসারণ ও সীমানা নির্ধারণে কাজ করছেন। নির্ভুল রেকর্ড ও যাচাইয়ের মাধ্যমে তিনি নিরাপদ জমি নিশ্চিত করেন।"
   },
   {
     id: 14,
@@ -585,7 +615,9 @@ const leadershipTeam = [
     roleEn: "Director – Business Development",
     roleBn: "পরিচালক – ব্যবসায় উন্নয়ন",
     phone: "01733707557",
-    image: "/leaders/md-mohsin.jpg?v=2"
+    image: "/leaders/md-mohsin.jpg?v=2",
+    speechEn: "Md. Mohsin leads business development and strategic commercial alliances. He focuses on identifying high-value real estate opportunities, forging collaborative investor partnerships, and advancing the sustainable growth of Dhaka Icon City.",
+    speechBn: "মোঃ মহসিন পরিচালক (ব্যবসায় উন্নয়ন) হিসেবে নতুন নতুন উন্নয়ন সম্ভাবনা উন্মোচন ও কৌশলগত ব্যবসায়িক অংশীদারিত্ব গড়ে তুলছেন, যা প্রতিষ্ঠানের টেকসই সম্প্রসারণে সহায়ক।"
   },
   {
     id: 15,
@@ -595,16 +627,9 @@ const leadershipTeam = [
     roleEn: "Director – Accounts",
     roleBn: "পরিচালক – হিসাব",
     phone: "01711005310",
-    image: "/leaders/md-saifullah-sharif.jpg?v=2"
-  },
-  {
-    id: 16,
-    sl: "—",
-    nameEn: "Kazi Maksudur Rahman",
-    nameBn: "কাজী মাকসুদুর রহমান",
-    roleEn: "Director",
-    roleBn: "পরিচালক",
-    phone: ""
+    image: "/leaders/md-saifullah-sharif.jpg?v=2",
+    speechEn: "Md. Saifullah Sharif directs corporate accounting, statutory audits, and financial reporting. He maintains meticulous financial ledgers, ensuring precision, compliance, and absolute transparency across all transactions and project accounts.",
+    speechBn: "মোঃ সাইফুল্লাহ শরীফ পরিচালক (হিসাব) হিসেবে প্রতিষ্ঠানের নির্ভুল হিসাবরক্ষণ, নিরীক্ষা ও আর্থিক স্বচ্ছতা বজায় রাখছেন। সুনির্দিষ্ট নিয়ন্ত্রণ ব্যবস্থার মাধ্যমে তিনি সুসংহত আর্থিক নীতি নিশ্চিত করেন।"
   }
 ]
 
@@ -616,14 +641,6 @@ function LeaderCard({ leader, lang }) {
 
   return (
     <div className="leader-card">
-      {leader.sl && leader.sl !== '—' && (
-        <div className="leader-card-header">
-          <span className="leader-sl-tag" title={isBn ? `ক্রমিক নং: ${leader.sl}` : `SL No: ${leader.sl}`}>
-            #{leader.sl}
-          </span>
-        </div>
-      )}
-
       <div className="leader-avatar-wrap">
         {leader.image && !imgError ? (
           <img 
@@ -645,7 +662,8 @@ function LeaderCard({ leader, lang }) {
           {isBn ? leader.nameBn : leader.nameEn}
         </h3>
         <div className="leader-role-badge">
-          {isBn ? leader.roleBn : leader.roleEn}
+          <Briefcase size={14} className="leader-role-icon" />
+          <span>{isBn ? leader.roleBn : leader.roleEn}</span>
         </div>
 
         {hasPhone ? (
@@ -654,13 +672,19 @@ function LeaderCard({ leader, lang }) {
             className="leader-phone-link"
             title={isBn ? `সরাসরি কল করুন: ${leader.phone}` : `Call directly: ${leader.phone}`}
           >
-            <Phone size={13} className="leader-phone-icon" />
+            <Phone size={15} className="leader-phone-icon" />
             <span>{leader.phone}</span>
           </a>
         ) : (
           <div className="leader-phone-placeholder">
             <span className="leader-phone-na">{isBn ? 'ফোন: প্রযোজ্য নয়' : 'Phone: On Request'}</span>
           </div>
+        )}
+
+        {(leader.speechEn || leader.speechBn) && (
+          <p className="leader-speech">
+            {isBn ? leader.speechBn : leader.speechEn}
+          </p>
         )}
       </div>
     </div>
@@ -795,7 +819,7 @@ function App() {
       if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
         return 'corporate-about'
       }
-      if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
+      if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team' || path === '/leadership' || hash === '#leadership' || hash === '#board-of-directors' || hash === '#founder-director' || hash === '#founder-directors') {
         return 'leadership-team'
       }
       if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
@@ -812,9 +836,16 @@ function App() {
       if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
         setCurrentRoute('corporate-about')
         window.scrollTo(0, 0)
-      } else if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team') {
+      } else if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team' || path === '/leadership' || hash === '#leadership' || hash === '#board-of-directors' || hash === '#founder-director' || hash === '#founder-directors') {
         setCurrentRoute('leadership-team')
-        window.scrollTo(0, 0)
+        if (hash === '#founder-director' || hash === '#founder-directors') {
+          setTimeout(() => {
+            const el = document.getElementById('founder-director')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
+          }, 80)
+        } else {
+          window.scrollTo(0, 0)
+        }
       } else if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
         setCurrentRoute('gallery')
         window.scrollTo(0, 0)
@@ -836,9 +867,16 @@ function App() {
       setCurrentRoute('corporate-about')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else if (route === 'leadership-team') {
-      window.location.hash = '#leadership-team'
+      window.location.hash = targetHash ? `#${targetHash}` : '#leadership-team'
       setCurrentRoute('leadership-team')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (targetHash) {
+        setTimeout(() => {
+          const el = document.getElementById(targetHash)
+          if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 80)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
     } else if (route === 'gallery') {
       window.location.hash = '#gallery'
       setCurrentRoute('gallery')
@@ -1212,7 +1250,7 @@ function App() {
             </div>
           </section>
 
-          {/* Full Leadership Team Grid */}
+          {/* Full Board of Directors Grid */}
           <section className="leadership-full-roster-section">
             <div className="section-container">
               <div className="leadership-grid leadership-page-grid">
@@ -1223,7 +1261,7 @@ function App() {
             </div>
           </section>
 
-          {/* New Section below Leadership Team: Founder director */}
+          {/* Founder Directors Section */}
           <FounderDirectorSection lang={lang} />
 
           {/* Consultation CTA Banner */}
@@ -1231,7 +1269,7 @@ function App() {
             <div className="section-container">
               <div className="leadership-cta-box">
                 <div className="lead-cta-text">
-                  <h3>{lang === 'bn' ? 'সরাসরি আমাদের বিশেষজ্ঞ টিমের সাথে পরামর্শ করতে চান?' : 'Want to Consult Directly with Our Leadership Team?'}</h3>
+                  <h3>{lang === 'bn' ? 'সরাসরি আমাদের বোর্ড অব ডিরেক্টরস বা বিশেষজ্ঞ টিমের সাথে পরামর্শ করতে চান?' : 'Want to Consult Directly with Our Board of Directors?'}</h3>
                   <p>{lang === 'bn' ? 'ঢাকা আইকন সিটির ভবিষ্যৎ সম্ভাবনা ও নিরাপদ প্লট ক্রয়ে বিশেষজ্ঞ পরামর্শ ও সাইট ভিজিট বুক করুন।' : 'Book a priority VIP site visit or executive consultation at our Gulshan corporate office.'}</p>
                 </div>
                 <button 
@@ -1303,7 +1341,7 @@ function App() {
               <div className="hero-visual-card">
                 <div className="hero-card-media-wrap">
                   <img 
-                    src="/dhaka-icon-dark-hero.jpg" 
+                    src="/dhaka-icon-hero.jpg" 
                     alt={lang === 'bn' ? 'ঢাকা আইকন সিটি - লাক্সারি স্মার্ট মেগা টাউনশিপ' : 'Dhaka Icon City - Luxury Smart Township'} 
                     className="hero-card-img"
                     loading="eager"
@@ -2301,7 +2339,7 @@ function App() {
               <h4 className="footer-heading">ঢাকা আইকন সিটি</h4>
               <ul className="footer-links-list">
                 <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</a></li>
-                <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{lang === 'bn' ? 'লিডারশিপ টিম' : 'Leadership Team'}</a></li>
+                <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{lang === 'bn' ? 'পরিচালনা পর্ষদ' : 'Board of Directors'}</a></li>
                 <li><a href="#gallery" onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{lang === 'bn' ? 'ফটো ও ইভেন্ট গ্যালারি' : 'Photo & Event Gallery'}</a></li>
                 <li><a href="#pricing-calculator" onClick={(e) => { e.preventDefault(); navigateTo('home', 'pricing-calculator'); }}>{lang === 'bn' ? 'ইন্টারেক্টিভ ক্যালকুলেটর' : 'Interactive Calculator'}</a></li>
                 <li><a href="#connectivity-location" onClick={(e) => { e.preventDefault(); navigateTo('home', 'connectivity-location'); }}>{lang === 'bn' ? 'দূরত্ব ও যাতায়াত' : 'Connectivity & Location'}</a></li>
@@ -2420,9 +2458,9 @@ function App() {
 
                 <div className="console-box" style={{ maxHeight: 220, overflowY: 'auto' }}>
                   {inquiries.map((inq, i) => (
-                    <div key={inq.id || i} style={{ padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: 12 }}>
-                      <strong style={{ color: '#00d2ff' }}>{inq.name}</strong> ({inq.phone})
-                      <p style={{ margin: '4px 0 0 0', color: '#cbd5e1' }}>{inq.message}</p>
+                    <div key={inq.id || i} style={{ padding: '8px 0', borderBottom: '1px solid #e2e8f0', fontSize: 12 }}>
+                      <strong style={{ color: '#008450' }}>{inq.name}</strong> ({inq.phone})
+                      <p style={{ margin: '4px 0 0 0', color: '#334155' }}>{inq.message}</p>
                     </div>
                   ))}
                   {inquiries.length === 0 && (

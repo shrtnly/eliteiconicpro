@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react'
-import { Search, ChevronLeft, ChevronRight, Users, X, LayoutGrid, Table as TableIcon, Briefcase, MapPin } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, Users, X, LayoutGrid, Table as TableIcon, Phone } from 'lucide-react'
 import { founderDirectors } from '../data/founderDirectorsData'
 
 export default function FounderDirectorSection({ lang = 'en' }) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedFilter, setSelectedFilter] = useState('all') // 'all', 'founder', 'shareholder', 'nrb'
+  const [selectedFilter, setSelectedFilter] = useState('all') // 'all', 'phone'
   const [pageSize, setPageSize] = useState(15) // default 15 items per page
   const [currentPage, setCurrentPage] = useState(1)
-  const [viewMode, setViewMode] = useState('auto') // 'auto' (cards on mobile, table on desktop), 'cards', 'table'
+  const [viewMode, setViewMode] = useState('cards') // default cards view, with 3 cards per row on desktop
 
   const isBn = lang === 'bn'
 
@@ -16,12 +16,8 @@ export default function FounderDirectorSection({ lang = 'en' }) {
     let result = founderDirectors
 
     // Category filter
-    if (selectedFilter === 'founder') {
-      result = result.filter(d => !d.designationEn.includes('Shareholder'))
-    } else if (selectedFilter === 'shareholder') {
-      result = result.filter(d => d.designationEn.includes('Shareholder'))
-    } else if (selectedFilter === 'nrb') {
-      result = result.filter(d => d.districtEn.includes('NRB') || d.professionEn.includes('NRB'))
+    if (selectedFilter === 'phone') {
+      result = result.filter(d => Boolean(d.phone && d.phone.trim()))
     }
 
     // Search query filter
@@ -32,10 +28,9 @@ export default function FounderDirectorSection({ lang = 'en' }) {
         d.nameEn.toLowerCase().includes(q) ||
         d.code.toLowerCase().includes(q) ||
         d.sl.includes(q) ||
-        d.professionBn.toLowerCase().includes(q) ||
-        d.professionEn.toLowerCase().includes(q) ||
-        d.districtBn.toLowerCase().includes(q) ||
-        d.districtEn.toLowerCase().includes(q)
+        (d.phone && d.phone.toLowerCase().includes(q)) ||
+        d.designationBn.toLowerCase().includes(q) ||
+        d.designationEn.toLowerCase().includes(q)
       )
     }
 
@@ -78,24 +73,20 @@ export default function FounderDirectorSection({ lang = 'en' }) {
       <div className="section-container">
         {/* Section Header */}
         <div className="section-header-center">
-          <div className="fd-badge-pill">
-            <Users size={14} />
-            <span>{isBn ? 'সম্মানিত পরিচালনা পর্ষদ' : 'Board of Directors'}</span>
-          </div>
           <h2 className="section-main-heading">
-            {isBn ? 'Founder Director (প্রতিষ্ঠাতা পরিচালক)' : 'Founder Director'}
+            {isBn ? 'Founder Directors (প্রতিষ্ঠাতা পরিচালকবৃন্দ)' : 'Founder Directors'}
           </h2>
           <div className="section-divider-line" />
           <p className="section-sub-desc">
             {isBn 
-              ? 'ঢাকা আইকন সিটির ভবিষ্যৎ বিনির্মাণে সম্মানিত প্রতিষ্ঠাতা পরিচালক ও শেয়ারহোল্ডার পরিচালকবৃন্দের তালিকা।' 
-              : 'Directory of honorable Founder & Shareholder Directors whose vision and patronage empower Dhaka Icon City.'}
+              ? 'ঢাকা আইকন সিটির সার্বিক অগ্রগতি ও ভবিষ্যৎ বিনির্মাণে সম্মানিত প্রতিষ্ঠাতা পরিচালকবৃন্দের তালিকা।' 
+              : 'Directory of honorable Founder Directors whose vision, patronage, and commitment empower Dhaka Icon City.'}
           </p>
         </div>
 
         {/* Directory Card Wrapper */}
         <div className="fd-table-card">
-          {/* Top Controls: Search & Filters */}
+          {/* Top Controls: Search */}
           <div className="fd-controls-bar">
             {/* Search Input */}
             <div className="fd-search-box">
@@ -104,7 +95,7 @@ export default function FounderDirectorSection({ lang = 'en' }) {
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                placeholder={isBn ? 'নাম, আইডি (FD-001), জেলা বা পেশা...' : 'Search by name, ID (FD-001), district...'}
+                placeholder={isBn ? 'নাম বা ফোন নম্বর দিয়ে খুঁজুন...' : 'Search by name or phone...'}
                 className="fd-search-input"
               />
               {searchTerm && (
@@ -112,40 +103,6 @@ export default function FounderDirectorSection({ lang = 'en' }) {
                   <X size={15} />
                 </button>
               )}
-            </div>
-
-            {/* Filter Pills */}
-            <div className="fd-filter-pills-scroll">
-              <div className="fd-filter-pills">
-                <button 
-                  type="button"
-                  className={`fd-pill ${selectedFilter === 'all' ? 'active' : ''}`}
-                  onClick={() => handleFilterChange('all')}
-                >
-                  {isBn ? 'সকল' : 'All'} ({founderDirectors.length})
-                </button>
-                <button 
-                  type="button"
-                  className={`fd-pill ${selectedFilter === 'founder' ? 'active' : ''}`}
-                  onClick={() => handleFilterChange('founder')}
-                >
-                  {isBn ? 'প্রতিষ্ঠাতা পরিচালক' : 'Founder Directors'}
-                </button>
-                <button 
-                  type="button"
-                  className={`fd-pill ${selectedFilter === 'shareholder' ? 'active' : ''}`}
-                  onClick={() => handleFilterChange('shareholder')}
-                >
-                  {isBn ? 'শেয়ারহোল্ডার' : 'Shareholders'}
-                </button>
-                <button 
-                  type="button"
-                  className={`fd-pill ${selectedFilter === 'nrb' ? 'active' : ''}`}
-                  onClick={() => handleFilterChange('nrb')}
-                >
-                  {isBn ? 'প্রবাসী (NRB)' : 'NRB'}
-                </button>
-              </div>
             </div>
           </div>
 
@@ -213,59 +170,45 @@ export default function FounderDirectorSection({ lang = 'en' }) {
             </div>
           </div>
 
-          {/* VIEW 1: Mobile-Optimized Cards (Visible by default on mobile or when cards mode selected) */}
+          {/* VIEW 1: Cards Grid View */}
           <div className={`fd-mobile-cards-container ${viewMode === 'table' ? 'fd-hidden-desktop' : (viewMode === 'cards' ? 'fd-force-show' : 'fd-auto-responsive-cards')}`}>
             {paginatedList.length > 0 ? (
               <div className="fd-cards-grid">
                 {paginatedList.map((director) => (
-                  <div key={director.id} className="fd-mobile-card">
-                    <div className="fd-mcard-header">
-                      <div className="fd-mcard-avatar-wrap">
-                        <img 
-                          src={director.image} 
-                          alt={isBn ? director.nameBn : director.nameEn} 
-                          className="fd-mcard-avatar"
-                          loading="lazy"
-                          width="46"
-                          height="46"
-                        />
-                      </div>
-                      <div className="fd-mcard-title-col">
-                        <div className="fd-mcard-name-row">
-                          <h4 className="fd-mcard-name">
-                            {isBn ? director.nameBn : director.nameEn}
-                          </h4>
-                          <span className="fd-sl-badge">#{director.sl}</span>
-                        </div>
-                        <div className="fd-mcard-chips-row">
-                          <span className="fd-code-pill">{director.code}</span>
-                          <span className={`fd-designation-tag ${director.designationEn.includes('Shareholder') ? 'shareholder' : 'founder'}`}>
-                            {isBn ? director.designationBn : director.designationEn}
-                          </span>
-                        </div>
-                      </div>
+                  <div key={director.id} className="fd-director-card">
+                    <div className="fd-dcard-avatar-wrap">
+                      <img 
+                        src={director.image} 
+                        alt={isBn ? director.nameBn : director.nameEn} 
+                        className="fd-dcard-avatar"
+                        loading="lazy"
+                        width="50"
+                        height="50"
+                      />
                     </div>
-
-                    <div className="fd-mcard-body">
-                      <div className="fd-mcard-meta-item">
-                        <Briefcase size={13} className="fd-mcard-meta-icon" />
-                        <span className="fd-mcard-meta-text">
-                          {isBn ? director.professionBn : director.professionEn}
-                        </span>
+                    <div className="fd-dcard-content">
+                      <div className="fd-dcard-header">
+                        <h4 className="fd-dcard-name">
+                          {isBn ? director.nameBn : director.nameEn}
+                        </h4>
+                        <span className="fd-dcard-sl">#{director.sl}</span>
                       </div>
-                      <div className="fd-mcard-meta-item district">
-                        <MapPin size={13} className="fd-mcard-meta-icon" />
-                        <span className="fd-dist-chip">
-                          {isBn ? director.districtBn : director.districtEn}
-                        </span>
-                      </div>
+                      <p className="fd-dcard-role">
+                        {isBn ? director.designationBn : director.designationEn}
+                      </p>
+                      {director.phone && (
+                        <a href={`tel:${director.phone}`} className="fd-dcard-phone" title={isBn ? 'কল করুন' : 'Call'}>
+                          <Phone size={13} className="fd-dcard-phone-icon" />
+                          <span>{director.phone}</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="fd-empty-state">
-                <p>{isBn ? `"${searchTerm}" দিয়ে কোনো প্রতিষ্ঠাতা পরিচালক খুঁজে পাওয়া যায়নি` : `No directors found matching "${searchTerm}"`}</p>
+                <p>{isBn ? `"${searchTerm}" দিয়ে কোনো পরিচালক খুঁজে পাওয়া যায়নি` : `No directors found matching "${searchTerm}"`}</p>
                 <button type="button" onClick={clearSearch} className="fd-btn-reset">
                   {isBn ? 'অনুসন্ধান রিসেট করুন' : 'Reset Search'}
                 </button>
@@ -280,10 +223,9 @@ export default function FounderDirectorSection({ lang = 'en' }) {
                 <tr>
                   <th className="fd-th-sl">{isBn ? 'ক্রম' : 'SL'}</th>
                   <th className="fd-th-photo">{isBn ? 'ছবি' : 'Photo'}</th>
-                  <th className="fd-th-name">{isBn ? 'নাম ও সদস্য কোড' : 'Name & ID'}</th>
-                  <th className="fd-th-role">{isBn ? 'পদবী' : 'Designation'}</th>
-                  <th className="fd-th-prof">{isBn ? 'পেশাগত পরিচিতি' : 'Profession'}</th>
-                  <th className="fd-th-dist">{isBn ? 'জেলা / অঞ্চল' : 'District'}</th>
+                  <th className="fd-th-name">{isBn ? 'নাম' : 'Name'}</th>
+                  <th className="fd-th-role">{isBn ? 'পদবী' : 'Position'}</th>
+                  <th className="fd-th-phone">{isBn ? 'মোবাইল / ফোন' : 'Phone Number'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,7 +237,7 @@ export default function FounderDirectorSection({ lang = 'en' }) {
                         <span className="fd-sl-badge">{director.sl}</span>
                       </td>
 
-                      {/* Photo - Simple 1 avatar for all */}
+                      {/* Photo */}
                       <td className="fd-td-photo">
                         <div className="fd-avatar-wrap">
                           <img 
@@ -309,43 +251,38 @@ export default function FounderDirectorSection({ lang = 'en' }) {
                         </div>
                       </td>
 
-                      {/* Name & Code */}
+                      {/* Name */}
                       <td className="fd-td-name">
-                        <div className="fd-name-col">
-                          <strong className="fd-name-text">
-                            {isBn ? director.nameBn : director.nameEn}
-                          </strong>
-                          <span className="fd-code-pill">{director.code}</span>
-                        </div>
+                        <strong className="fd-name-text">
+                          {isBn ? director.nameBn : director.nameEn}
+                        </strong>
                       </td>
 
                       {/* Designation */}
                       <td className="fd-td-role">
-                        <span className={`fd-designation-tag ${director.designationEn.includes('Shareholder') ? 'shareholder' : 'founder'}`}>
+                        <span className="fd-designation-tag founder">
                           {isBn ? director.designationBn : director.designationEn}
                         </span>
                       </td>
 
-                      {/* Profession */}
-                      <td className="fd-td-prof">
-                        <span className="fd-prof-text">
-                          {isBn ? director.professionBn : director.professionEn}
-                        </span>
-                      </td>
-
-                      {/* District */}
-                      <td className="fd-td-dist">
-                        <span className="fd-dist-chip">
-                          {isBn ? director.districtBn : director.districtEn}
-                        </span>
+                      {/* Phone */}
+                      <td className="fd-td-phone">
+                        {director.phone ? (
+                          <a href={`tel:${director.phone}`} className="fd-phone-link" title={isBn ? 'কল করুন' : 'Call Director'}>
+                            <Phone size={12} className="fd-phone-icon" />
+                            <span>{director.phone}</span>
+                          </a>
+                        ) : (
+                          <span className="fd-phone-na">—</span>
+                        )}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="fd-empty-td">
+                    <td colSpan="5" className="fd-empty-td">
                       <div className="fd-empty-state">
-                        <p>{isBn ? `"${searchTerm}" দিয়ে কোনো প্রতিষ্ঠাতা পরিচালক খুঁজে পাওয়া যায়নি` : `No directors found matching "${searchTerm}"`}</p>
+                        <p>{isBn ? `"${searchTerm}" দিয়ে কোনো পরিচালক খুঁজে পাওয়া যায়নি` : `No directors found matching "${searchTerm}"`}</p>
                         <button type="button" onClick={clearSearch} className="fd-btn-reset">
                           {isBn ? 'অনুসন্ধান রিসেট করুন' : 'Reset Search'}
                         </button>

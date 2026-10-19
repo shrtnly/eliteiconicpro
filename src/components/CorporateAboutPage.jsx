@@ -215,7 +215,7 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
                   onClick={() => navigateTo('leadership-team')}
                 >
                   <Users size={18} />
-                  <span>{isBn ? 'পরিচালনা পর্ষদ দেখুন' : 'View Leadership Team'}</span>
+                  <span>{isBn ? 'পরিচালনা পর্ষদ দেখুন' : 'View Board of Directors'}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
