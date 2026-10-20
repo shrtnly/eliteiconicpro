@@ -514,14 +514,14 @@ const leadershipTeam = [
   {
     id: 6,
     sl: "6",
-    nameEn: "Md. Mosharrof Hossain",
-    nameBn: "মোঃ মোশাররফ হোসেন",
-    roleEn: "Marketing Director",
-    roleBn: "মার্কেটিং ডিরেক্টর",
-    phone: "01671749589",
-    image: "/leaders/md-mosharrof-hossain.jpg?v=2",
-    speechEn: "Md. Mosharrof Hossain leads marketing and market expansion strategies. He focuses on building trusted relationships with plot buyers, maintaining transparent project communication, and elevating the corporate presence of Dhaka Icon City nationwide.",
-    speechBn: "মোঃ মোশাররফ হোসেন মার্কেটিং ডিরেক্টর হিসেবে বাজার সম্প্রসারণ ও বিপণন কৌশলে নেতৃত্ব দিচ্ছেন। গ্রাহকদের সাথে বিশ্বস্ত সম্পর্ক স্থাপন ও প্রকল্পের সুযোগ-সুবিধা তুলে ধরার মাধ্যমে তিনি ব্র্যান্ডের সুনাম বৃদ্ধি করছেন।"
+    nameEn: "Md Nayeem Islam",
+    nameBn: "মোঃ নাঈম ইসলাম",
+    roleEn: "Director – IT & Digital Marketing",
+    roleBn: "পরিচালক – আইটি ও ডিজিটাল মার্কেটিং",
+    phone: "01722105259",
+    image: "/leaders/md-nayeem.jpg",
+    speechEn: "Md. Nayeem Islam oversees the company's IT infrastructure and digital marketing strategies. He leverages advanced technology and digital platforms to connect real estate investors with high-value property opportunities, ensuring a seamless and modern property investment experience.",
+    speechBn: "মোঃ নাঈম ইসলাম প্রতিষ্ঠানের তথ্যপ্রযুক্তি অবকাঠামো এবং ডিজিটাল মার্কেটিং কৌশল তদারকি করছেন। তিনি উন্নত প্রযুক্তি ও ডিজিটাল প্ল্যাটফর্ম ব্যবহারের মাধ্যমে রিয়েল এস্টেট বিনিয়োগকারীদের সেরা প্রপার্টি সম্ভাবনার সাথে সংযুক্ত করেন, যা একটি আধুনিক ও নির্ভরযোগ্য বিনিয়োগ অভিজ্ঞতা নিশ্চিত করে।"
   },
   {
     id: 7,
@@ -538,14 +538,14 @@ const leadershipTeam = [
   {
     id: 8,
     sl: "8",
-    nameEn: "Md Nayeem Islam",
-    nameBn: "মোঃ নাঈম ইসলাম",
-    roleEn: "Director – IT & Digital Marketing",
-    roleBn: "পরিচালক – আইটি ও ডিজিটাল মার্কেটিং",
-    phone: "01722105259",
-    image: "/leaders/md-nayeem.jpg",
-    speechEn: "Md. Nayeem Islam oversees the company's IT infrastructure and digital marketing strategies. He leverages advanced technology and digital platforms to connect real estate investors with high-value property opportunities, ensuring a seamless and modern property investment experience.",
-    speechBn: "মোঃ নাঈম ইসলাম প্রতিষ্ঠানের তথ্যপ্রযুক্তি অবকাঠামো এবং ডিজিটাল মার্কেটিং কৌশল তদারকি করছেন। তিনি উন্নত প্রযুক্তি ও ডিজিটাল প্ল্যাটফর্ম ব্যবহারের মাধ্যমে রিয়েল এস্টেট বিনিয়োগকারীদের সেরা প্রপার্টি সম্ভাবনার সাথে সংযুক্ত করেন, যা একটি আধুনিক ও নির্ভরযোগ্য বিনিয়োগ অভিজ্ঞতা নিশ্চিত করে।"
+    nameEn: "Md. Mosharrof Hossain",
+    nameBn: "মোঃ মোশাররফ হোসেন",
+    roleEn: "Marketing Director",
+    roleBn: "মার্কেটিং ডিরেক্টর",
+    phone: "01671749589",
+    image: "/leaders/md-mosharrof-hossain.jpg?v=2",
+    speechEn: "Md. Mosharrof Hossain leads marketing and market expansion strategies. He focuses on building trusted relationships with plot buyers, maintaining transparent project communication, and elevating the corporate presence of Dhaka Icon City nationwide.",
+    speechBn: "মোঃ মোশাররফ হোসেন মার্কেটিং ডিরেক্টর হিসেবে বাজার সম্প্রসারণ ও বিপণন কৌশলে নেতৃত্ব দিচ্ছেন। গ্রাহকদের সাথে বিশ্বস্ত সম্পর্ক স্থাপন ও প্রকল্পের সুযোগ-সুবিধা তুলে ধরার মাধ্যমে তিনি ব্র্যান্ডের সুনাম বৃদ্ধি করছেন।"
   },
   {
     id: 9,

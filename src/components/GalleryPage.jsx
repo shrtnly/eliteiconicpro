@@ -264,54 +264,19 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit, navigateTo }
       {/* 1. HERO BANNER */}
       <section className="gallery-page-hero">
         <div className="section-container">
-          <div className="gallery-hero-badge-row">
-            <span className="gallery-hero-badge">
-              <Camera size={14} />
-              {isBn ? 'সরেজমিন ফিল্ড ও করপোরেট গ্যালারি' : 'Live Field & Corporate Gallery'}
-            </span>
-            <span className="gallery-hero-badge live-dot-badge">
-              <span className="pulse-green-dot" />
-              {isBn ? 'চলমান প্রজেক্ট অগ্রগতি' : 'Active On-Site Progress'}
-            </span>
-          </div>
-
           <h1 className="gallery-hero-title">
-            {isBn ? (
-              <>ঢাকা আইকন সিটি ও এলিট আইকনিক <span className="gold-text-glow">ফটো গ্যালারি</span></>
-            ) : (
-              <>Dhaka Icon City & Elite Iconic <span className="gold-text-glow">Photo Gallery</span></>
-            )}
+            <span className="gold-text-glow">{isBn ? 'ফটো গ্যালারি' : 'Photo Gallery'}</span>
           </h1>
 
           <div className="section-divider-line" />
 
           <p className="gallery-hero-desc">
             {isBn ? (
-              'তুরাগ নদীর তীরে ড্রেজিং ও পাইপলাইনে বালু ভরাট, সম্মানিত ক্রেতা ও বিনিয়োগকারীদের সাইট পরিদর্শন, বোর্ডরুম স্ট্র্যাটেজি বৈঠক এবং প্রাণবন্ত করপোরেট ইভেন্টের বাস্তব চিত্র।'
+              'ঢাকা আইকন সিটির সরেজমিন উন্নয়ন, রিভারফ্রন্ট অগ্রগতি ও কার্যক্রমের বাস্তব চিত্র।'
             ) : (
-              'Authentic ground photography documenting active riverfront slurry sand filling, high-level client delegations, executive boardroom sessions, and corporate milestones.'
+              'Explore real on-site development, riverfront progress, and executive milestones at Dhaka Icon City.'
             )}
           </p>
-
-          {/* Quick Real-Time Metrics Strip */}
-          <div className="gallery-stats-strip">
-            <div className="gallery-stat-card">
-              <div className="stat-number">১০+</div>
-              <div className="stat-label">{isBn ? 'বাস্তব সাইট ছবি' : 'Authentic Field Photos'}</div>
-            </div>
-            <div className="gallery-stat-card">
-              <div className="stat-number">১০০%</div>
-              <div className="stat-label">{isBn ? 'সরেজমিন উন্নয়ন' : 'Ground Elevation Verified'}</div>
-            </div>
-            <div className="gallery-stat-card">
-              <div className="stat-number">২,৫০০+</div>
-              <div className="stat-label">{isBn ? 'কাঠা মেগা প্রকল্প' : 'Katha Township Area'}</div>
-            </div>
-            <div className="gallery-stat-card">
-              <div className="stat-number">২৪/৭</div>
-              <div className="stat-label">{isBn ? 'সরাসরি সাইট পরিদর্শন সুবিধা' : 'VIP Guided Site Visits'}</div>
-            </div>
-          </div>
         </div>
       </section>
 
