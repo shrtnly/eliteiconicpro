@@ -1,6 +1,6 @@
-// List of Founder Directors (Starting from Kazi Maksudur Rahman as SL 1)
+// List of Founder Directors (Starting from SL 16)
 export const rawFounderList = [
-  // SL 1 (Formerly SL 16)
+  // SL 16
   {
     bn: "কাজী মাকসুদুর মনির",
     en: "Kazi Maksudur Monir",
@@ -12,13 +12,13 @@ export const rawFounderList = [
     distEn: "Dhaka",
     type: "founder"
   },
-  // SL 2 (Formerly SL 17)
+  // SL 17 (Exchanged with SL 24)
   {
-    bn: "মো: বাপ্পী",
-    en: "Md. Bappi",
+    bn: "মো: শেখ ফরিদ",
+    en: "Mohd Sheikh Farid",
     positionBn: "পরিচালক",
     positionEn: "Director",
-    phone: "01755064277",
+    phone: "01727686389",
     image: "/founder-avatar.svg",
     distBn: "ঢাকা",
     distEn: "Dhaka",
@@ -96,13 +96,13 @@ export const rawFounderList = [
     distEn: "Dhaka",
     type: "founder"
   },
-  // SL 9 (Formerly SL 24)
+  // SL 24 (Exchanged with SL 17)
   {
-    bn: "মো: শেখ ফরিদ",
-    en: "Mohd Sheikh Farid",
+    bn: "মো: বাপ্পী",
+    en: "Md. Bappi",
     positionBn: "পরিচালক",
     positionEn: "Director",
-    phone: "01727686389",
+    phone: "01755064277",
     image: "/founder-avatar.svg",
     distBn: "ঢাকা",
     distEn: "Dhaka",
@@ -411,10 +411,10 @@ export const rawFounderList = [
 ];
 
 export const founderDirectors = rawFounderList.map((item, index) => {
-  const serialNum = (index + 1).toString().padStart(3, '0');
+  const serialNum = (index + 16).toString();
   const code = `FD-${serialNum}`;
   return {
-    id: index + 1,
+    id: index + 16,
     sl: serialNum,
     code,
     nameBn: item.bn,

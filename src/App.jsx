@@ -1348,12 +1348,6 @@ function App() {
                     fetchPriority="high"
                   />
                   <div className="hero-card-overlay-gradient"></div>
-                  
-                  {/* Floating Top Status Badge */}
-                  <div className="hero-card-floating-badge top-badge">
-                    <span className="hero-pulse-dot"></span>
-                    <span>{lang === 'bn' ? 'ঢাকা আইকন সিটি • প্রিমিয়ার টাউনশিপ' : 'Dhaka Icon City • Premier Township'}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1772,7 +1766,7 @@ function App() {
           </div>
 
           <div className="leadership-grid">
-            {leadershipTeam.slice(0, 4).map((leader) => (
+            {leadershipTeam.slice(0, 6).map((leader) => (
               <LeaderCard key={leader.id} leader={leader} lang={lang} />
             ))}
           </div>
