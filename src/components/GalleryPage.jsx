@@ -280,58 +280,7 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit, navigateTo }
         </div>
       </section>
 
-      {/* 2. CATEGORY FILTERS & SEARCH CONTROLS */}
-      <section className="gallery-controls-section">
-        <div className="section-container">
-          <div className="gallery-controls-bar">
-            {/* Category Filter Pills */}
-            <div className="gallery-category-pills" role="tablist">
-              {categories.map((cat) => {
-                const count = cat.id === 'all' 
-                  ? galleryItems.length 
-                  : galleryItems.filter(i => i.category === cat.id).length
 
-                return (
-                  <button
-                    key={cat.id}
-                    className={`gallery-cat-btn ${activeCategory === cat.id ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveCategory(cat.id)
-                      setLightboxIndex(null)
-                    }}
-                    role="tab"
-                    aria-selected={activeCategory === cat.id}
-                  >
-                    <span>{isBn ? cat.labelBn : cat.labelEn}</span>
-                    <span className="gallery-cat-count">{count}</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* Quick Search Input */}
-            <div className="gallery-search-box">
-              <Search size={16} className="search-icon" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={isBn ? 'ছবি ও বিবরণ খুঁজুন...' : 'Search photos & locations...'}
-                className="gallery-search-input"
-              />
-              {searchQuery && (
-                <button 
-                  className="search-clear-btn" 
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Clear search"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 3. RESPONSIVE PHOTO GRID */}
       <section className="gallery-grid-section">

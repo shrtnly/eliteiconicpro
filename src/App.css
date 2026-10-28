@@ -4279,17 +4279,23 @@ h1, h2, h3, h4, h5, h6, p, li, a, span, strong, label {
 
   .hero-stat-box.highlight-stat {
     grid-column: auto;
-    background: linear-gradient(135deg, rgba(6, 78, 59, 0.35) 0%, rgba(6, 95, 70, 0.2) 100%);
-    border: 1px solid rgba(16, 185, 129, 0.4);
+    background: #f0fdf4;
+    border: 1px solid rgba(0, 132, 80, 0.28);
+  }
+
+  .hero-stat-box.highlight-stat .stat-icon-pill.highlight-pill {
+    background: #ecfdf5;
+    border-color: rgba(0, 132, 80, 0.22);
+    color: #008450;
   }
 
   .hero-stat-box.highlight-stat .stat-value {
     font-size: clamp(12.5px, 3.4vw, 14.5px);
-    color: #34d399;
+    color: #008450;
   }
 
   .hero-stat-box.highlight-stat .stat-label {
-    color: #a7f3d0;
+    color: #00683f;
   }
 
   .section-container {

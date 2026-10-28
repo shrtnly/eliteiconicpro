@@ -2053,8 +2053,7 @@ function App() {
               className="btn-view-full-gallery"
               onClick={() => navigateTo('gallery')}
             >
-              <Eye size={18} />
-              <span>{lang === 'bn' ? 'সম্পূর্ণ অফিসিয়াল ফটো গ্যালারি দেখুন (১২টি ছবি)' : 'Explore Full Corporate & Site Gallery (12+ Photos)'}</span>
+              <span>{lang === 'bn' ? 'গ্যালারি দেখুন' : 'Explore Gallery'}</span>
               <ChevronRight size={18} />
             </button>
           </div>

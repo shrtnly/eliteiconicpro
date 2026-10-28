@@ -135,25 +135,6 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
                 : 'Pioneering sustainable urban development, trusted land acquisition, and state-of-the-art master-planned townships in Dhaka.'}
             </p>
 
-            {/* Hero Quick Key Highlights Ribbon */}
-            <div className="about-highlights-strip">
-              <div className="about-highlight-item">
-                <span className="hl-val">১৫+</span>
-                <span className="hl-lbl">{isBn ? 'বছরের সম্মিলিত অভিজ্ঞতা' : 'Years Experience'}</span>
-              </div>
-              <div className="about-highlight-item">
-                <span className="hl-val">২,৫০০+</span>
-                <span className="hl-lbl">{isBn ? 'কাঠা চলমান ল্যান্ড ব্যাংক' : 'Katha Land Bank'}</span>
-              </div>
-              <div className="about-highlight-item">
-                <span className="hl-val">১১২</span>
-                <span className="hl-lbl">{isBn ? 'সম্মানিত প্রতিষ্ঠাতা পরিচালক' : 'Founder Directors'}</span>
-              </div>
-              <div className="about-highlight-item">
-                <span className="hl-val">১০০%</span>
-                <span className="hl-lbl">{isBn ? 'নিষ্কণ্টক ও অনুমোদিত জমি' : 'Clean & Verified Land'}</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
