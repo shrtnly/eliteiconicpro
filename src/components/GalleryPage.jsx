@@ -277,26 +277,6 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit }) {
                   : 'Explore verified photographs of riverfront sand filling, infrastructure works, VIP client delegations, and corporate milestones at Dhaka Icon City.'}
               </p>
             </div>
-
-            {/* Right Callout */}
-            <div className="bod-hero-right-col">
-              <strong className="bod-right-heading">
-                {isBn ? 'বাস্তব অগ্রগতির প্রামাণ্য চিত্র।' : 'Real progress on ground.'}
-              </strong>
-              <p className="bod-right-desc">
-                {isBn ? (
-                  <>
-                    প্রতিটি ছবি আমাদের চলমান মাঠ উন্নয়ন, স্বচ্ছতা এবং{' '}
-                    <span className="bod-right-highlight">প্রতিশ্রুত সময়সীমায় প্রকল্প হস্তান্তরের</span> বাস্তব সাক্ষ্য বহন করে।
-                  </>
-                ) : (
-                  <>
-                    Every frame documents our active engineering, transparent land development, and commitment to{' '}
-                    <span className="bod-right-highlight">timely township delivery.</span>
-                  </>
-                )}
-              </p>
-            </div>
           </div>
         </div>
       </section>

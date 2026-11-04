@@ -12,10 +12,8 @@ import {
   KeyRound,
   UserCheck,
   Building2,
-  ShieldCheck,
   WifiOff,
-  RefreshCw,
-  Sparkles
+  RefreshCw
 } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 
@@ -143,38 +141,6 @@ export default function LoginPage({
     }
   }
 
-  // Handle Demo Admin Bypass (Ensures instant access if Supabase is blocked by client adblocker)
-  const handleDemoAdminLogin = () => {
-    setErrorMsg('')
-    setIsNetworkBlocked(false)
-    setSuccessMsg(isBn ? 'সুপারএডমিন ডেমো মোডে প্রবেশ করা হচ্ছে...' : 'Entering Superadmin Demo Mode...')
-    
-    const demoAdminUser = {
-      id: 'superadmin-demo-session',
-      email: 'freeman.find@gmail.com',
-      user_metadata: {
-        full_name: 'Mahadi Hasan Freeman'
-      },
-      role: 'authenticated'
-    }
-
-    if (onLoginSuccess) {
-      onLoginSuccess(demoAdminUser)
-    }
-
-    setTimeout(() => {
-      navigateTo('admin')
-    }, 600)
-  }
-
-  // Quick fill admin credentials for convenient testing
-  const handleAutofillAdmin = () => {
-    setEmail('freeman.find@gmail.com')
-    setPassword('Iconic@2024')
-    setErrorMsg('')
-    setIsNetworkBlocked(false)
-  }
-
   // Handle Forgot Password
   const handleForgotPassword = async (e) => {
     e.preventDefault()
@@ -291,25 +257,16 @@ export default function LoginPage({
                       : 'Your browser ad-blocker (Brave Shields, uBlock Origin, Privacy Badger) or firewall blocked the request to Supabase auth.'}
                   </p>
                   <div className="alert-network-tips">
-                    <span>💡 {isBn ? 'সমাধান: এই সাইটের জন্য Brave Shields বা AdBlock বন্ধ করুন অথবা নিচের ডেমো মোড ব্যবহার করুন।' : 'Quick Fix: Disable Brave Shields/AdBlock for localhost, or bypass via Demo Admin Mode below.'}</span>
+                    <span>💡 {isBn ? 'সমাধান: এই সাইটের জন্য Brave Shields বা AdBlock বন্ধ করুন অথবা ইন্টারনেট সংযোগ পরীক্ষা করুন।' : 'Quick Fix: Disable Brave Shields/AdBlock for this site or check your internet connection.'}</span>
                   </div>
                   <div className="alert-network-actions">
-                    <button
-                      type="button"
-                      className="btn-alert-demo"
-                      onClick={handleDemoAdminLogin}
-                      disabled={loading}
-                    >
-                      <ShieldCheck size={15} />
-                      <span>{isBn ? 'ডেমো অ্যাডমিন মোডে প্রবেশ করুন' : 'Continue in Demo Admin Mode'}</span>
-                    </button>
                     <button
                       type="button"
                       className="btn-alert-retry"
                       onClick={() => { setIsNetworkBlocked(false); setErrorMsg(''); }}
                     >
                       <RefreshCw size={14} />
-                      <span>{isBn ? 'পুনরায় চেষ্টা' : 'Dismiss'}</span>
+                      <span>{isBn ? 'পুনরায় চেষ্টা' : 'Retry'}</span>
                     </button>
                   </div>
                 </div>
@@ -426,33 +383,6 @@ export default function LoginPage({
                   </>
                 )}
               </button>
-
-              {/* Instant Superadmin Demo Bypass Option */}
-              <div className="login-demo-bypass-row">
-                <button
-                  type="button"
-                  className="btn-login-demo-bypass"
-                  onClick={handleDemoAdminLogin}
-                  disabled={loading}
-                  title={isBn ? 'সুপারএডমিন ডেমো এক্সেস' : 'Instant Superadmin Demo Access'}
-                >
-                  <ShieldCheck size={16} className="bypass-icon" />
-                  <span>{isBn ? 'সুপারএডমিন ডেমো মোডে প্রবেশ করুন' : 'Continue as Superadmin (Demo Mode)'}</span>
-                </button>
-              </div>
-
-              {/* Quick Fill Admin Credentials */}
-              <div className="login-quickfill-row">
-                <button
-                  type="button"
-                  className="btn-login-quickfill"
-                  onClick={handleAutofillAdmin}
-                  tabIndex={-1}
-                >
-                  <Sparkles size={13} />
-                  <span>{isBn ? 'এডমিন ক্রেডেনশিয়াল পূরণ করুন (freeman.find@gmail.com)' : 'Quick-fill Admin (freeman.find@gmail.com)'}</span>
-                </button>
-              </div>
 
               {/* Notice: Strictly No Signup as requested */}
               <div className="login-no-signup-note">

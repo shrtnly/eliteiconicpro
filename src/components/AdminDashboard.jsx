@@ -12,6 +12,8 @@ import {
   UserCircle2,
   LayoutGrid,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Layers,
   Search,
   Mic,
@@ -99,118 +101,118 @@ export const TAB_CONFIG = {
     title: 'Dashboard Overview',
     subtitle: 'Real-time performance, asset valuations & sales summary',
     submenus: [
-      { id: 'all', label: 'Overview' },
-      { id: 'analytics', label: 'Status Analysis' },
-      { id: 'revenue', label: 'Revenue Generation' },
-      { id: 'properties-preview', label: 'Properties Showcase' }
+      { id: 'all', label: 'Overview', icon: LayoutGrid },
+      { id: 'analytics', label: 'Status Analysis', icon: BarChart3 },
+      { id: 'revenue', label: 'Revenue Generation', icon: TrendingUp },
+      { id: 'properties-preview', label: 'Properties Showcase', icon: Building2 }
     ]
   },
   properties: {
     title: 'Properties & Plots',
     subtitle: 'Manage land plots, ongoing projects, buildings, floors, and individual flats',
     submenus: [
-      { id: 'Plot', label: 'Plot' },
-      { id: 'Project', label: 'Project' },
-      { id: 'Building', label: 'Building' },
-      { id: 'Floor', label: 'Floor' },
-      { id: 'Flat', label: 'Flat' }
+      { id: 'Plot', label: 'Plot', icon: MapPin },
+      { id: 'Project', label: 'Project', icon: Building2 },
+      { id: 'Building', label: 'Building', icon: Layers },
+      { id: 'Floor', label: 'Floor', icon: LayoutDashboard },
+      { id: 'Flat', label: 'Flat', icon: Home }
     ]
   },
   crm: {
     title: 'CRM & Lead Pipeline',
     subtitle: 'Manage client communications and lead stages from New Lead to Converted',
     submenus: [
-      { id: 'New Lead', label: 'New Lead' },
-      { id: 'Contacted', label: 'Contacted' },
-      { id: 'Interested', label: 'Interested' },
-      { id: 'Site Visit', label: 'Site Visit' },
-      { id: 'Negotiation', label: 'Negotiation' },
-      { id: 'Booking', label: 'Booking' },
-      { id: 'Converted', label: 'Converted' }
+      { id: 'New Lead', label: 'New Lead', icon: Sparkles },
+      { id: 'Contacted', label: 'Contacted', icon: Phone },
+      { id: 'Interested', label: 'Interested', icon: ThumbsUp },
+      { id: 'Site Visit', label: 'Site Visit', icon: Compass },
+      { id: 'Negotiation', label: 'Negotiation', icon: ArrowLeftRight },
+      { id: 'Booking', label: 'Booking', icon: Calendar },
+      { id: 'Converted', label: 'Converted', icon: CheckCircle2 }
     ]
   },
   deals: {
     title: 'Deals Pipeline',
     subtitle: 'Track active negotiations, counters, and accepted sales contracts',
     submenus: [
-      { id: 'all', label: 'All Deals' },
-      { id: 'Accepted', label: 'Accepted (1,037)' },
-      { id: 'Counter Offer', label: 'Counter Offers (166)' },
-      { id: 'Rejected', label: 'Rejected (486)' }
+      { id: 'all', label: 'All Deals', icon: Layers },
+      { id: 'Accepted', label: 'Accepted (1,037)', icon: CheckCircle2 },
+      { id: 'Counter Offer', label: 'Counter Offers (166)', icon: ArrowLeftRight },
+      { id: 'Rejected', label: 'Rejected (486)', icon: X }
     ]
   },
   transactions: {
     title: 'Transactions & Collections',
     subtitle: 'Financial ledger, booking advances, bank transfers & installment logs',
     submenus: [
-      { id: 'all', label: 'All Transactions' },
-      { id: 'Completed', label: 'Completed' },
-      { id: 'Processing', label: 'Processing' },
-      { id: 'Booking Advance', label: 'Booking Advances' },
-      { id: 'Installment', label: 'Installments' }
+      { id: 'all', label: 'All Transactions', icon: Receipt },
+      { id: 'Completed', label: 'Completed', icon: CheckCircle2 },
+      { id: 'Processing', label: 'Processing', icon: Clock },
+      { id: 'Booking Advance', label: 'Booking Advances', icon: Wallet },
+      { id: 'Installment', label: 'Installments', icon: DollarSign }
     ]
   },
   inventory: {
     title: 'Inventory & Materials',
     subtitle: 'Construction materials, rebar, cement, and engineering supply reserves',
     submenus: [
-      { id: 'all', label: 'All Materials' },
-      { id: 'Civil & Structural', label: 'Civil & Structural' },
-      { id: 'Steel & Metal', label: 'Steel & Metal' },
-      { id: 'Aggregates', label: 'Aggregates & Sand' },
-      { id: 'low-stock', label: 'Low Stock Alerts' }
+      { id: 'all', label: 'All Materials', icon: Boxes },
+      { id: 'Civil & Structural', label: 'Civil & Structural', icon: Building2 },
+      { id: 'Steel & Metal', label: 'Steel & Metal', icon: Shield },
+      { id: 'Aggregates', label: 'Aggregates & Sand', icon: Layers },
+      { id: 'low-stock', label: 'Low Stock Alerts', icon: AlertTriangle }
     ]
   },
   'project-mgmt': {
     title: 'Project Management',
     subtitle: 'Dhaka Icon City infrastructure milestones, zones, and site engineering',
     submenus: [
-      { id: 'all', label: 'All Phases' },
-      { id: 'Sector A VIP Zone', label: 'Sector A Lakefront' },
-      { id: 'Central Avenue', label: 'Central Avenue' },
-      { id: 'Sector B Residential', label: 'Sector B Residential' },
-      { id: 'On Track', label: 'On Track' }
+      { id: 'all', label: 'All Phases', icon: FolderKanban },
+      { id: 'Sector A VIP Zone', label: 'Sector A Lakefront', icon: Trophy },
+      { id: 'Central Avenue', label: 'Central Avenue', icon: Compass },
+      { id: 'Sector B Residential', label: 'Sector B Residential', icon: Home },
+      { id: 'On Track', label: 'On Track', icon: CheckCircle2 }
     ]
   },
   'land-mgmt': {
     title: 'Land Management & Records',
     subtitle: 'Mouza records, CS/SA/RS/BS khatians, mutation documents, and zoning',
     submenus: [
-      { id: 'all', label: 'All Land Parcels' },
-      { id: 'Boro Kalia', label: 'Boro Kalia Mouza' },
-      { id: 'Chhoto Kalia', label: 'Chhoto Kalia Mouza' },
-      { id: 'Mutation Complete', label: 'Mutation Complete' }
+      { id: 'all', label: 'All Land Parcels', icon: Map },
+      { id: 'Boro Kalia', label: 'Boro Kalia Mouza', icon: FileText },
+      { id: 'Chhoto Kalia', label: 'Chhoto Kalia Mouza', icon: FileText },
+      { id: 'Mutation Complete', label: 'Mutation Complete', icon: BadgeCheck }
     ]
   },
   clients: {
     title: 'Clients & Inquiries',
     subtitle: '895 verified buyers and incoming property consultation requests',
     submenus: [
-      { id: 'all', label: 'All Clients' },
-      { id: 'inquiries', label: 'Website Inquiries' },
-      { id: 'consultations', label: 'Consultation Bookings' }
+      { id: 'all', label: 'All Clients', icon: Users },
+      { id: 'inquiries', label: 'Website Inquiries', icon: Mail },
+      { id: 'consultations', label: 'Consultation Bookings', icon: Calendar }
     ]
   },
   agents: {
     title: 'Agents & Sales Team',
     subtitle: 'Senior sales directors, commercial consultants, and client advisors',
     submenus: [
-      { id: 'all', label: 'All Agents' },
-      { id: 'directors', label: 'Sales Directors' },
-      { id: 'consultants', label: 'Consultants' }
+      { id: 'all', label: 'All Agents', icon: Users },
+      { id: 'directors', label: 'Sales Directors', icon: Award },
+      { id: 'consultants', label: 'Consultants', icon: User }
     ]
   },
   profile: {
     title: 'Executive Profile & Strategic Command',
     subtitle: 'Performance analytics, active tasks, client portfolio, and information-based strategic roadmap',
     submenus: [
-      { id: 'overview', label: 'Overview' },
-      { id: 'performance', label: 'Performance' },
-      { id: 'tasks', label: 'Tasks & Milestones' },
-      { id: 'clients', label: 'Client Portfolio' },
-      { id: 'strategy', label: 'Strategic Roadmap' },
-      { id: 'general', label: 'Account Info' },
-      { id: 'security', label: 'Security' }
+      { id: 'overview', label: 'Overview', icon: LayoutGrid },
+      { id: 'performance', label: 'Performance', icon: TrendingUp },
+      { id: 'tasks', label: 'Tasks & Milestones', icon: CheckSquare },
+      { id: 'clients', label: 'Client Portfolio', icon: Users },
+      { id: 'strategy', label: 'Strategic Roadmap', icon: Target },
+      { id: 'general', label: 'Account Info', icon: User },
+      { id: 'security', label: 'Security', icon: ShieldCheck }
     ]
   }
 }
@@ -700,6 +702,72 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
   const [profileTasks, setProfileTasks] = useState(INITIAL_PROFILE_TASKS)
   const [taskFilter, setTaskFilter] = useState('all')
 
+  // Top Loading Progress Bar Controller (YouTube / Vercel style)
+  const [topProgress, setTopProgress] = useState(0)
+  const [progressVisible, setProgressVisible] = useState(false)
+  const [bootProgress, setBootProgress] = useState(14)
+  const [bootStatusText, setBootStatusText] = useState('Verifying administrator session...')
+  const progressTimerRef = useRef(null)
+
+  const triggerProgress = useCallback(() => {
+    if (progressTimerRef.current) clearInterval(progressTimerRef.current)
+    setProgressVisible(true)
+    setTopProgress(18)
+
+    let current = 18
+    progressTimerRef.current = setInterval(() => {
+      current += Math.random() * 24 + 14
+      if (current >= 94) {
+        current = 94
+        clearInterval(progressTimerRef.current)
+      }
+      setTopProgress(Math.floor(current))
+    }, 40)
+
+    setTimeout(() => {
+      clearInterval(progressTimerRef.current)
+      setTopProgress(100)
+      setTimeout(() => {
+        setProgressVisible(false)
+        setTopProgress(0)
+      }, 200)
+    }, 260)
+  }, [])
+
+  // Boot loader progress sequence during checking
+  useEffect(() => {
+    if (authState === 'checking') {
+      const t1 = setTimeout(() => {
+        setBootProgress(42)
+        setBootStatusText('Connecting to Supabase Cloud Database...')
+      }, 90)
+
+      const t2 = setTimeout(() => {
+        setBootProgress(78)
+        setBootStatusText('Syncing live plot registries & CRM data...')
+      }, 240)
+
+      const t3 = setTimeout(() => {
+        setBootProgress(96)
+        setBootStatusText('Calibrating DataBrain analytics engine...')
+      }, 380)
+
+      return () => {
+        clearTimeout(t1)
+        clearTimeout(t2)
+        clearTimeout(t3)
+      }
+    } else if (authState === 'ok') {
+      setBootProgress(100)
+      setBootStatusText('DataBrain Command Center Ready!')
+    }
+  }, [authState])
+
+  const handleSubTabChange = (id) => {
+    if (id !== activeSubTab) triggerProgress()
+    setActiveSubTab(id)
+  }
+
   const toggleTaskStatus = (id) => {
     setProfileTasks(prev => prev.map(t => {
       if (t.id === id) {
@@ -718,6 +786,31 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
   const profileMenuRef = useRef(null)
   const verifiedUserIdRef = useRef(null)
   const initialLoadDoneRef = useRef(false)
+  const kpiRowRef = useRef(null)
+  const [activeKpiIndex, setActiveKpiIndex] = useState(0)
+
+  // Smart swipe scroll sync for KPI row
+  const handleKpiScroll = useCallback(() => {
+    if (!kpiRowRef.current) return
+    const el = kpiRowRef.current
+    const cardEl = el.querySelector('.adm-databrain-kpi')
+    if (!cardEl) return
+    const cardWidth = cardEl.offsetWidth + 12
+    const index = Math.round(el.scrollLeft / cardWidth)
+    setActiveKpiIndex(Math.min(4, Math.max(0, index)))
+  }, [])
+
+  const scrollToKpiCard = (index) => {
+    if (!kpiRowRef.current) return
+    const el = kpiRowRef.current
+    const cardEl = el.querySelector('.adm-databrain-kpi')
+    const cardWidth = (cardEl?.offsetWidth || 230) + 12
+    el.scrollTo({
+      left: index * cardWidth,
+      behavior: 'smooth'
+    })
+    setActiveKpiIndex(index)
+  }
 
   const isSuperAdmin = Boolean(user?.email && SUPERADMIN_EMAILS.includes(user.email.toLowerCase().trim()))
   const isAdmin = profile?.role === 'admin' || isSuperAdmin
@@ -812,6 +905,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
   }, [user?.id, user?.email, isSuperAdmin, authState])
 
   const loadAll = useCallback(async () => {
+    triggerProgress()
     setLoading(true)
     const msgs = []
 
@@ -869,6 +963,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
   }, [profile, user])
 
   const switchTab = (id) => { 
+    if (id !== tab) triggerProgress()
     setTab(id)
     if (id === 'properties') {
       setActiveSubTab('Plot')
@@ -1116,34 +1211,113 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
   if (authState !== 'ok') {
     return (
       <div className="adm-gate">
-        <div className="adm-gate-card">
-          {authState === 'checking' && (<><Loader2 className="adm-spin" size={30} /><h2>Verifying access…</h2></>)}
-          {authState === 'guest' && (
-            <>
-              <ShieldAlert size={34} />
-              <h2>Admin sign-in required</h2>
-              <p>Please sign in with an administrator account to open the dashboard.</p>
-              <button className="adm-btn adm-btn-primary" onClick={() => navigateTo('login')}>Go to Sign In</button>
-            </>
-          )}
-          {authState === 'denied' && (
-            <>
-              <ShieldAlert size={34} />
-              <h2>Access denied</h2>
-              <p><strong>{user?.email}</strong> does not have admin or staff permissions.</p>
-              <div className="adm-gate-actions">
-                <button className="adm-btn adm-btn-primary" onClick={() => navigateTo('home')}>Back to Home</button>
-                <button className="adm-btn adm-btn-secondary" onClick={handleSignOut}>Sign out</button>
+        {authState === 'checking' ? (
+          <>
+            <div className="adm-page-top-progress" style={{ opacity: 1 }}>
+              <div className="adm-page-top-progress-bar" style={{ width: `${bootProgress}%` }} />
+            </div>
+
+            <div className="adm-boot-card">
+              <div className="adm-boot-brand-wrap">
+                <img 
+                  src="/elite-iconic-logo.png" 
+                  alt="Elite Iconic Properties & Construction Limited" 
+                  className="adm-boot-logo"
+                />
+                <div className="adm-boot-badge">
+                  <span className="adm-boot-pulsing-dot" />
+                  <span>DATABRAIN OS 2.0</span>
+                </div>
               </div>
-            </>
-          )}
-        </div>
+
+              <div className="adm-boot-header">
+                <h2>Command Center Initialization</h2>
+                <p>Loading real-time executive dashboard & enterprise asset telemetry</p>
+              </div>
+
+              {/* Dynamic Animated Progress Bar */}
+              <div className="adm-boot-progress-container">
+                <div className="adm-boot-progress-track">
+                  <div 
+                    className="adm-boot-progress-fill"
+                    style={{ width: `${bootProgress}%` }}
+                  >
+                    <div className="adm-boot-progress-shimmer" />
+                  </div>
+                </div>
+
+                <div className="adm-boot-progress-meta">
+                  <span className="adm-boot-status-text">
+                    <Loader2 size={13} className="adm-spin" />
+                    <span>{bootStatusText}</span>
+                  </span>
+                  <strong className="adm-boot-pct">{bootProgress}%</strong>
+                </div>
+              </div>
+
+              <div className="adm-boot-pills-row">
+                <span className="adm-boot-minipill">
+                  <CheckCircle2 size={12} className="text-emerald" />
+                  <span>Supabase Engine</span>
+                </span>
+                <span className="adm-boot-minipill">
+                  <CheckCircle2 size={12} className="text-emerald" />
+                  <span>Dhaka Icon City</span>
+                </span>
+                <span className="adm-boot-minipill">
+                  <CheckCircle2 size={12} className="text-emerald" />
+                  <span>Live CRM Sync</span>
+                </span>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="adm-gate-card">
+            {authState === 'guest' && (
+              <>
+                <div className="adm-gate-icon-circle guest">
+                  <ShieldAlert size={32} />
+                </div>
+                <h2>Admin Sign-In Required</h2>
+                <p>Please sign in with an administrator account to access the Dream Zone command center.</p>
+                <button className="adm-btn adm-btn-primary" onClick={() => navigateTo('login')}>Go to Sign In</button>
+              </>
+            )}
+            {authState === 'denied' && (
+              <>
+                <div className="adm-gate-icon-circle denied">
+                  <ShieldAlert size={32} />
+                </div>
+                <h2>Access Denied</h2>
+                <p><strong>{user?.email}</strong> does not have administrator or executive staff permissions.</p>
+                <div className="adm-gate-actions">
+                  <button className="adm-btn adm-btn-primary" onClick={() => navigateTo('home')}>Back to Home</button>
+                  <button className="adm-btn adm-btn-secondary" onClick={handleSignOut}>Sign out</button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
     )
   }
 
   return (
     <div className="adm-shell databrain-theme">
+      {/* Top Loading Progress Bar for Page/Tab Transitions */}
+      <div 
+        className="adm-page-top-progress"
+        style={{ 
+          opacity: progressVisible ? 1 : 0,
+          pointerEvents: 'none'
+        }}
+        aria-hidden="true"
+      >
+        <div 
+          className="adm-page-top-progress-bar"
+          style={{ width: `${topProgress}%` }}
+        />
+      </div>
       {/* ====================================================================
           UNIVERSAL TOPBAR & LOGO (With Integrated Capsule Nav)
           ==================================================================== */}
@@ -1193,6 +1367,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                   type="button"
                   className={`adm-capsule-item ${isCur ? 'active' : ''}`}
                   onClick={() => switchTab(nav.id)}
+                  title={nav.label}
                 >
                   <NavIcon size={17} className="adm-capsule-icon" />
                   <span>{nav.label}</span>
@@ -1200,8 +1375,26 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
               )
             })}
 
-            {/* More Dropdown */}
-            <div className="adm-capsule-more-container" ref={moreMenuRef}>
+            {/* Broken-out "More" items placed directly horizontally on mobile (No "More" button on mobile) */}
+            {MORE_NAV_LINKS.map((item) => {
+              const ItemIcon = item.icon
+              const isCur = tab === item.id
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`adm-capsule-item adm-horizontal-more-item ${isCur ? 'active' : ''}`}
+                  onClick={() => switchTab(item.id)}
+                  title={item.label}
+                >
+                  <ItemIcon size={17} className="adm-capsule-icon" />
+                  <span>{item.label}</span>
+                </button>
+              )
+            })}
+
+            {/* More Dropdown (Desktop Only) */}
+            <div className="adm-capsule-more-container adm-desktop-only-more" ref={moreMenuRef}>
               <button
                 type="button"
                 className={`adm-capsule-item adm-more-trigger ${isMoreActive ? 'active' : ''}`}
@@ -1395,13 +1588,17 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
           <div className="adm-submenu-bar">
             {curTabConfig.submenus && curTabConfig.submenus.map((sub) => {
               const isActive = activeSubTab === sub.id
+              const SubIcon = sub.icon || LayoutGrid
               return (
                 <button
                   key={sub.id}
                   type="button"
                   className={`adm-submenu-pill ${isActive ? 'active' : ''}`}
-                  onClick={() => setActiveSubTab(sub.id)}
+                  onClick={() => handleSubTabChange(sub.id)}
+                  title={sub.label}
+                  aria-label={sub.label}
                 >
+                  <SubIcon size={15} className="adm-submenu-icon" />
                   <span>{sub.label}</span>
                 </button>
               )
@@ -1454,7 +1651,11 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
           <>
 
             {/* --- 5 Top Metric KPI Cards (1 Row) --- */}
-            <div className="adm-kpi-row">
+            <div 
+              className="adm-kpi-row"
+              ref={kpiRowRef}
+              onScroll={handleKpiScroll}
+            >
               {/* Card 1: Active Leads */}
               <div className="adm-databrain-kpi">
                 <div className="adm-kpi-top-row">
@@ -1544,7 +1745,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                 </div>
               </div>
 
-              {/* Card 3: Properties Sold */}
+              {/* Card 4: Properties Sold */}
               <div className="adm-databrain-kpi">
                 <div className="adm-kpi-top-row">
                   <div className="adm-kpi-figure-wrap">
@@ -1573,7 +1774,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                 </div>
               </div>
 
-              {/* Card 4: New Clients */}
+              {/* Card 5: New Clients */}
               <div className="adm-databrain-kpi">
                 <div className="adm-kpi-top-row">
                   <div className="adm-kpi-figure-wrap">
@@ -1605,6 +1806,50 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Smart Modern & Minimal KPI Navigator (Mobile & Tablet) */}
+            <div className="adm-kpi-navigator-row">
+              <button 
+                type="button" 
+                className="adm-kpi-nav-arrow prev"
+                onClick={() => scrollToKpiCard(Math.max(0, activeKpiIndex - 1))}
+                disabled={activeKpiIndex === 0}
+                aria-label="Previous card"
+                title="Previous card"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              <div className="adm-kpi-dots-track">
+                {[
+                  { id: 0, label: 'Active Leads' },
+                  { id: 1, label: 'Properties Managed' },
+                  { id: 2, label: 'Asset Value' },
+                  { id: 3, label: 'Properties Sold' },
+                  { id: 4, label: 'New Clients' }
+                ].map((kpi) => (
+                  <button
+                    key={kpi.id}
+                    type="button"
+                    className={`adm-kpi-dot ${activeKpiIndex === kpi.id ? 'active' : ''}`}
+                    onClick={() => scrollToKpiCard(kpi.id)}
+                    title={kpi.label}
+                    aria-label={kpi.label}
+                  />
+                ))}
+              </div>
+
+              <button 
+                type="button" 
+                className="adm-kpi-nav-arrow next"
+                onClick={() => scrollToKpiCard(Math.min(4, activeKpiIndex + 1))}
+                disabled={activeKpiIndex === 4}
+                aria-label="Next card"
+                title="Next card"
+              >
+                <ChevronRight size={16} />
+              </button>
             </div>
 
             {/* --- Middle Row 2 Visual Charts --- */}
@@ -1667,33 +1912,45 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                     </svg>
 
                     <div className="adm-donut-center-icon">
-                      <Layers size={22} />
+                      <div className="adm-donut-center-stats">
+                        <span className="donut-center-num">1,689</span>
+                        <span className="donut-center-lbl">Total</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Legend Counts */}
                   <div className="adm-donut-legend">
-                    <div className="adm-legend-item">
+                    <div className="adm-legend-item accepted">
                       <div className="adm-legend-circle purple" />
                       <div className="adm-legend-text">
-                        <span className="adm-legend-lbl">Accepted</span>
-                        <strong className="adm-legend-val">1037</strong>
+                        <span className="adm-legend-lbl">Accepted Deals</span>
+                        <div className="adm-legend-metric-row">
+                          <strong className="adm-legend-val">1,037</strong>
+                          <span className="adm-legend-pct purple">61.4%</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="adm-legend-item">
+                    <div className="adm-legend-item rejected">
                       <div className="adm-legend-circle yellow" />
                       <div className="adm-legend-text">
                         <span className="adm-legend-lbl">Rejected</span>
-                        <strong className="adm-legend-val">486</strong>
+                        <div className="adm-legend-metric-row">
+                          <strong className="adm-legend-val">486</strong>
+                          <span className="adm-legend-pct yellow">28.8%</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="adm-legend-item">
+                    <div className="adm-legend-item counter">
                       <div className="adm-legend-circle blue" />
                       <div className="adm-legend-text">
-                        <span className="adm-legend-lbl">Counter...</span>
-                        <strong className="adm-legend-val">165</strong>
+                        <span className="adm-legend-lbl">Counter Offers</span>
+                        <div className="adm-legend-metric-row">
+                          <strong className="adm-legend-val">166</strong>
+                          <span className="adm-legend-pct blue">9.8%</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2644,7 +2901,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                 <button
                   type="button"
                   className="adm-pill-btn"
-                  onClick={() => setActiveSubTab('strategy')}
+                  onClick={() => handleSubTabChange('strategy')}
                 >
                   <Target size={14} />
                   <span>Strategic Roadmap</span>
@@ -2652,7 +2909,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                 <button
                   type="button"
                   className="adm-pill-btn"
-                  onClick={() => setActiveSubTab('performance')}
+                  onClick={() => handleSubTabChange('performance')}
                 >
                   <TrendingUp size={14} />
                   <span>Performance</span>
@@ -2671,22 +2928,22 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
 
             {/* 2. Key Account Stat Highlights: Performance, Tasks, Clients, Strategy */}
             <div className="adm-tab-stats-row">
-              <div className="adm-stat-box" onClick={() => setActiveSubTab('performance')} style={{ cursor: 'pointer' }}>
+              <div className="adm-stat-box" onClick={() => handleSubTabChange('performance')} style={{ cursor: 'pointer' }}>
                 <span className="adm-stat-label">Performance Rating</span>
                 <strong className="adm-stat-value text-purple">94.8%</strong>
                 <span className="adm-stat-growth green">↗ +4.2% Quota Velocity</span>
               </div>
-              <div className="adm-stat-box" onClick={() => setActiveSubTab('tasks')} style={{ cursor: 'pointer' }}>
+              <div className="adm-stat-box" onClick={() => handleSubTabChange('tasks')} style={{ cursor: 'pointer' }}>
                 <span className="adm-stat-label">Active Tasks</span>
                 <strong className="adm-stat-value text-blue">{profileTasks.length} Milestones</strong>
                 <span className="adm-stat-sub">{profileTasks.filter(t => t.status === 'Completed').length} Done • {profileTasks.filter(t => t.status === 'In Progress').length} Active</span>
               </div>
-              <div className="adm-stat-box" onClick={() => setActiveSubTab('clients')} style={{ cursor: 'pointer' }}>
+              <div className="adm-stat-box" onClick={() => handleSubTabChange('clients')} style={{ cursor: 'pointer' }}>
                 <span className="adm-stat-label">Client Portfolio</span>
                 <strong className="adm-stat-value text-green">142 VIPs</strong>
                 <span className="adm-stat-sub">$18.4M Value • 98% Retention</span>
               </div>
-              <div className="adm-stat-box" onClick={() => setActiveSubTab('strategy')} style={{ cursor: 'pointer' }}>
+              <div className="adm-stat-box" onClick={() => handleSubTabChange('strategy')} style={{ cursor: 'pointer' }}>
                 <span className="adm-stat-label">Strategic Roadmap</span>
                 <strong className="adm-stat-value">91.5%</strong>
                 <span className="adm-stat-growth green">● 4 Pillars On Track</span>
@@ -2762,7 +3019,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                         <Target size={18} className="text-blue" />
                         <h3 className="adm-chart-card-title">Information-Based Strategic Roadmap</h3>
                       </div>
-                      <button type="button" className="adm-mini-select-pill" onClick={() => setActiveSubTab('strategy')}>
+                      <button type="button" className="adm-mini-select-pill" onClick={() => handleSubTabChange('strategy')}>
                         <span>View Strategy</span>
                         <ChevronDown size={13} />
                       </button>
@@ -2805,7 +3062,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                         <CheckSquare size={18} className="text-purple" />
                         <h3 className="adm-chart-card-title">Administrative Tasks & Milestones</h3>
                       </div>
-                      <button type="button" className="adm-mini-select-pill" onClick={() => setActiveSubTab('tasks')}>
+                      <button type="button" className="adm-mini-select-pill" onClick={() => handleSubTabChange('tasks')}>
                         <span>View All ({profileTasks.length})</span>
                       </button>
                     </div>
@@ -2861,7 +3118,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
                         <Users size={18} className="text-green" />
                         <h3 className="adm-chart-card-title">Managed Client Portfolio</h3>
                       </div>
-                      <button type="button" className="adm-mini-select-pill" onClick={() => setActiveSubTab('clients')}>
+                      <button type="button" className="adm-mini-select-pill" onClick={() => handleSubTabChange('clients')}>
                         <span>All Clients</span>
                       </button>
                     </div>

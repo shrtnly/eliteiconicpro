@@ -1016,12 +1016,12 @@ const leadershipTeam = [
     sl: "10",
     nameEn: "Md. Abul Basar",
     nameBn: "মোঃ আবুল বাশার",
-    roleEn: "Director – Purchase",
-    roleBn: "পরিচালক – ক্রয়",
+    roleEn: "Director – Procurement",
+    roleBn: "পরিচালক – প্রকিউরমেন্ট",
     phone: "01604493384",
     image: "/leaders/md-abul-basar.jpg?v=2",
     speechEn: "Md. Abul Basar manages strategic procurement and supply chain management. He ensures that all materials and infrastructure inputs meet the highest benchmarks of durability, safety, and cost efficiency for long-term township longevity.",
-    speechBn: "মোঃ আবুল বাশার পরিচালক (ক্রয়) হিসেবে মানসম্পন্ন নির্মাণ উপকরণ ও কাঁচামাল সংগ্রহের তদারকি করছেন। সাশ্রয়ী ও সর্বোচ্চ মানের যোগান নিশ্চিত করে তিনি উন্নয়ন কার্যক্রমে বিশেষ অবদান রাখছেন।"
+    speechBn: "মোঃ আবুল বাশার পরিচালক (প্রকিউরমেন্ট) হিসেবে মানসম্পন্ন নির্মাণ উপকরণ ও কাঁচামাল সংগ্রহের তদারকি করছেন। সাশ্রয়ী ও সর্বোচ্চ মানের যোগান নিশ্চিত করে তিনি উন্নয়ন কার্যক্রমে বিশেষ অবদান রাখছেন।"
   },
   {
     id: 11,
