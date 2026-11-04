@@ -751,7 +751,16 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
         return
       }
 
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
+      let data = null
+      let error = null
+      try {
+        const res = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
+        data = res.data
+        error = res.error
+      } catch (e) {
+        error = e
+      }
+
       if (cancelled) return
 
       if (isSuperAdmin) {
@@ -767,13 +776,17 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
         setAuthState('ok')
 
         if (!data || data.role !== 'admin' || data.status !== 'active') {
-          supabase.from('profiles').upsert({
-            id: user.id,
-            email: user.email,
-            full_name: data?.full_name || user.user_metadata?.full_name || 'Administrator',
-            role: 'admin',
-            status: 'active'
-          }).then(() => {}).catch(() => {})
+          try {
+            supabase.from('profiles').upsert({
+              id: user.id,
+              email: user.email,
+              full_name: data?.full_name || user.user_metadata?.full_name || 'Administrator',
+              role: 'admin',
+              status: 'active'
+            }).then(() => {}).catch(() => {})
+          } catch {
+            // Ignore offline upsert error
+          }
         }
         return
       }
@@ -802,19 +815,34 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
     setLoading(true)
     const msgs = []
 
-    const leadRes = await supabase.from(LEADS_TABLE).select('*').order('created_at', { ascending: false }).limit(2000)
-    if (leadRes.error) msgs.push(`Leads: ${leadRes.error.message}`)
-    setLeads(leadRes.data || [])
+    try {
+      const leadRes = await supabase.from(LEADS_TABLE).select('*').order('created_at', { ascending: false }).limit(2000)
+      if (leadRes.error) msgs.push(`Leads: ${leadRes.error.message}`)
+      setLeads(leadRes.data || [])
+    } catch (err) {
+      console.warn('Could not load Supabase leads:', err?.message)
+      setLeads([])
+    }
 
-    let inqRes = await supabase.from('inquiries').select('*').order('created_at', { ascending: false }).limit(1000)
-    if (inqRes.error) inqRes = await supabase.from('inquiries').select('*').limit(1000)
-    if (inqRes.error) msgs.push(`Inquiries: ${inqRes.error.message}`)
-    setInquiries(inqRes.data || [])
+    try {
+      let inqRes = await supabase.from('inquiries').select('*').order('created_at', { ascending: false }).limit(1000)
+      if (inqRes.error) inqRes = await supabase.from('inquiries').select('*').limit(1000)
+      if (inqRes.error) msgs.push(`Inquiries: ${inqRes.error.message}`)
+      setInquiries(inqRes.data || [])
+    } catch (err) {
+      console.warn('Could not load Supabase inquiries:', err?.message)
+      setInquiries([])
+    }
 
     if (isAdmin) {
-      const userRes = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(1000)
-      if (userRes.error) msgs.push(`Users: ${userRes.error.message}`)
-      setUsers(userRes.data || [])
+      try {
+        const userRes = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(1000)
+        if (userRes.error) msgs.push(`Users: ${userRes.error.message}`)
+        setUsers(userRes.data || [])
+      } catch (err) {
+        console.warn('Could not load Supabase profiles:', err?.message)
+        setUsers([])
+      }
     }
 
     setNotices(msgs)
@@ -1381,15 +1409,15 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
           </div>
 
           <div className="adm-overview-actions">
-            <button type="button" className="adm-pill-btn">
+            <button type="button" className="adm-pill-btn adm-date-btn">
               <Calendar size={15} />
               <span>26 June 2024</span>
-              <ChevronDown size={14} />
+              <ChevronDown size={14} className="adm-date-chevron" />
             </button>
 
             <button 
               type="button" 
-              className="adm-pill-btn"
+              className="adm-pill-btn adm-export-btn"
               onClick={handleExportCurrentTab}
             >
               <span>Export</span>
@@ -1398,7 +1426,7 @@ export default function AdminDashboard({ user, navigateTo, onLogout }) {
 
             <button 
               type="button" 
-              className="adm-pill-btn primary-dark"
+              className="adm-pill-btn primary-dark adm-primary-cta-btn"
               onClick={() => {
                 if (tab === 'inventory') {
                   setNotices(['📦 Material stock registration panel ready.'])

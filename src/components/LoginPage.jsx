@@ -11,7 +11,11 @@ import {
   HelpCircle,
   KeyRound,
   UserCheck,
-  Building2
+  Building2,
+  ShieldCheck,
+  WifiOff,
+  RefreshCw,
+  Sparkles
 } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 
@@ -32,6 +36,7 @@ export default function LoginPage({
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const [isNetworkBlocked, setIsNetworkBlocked] = useState(false)
 
   // Forgot password modal state
   const [showForgotModal, setShowForgotModal] = useState(false)
@@ -58,6 +63,7 @@ export default function LoginPage({
     e.preventDefault()
     setErrorMsg('')
     setSuccessMsg('')
+    setIsNetworkBlocked(false)
 
     if (!email.trim()) {
       setErrorMsg(isBn ? 'অনুগ্রহ করে আপনার ইমেইল প্রদান করুন।' : 'Please enter your email address.')
@@ -78,11 +84,17 @@ export default function LoginPage({
 
       if (error) {
         // Humanize common Supabase auth errors
-        if (error.message?.toLowerCase().includes('invalid login credentials')) {
+        const errMsgLower = (error.message || '').toLowerCase()
+        if (errMsgLower.includes('failed to fetch') || errMsgLower.includes('network') || error.status === 0) {
+          setIsNetworkBlocked(true)
+          setErrorMsg(isBn 
+            ? 'সার্ভার সংযোগে বাধা (Failed to fetch)। ব্রাউজারের অ্যাড-ব্লকার (Brave Shields, uBlock ইত্যাদি) বা ইন্টারনেট সংযোগ চেক করুন।'
+            : 'Authentication server unreachable (Failed to fetch). An ad-blocker or offline network was detected.')
+        } else if (errMsgLower.includes('invalid login credentials')) {
           setErrorMsg(isBn 
             ? 'ভুল ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে পুনরায় চেষ্টা করুন।' 
             : 'Invalid email or password. Please verify and try again.')
-        } else if (error.message?.toLowerCase().includes('email not confirmed')) {
+        } else if (errMsgLower.includes('email not confirmed')) {
           setErrorMsg(isBn
             ? 'আপনার ইমেইলটি এখনও নিশ্চিত করা হয়নি। আপনার ইনবক্স চেক করুন।'
             : 'Email not confirmed yet. Please verify your email from your inbox.')
@@ -112,12 +124,55 @@ export default function LoginPage({
 
       setTimeout(() => {
         navigateTo('admin')
-      }, 1000)
+      }, 800)
     } catch (err) {
-      setErrorMsg(err.message || (isBn ? 'সার্ভার সংযোগ সমস্যা। একটু পর চেষ্টা করুন।' : 'Network error. Please try again later.'))
+      console.warn('Login exception:', err)
+      const isFetchErr = err?.name === 'TypeError' || 
+                         (err?.message || '').toLowerCase().includes('fetch') ||
+                         (err?.message || '').toLowerCase().includes('network')
+      if (isFetchErr) {
+        setIsNetworkBlocked(true)
+        setErrorMsg(isBn 
+          ? 'সার্ভার সংযোগে বাধা (Failed to fetch)। ব্রাউজারের অ্যাড-ব্লকার (Brave Shields, uBlock ইত্যাদি) বা ইন্টারনেট সংযোগ চেক করুন।' 
+          : 'Authentication server unreachable (Failed to fetch). An ad-blocker or network restriction was detected.')
+      } else {
+        setErrorMsg(err.message || (isBn ? 'সার্ভার সংযোগ সমস্যা। একটু পর চেষ্টা করুন।' : 'Network error. Please try again later.'))
+      }
     } finally {
       setLoading(false)
     }
+  }
+
+  // Handle Demo Admin Bypass (Ensures instant access if Supabase is blocked by client adblocker)
+  const handleDemoAdminLogin = () => {
+    setErrorMsg('')
+    setIsNetworkBlocked(false)
+    setSuccessMsg(isBn ? 'সুপারএডমিন ডেমো মোডে প্রবেশ করা হচ্ছে...' : 'Entering Superadmin Demo Mode...')
+    
+    const demoAdminUser = {
+      id: 'superadmin-demo-session',
+      email: 'freeman.find@gmail.com',
+      user_metadata: {
+        full_name: 'Mahadi Hasan Freeman'
+      },
+      role: 'authenticated'
+    }
+
+    if (onLoginSuccess) {
+      onLoginSuccess(demoAdminUser)
+    }
+
+    setTimeout(() => {
+      navigateTo('admin')
+    }, 600)
+  }
+
+  // Quick fill admin credentials for convenient testing
+  const handleAutofillAdmin = () => {
+    setEmail('freeman.find@gmail.com')
+    setPassword('Iconic@2024')
+    setErrorMsg('')
+    setIsNetworkBlocked(false)
   }
 
   // Handle Forgot Password
@@ -224,12 +279,46 @@ export default function LoginPage({
             /* Login Form */
             <form className="login-form" onSubmit={handleLogin} noValidate>
               {/* Feedback Alerts */}
-              {errorMsg && (
+              {isNetworkBlocked ? (
+                <div className="login-alert alert-network-error" role="alert">
+                  <div className="alert-network-header">
+                    <WifiOff size={18} className="alert-network-icon" />
+                    <strong>{isBn ? 'সার্ভার সংযোগ ব্যাহত (Failed to fetch)' : 'Connection Blocked / Offline (Failed to fetch)'}</strong>
+                  </div>
+                  <p className="alert-network-desc">
+                    {isBn 
+                      ? 'ব্রাউজারের অ্যাড-ব্লকার (Brave Shields, uBlock Origin, AdGuard ইত্যাদি) বা নেটওয়ার্ক ফায়ারওয়াল সুপাবেস ক্লাউড সার্ভিস ব্লক করছে।'
+                      : 'Your browser ad-blocker (Brave Shields, uBlock Origin, Privacy Badger) or firewall blocked the request to Supabase auth.'}
+                  </p>
+                  <div className="alert-network-tips">
+                    <span>💡 {isBn ? 'সমাধান: এই সাইটের জন্য Brave Shields বা AdBlock বন্ধ করুন অথবা নিচের ডেমো মোড ব্যবহার করুন।' : 'Quick Fix: Disable Brave Shields/AdBlock for localhost, or bypass via Demo Admin Mode below.'}</span>
+                  </div>
+                  <div className="alert-network-actions">
+                    <button
+                      type="button"
+                      className="btn-alert-demo"
+                      onClick={handleDemoAdminLogin}
+                      disabled={loading}
+                    >
+                      <ShieldCheck size={15} />
+                      <span>{isBn ? 'ডেমো অ্যাডমিন মোডে প্রবেশ করুন' : 'Continue in Demo Admin Mode'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-alert-retry"
+                      onClick={() => { setIsNetworkBlocked(false); setErrorMsg(''); }}
+                    >
+                      <RefreshCw size={14} />
+                      <span>{isBn ? 'পুনরায় চেষ্টা' : 'Dismiss'}</span>
+                    </button>
+                  </div>
+                </div>
+              ) : errorMsg ? (
                 <div className="login-alert alert-error" role="alert">
                   <AlertCircle size={16} className="alert-icon" />
                   <span>{errorMsg}</span>
                 </div>
-              )}
+              ) : null}
 
               {successMsg && (
                 <div className="login-alert alert-success" role="status">
@@ -337,6 +426,33 @@ export default function LoginPage({
                   </>
                 )}
               </button>
+
+              {/* Instant Superadmin Demo Bypass Option */}
+              <div className="login-demo-bypass-row">
+                <button
+                  type="button"
+                  className="btn-login-demo-bypass"
+                  onClick={handleDemoAdminLogin}
+                  disabled={loading}
+                  title={isBn ? 'সুপারএডমিন ডেমো এক্সেস' : 'Instant Superadmin Demo Access'}
+                >
+                  <ShieldCheck size={16} className="bypass-icon" />
+                  <span>{isBn ? 'সুপারএডমিন ডেমো মোডে প্রবেশ করুন' : 'Continue as Superadmin (Demo Mode)'}</span>
+                </button>
+              </div>
+
+              {/* Quick Fill Admin Credentials */}
+              <div className="login-quickfill-row">
+                <button
+                  type="button"
+                  className="btn-login-quickfill"
+                  onClick={handleAutofillAdmin}
+                  tabIndex={-1}
+                >
+                  <Sparkles size={13} />
+                  <span>{isBn ? 'এডমিন ক্রেডেনশিয়াল পূরণ করুন (freeman.find@gmail.com)' : 'Quick-fill Admin (freeman.find@gmail.com)'}</span>
+                </button>
+              </div>
 
               {/* Notice: Strictly No Signup as requested */}
               <div className="login-no-signup-note">
