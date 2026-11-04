@@ -72,12 +72,25 @@ export default function FounderDirectorSection({ lang = 'en' }) {
     <section className="founder-directors-section" id="founder-director">
       <div className="section-container">
         {/* Section Header */}
-        <div className="section-header-center">
-          <h2 className="section-main-heading">
+        <div className="amenities-center-header fd-center-header">
+          <div className="amenities-kicker-row">
+            <span className="amenities-kicker-rule" aria-hidden="true" />
+            <span className="amenities-kicker-text">
+              {isBn ? 'সম্মানিত প্রতিষ্ঠাতা পর্ষদ' : 'HONORABLE PATRONS & STAKEHOLDERS'}
+            </span>
+            <span className="amenities-kicker-rule" aria-hidden="true" />
+          </div>
+
+          <h2 className="amenities-main-title">
             {isBn ? 'Founder Directors (প্রতিষ্ঠাতা পরিচালকবৃন্দ)' : 'Founder Directors'}
           </h2>
-          <div className="section-divider-line" />
-          <p className="section-sub-desc">
+
+          <div className="amenities-dual-divider" aria-hidden="true">
+            <span className="divider-seg-green" />
+            <span className="divider-seg-gold" />
+          </div>
+
+          <p className="amenities-sub-desc">
             {isBn 
               ? 'ঢাকা আইকন সিটির সার্বিক অগ্রগতি ও ভবিষ্যৎ বিনির্মাণে সম্মানিত প্রতিষ্ঠাতা পরিচালকবৃন্দের তালিকা।' 
               : 'Directory of honorable Founder Directors whose vision, patronage, and commitment empower Dhaka Icon City.'}

@@ -23,8 +23,8 @@
   --text-secondary: #334155;
   --text-muted: #64748b;
 
-  --shadow-neon: 0 4px 20px rgba(0, 132, 80, 0.12);
-  --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  --shadow-neon: none;
+  --shadow-glow: none;
 
   color-scheme: light;
   color: var(--text-primary);

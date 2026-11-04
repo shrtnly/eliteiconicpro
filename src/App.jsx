@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from './lib/supabaseClient'
 import { 
   Building2, 
@@ -35,17 +35,27 @@ import {
   ArrowRight,
   Home,
   Check,
+  LayoutGrid,
+  BarChart2,
   User,
   Users,
   TrendingUp,
-  Briefcase,
-  Landmark
+  Landmark,
+  LogIn,
+  LogOut,
+  Zap,
+  Sprout
 } from 'lucide-react'
 import './App.css'
 import FounderDirectorSection from './components/FounderDirectorSection'
 import { founderDirectors } from './data/founderDirectorsData'
 import CorporateAboutPage from './components/CorporateAboutPage'
 import GalleryPage from './components/GalleryPage'
+import LoginPage from './components/LoginPage'
+import AdminDashboard from './components/AdminDashboard'
+import HeroVideoPlayer from './components/HeroVideoPlayer'
+import VisitScheduleModal from './components/VisitScheduleModal'
+import BookingModal from './components/BookingModal'
 
 // Comprehensive Translations (Bangla & English)
 const translations = {
@@ -145,17 +155,17 @@ const translations = {
     otherProjectsTitle: "এলিট আইকনিকের অন্যান্য সিগনেচার প্রকল্প",
     
     // Contact & Booking Form
-    formTitle: "আপনার পছন্দের প্লটটি বুক করুন অথবা ভিজিট করুন",
-    formSubtitle: "আমাদের সিনিয়র রিয়েল এস্টেট কনসালটেন্ট আপনার সাথে সরাসরি যোগাযোগ করে বিস্তারিত তথ্য ও ফ্রি সাইট ভিজিটের ব্যবস্থা করবেন।",
+    formTitle: "আপনার পছন্দের প্লটটি বুক করুন অথবা সাইট ভিজিট শিডিউল করুন",
+    formSubtitle: "কোম্পানির নিজস্ব ট্রান্সপোর্টে সরেজমিন প্রকল্প পরিদর্শন ও কিস্তির তথ্য পেতে সরাসরি যোগাযোগ করুন।",
     lblFullName: "আপনার পুরো নাম *",
     lblPhone: "মোবাইল নম্বর *",
-    lblEmail: "ইমেইল এড্রেস *",
+    lblEmail: "ইমেইল এড্রেস (ঐচ্ছিক)",
     lblPlotType: "আগ্রহী প্লটের ক্যাটাগরি",
-    lblPlotSize: "প্লটের সাইজ",
-    lblMessage: "আপনার কোনো বিশেষ জিজ্ঞাসা বা মন্তব্য",
-    btnSubmitForm: "আবেদন জমা দিন (Submit Request)",
+    lblPlotSize: "পছন্দের প্লটের সাইজ",
+    lblMessage: "ভিজিট তারিখ বা বিশেষ কোনো জিজ্ঞাসা (ঐচ্ছিক)",
+    btnSubmitForm: "বুকিং ও ভিজিট রিকোয়েস্ট পাঠান",
     formSubmitting: "তথ্য পাঠানো হচ্ছে...",
-    formSuccess: "✓ ধন্যবাদ! আপনার তথ্য সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি অতি দ্রুত যোগাযোগ করবেন।"
+    formSuccess: "✓ ধন্যবাদ! আপনার অনুরোধটি সফলভাবে নিবন্ধিত হয়েছে। আমাদের সিনিয়র কনসালটেন্ট অতি দ্রুত আপনার সাথে যোগাযোগ করবেন।"
   },
   en: {
     langBtn: "বাংলা",
@@ -253,17 +263,17 @@ const translations = {
     otherProjectsTitle: "Elite Iconic's Signature Portfolio",
 
     // Contact & Booking Form
-    formTitle: "Book Your Plot or Schedule a Free VIP Site Visit",
-    formSubtitle: "Our senior property consultant will reach out immediately to share customized payment schedules and coordinate on-site visit transportation.",
+    formTitle: "Reserve Your Prime Plot or Schedule a Free Site Visit",
+    formSubtitle: "Experience a chauffeured on-site tour with personalized plot selection and easy installment plans.",
     lblFullName: "Full Name *",
-    lblPhone: "Phone Number *",
-    lblEmail: "Email Address *",
-    lblPlotType: "Interested Plot Category",
-    lblPlotSize: "Plot Size",
-    lblMessage: "Special Inquiries or Preferred Inspection Date",
+    lblPhone: "Mobile Number *",
+    lblEmail: "Email Address (Optional)",
+    lblPlotType: "Preferred Plot Category",
+    lblPlotSize: "Preferred Plot Size",
+    lblMessage: "Visit Date or Custom Queries (Optional)",
     btnSubmitForm: "Submit Booking Request",
-    formSubmitting: "Submitting Details...",
-    formSuccess: "✓ Thank you! Your booking request is logged. Our representative will contact you shortly."
+    formSubmitting: "Submitting Request...",
+    formSuccess: "✓ Thank you! Your priority request is logged. A Senior Property Advisor will contact you shortly."
   }
 }
 
@@ -271,165 +281,607 @@ const translations = {
 const plotPricingData = [
   {
     id: 'commercial-corner',
+    index: '01',
     titleBn: 'বাণিজ্যিক প্লট (কর্ণার)',
     titleEn: 'Commercial Plot (Corner)',
     ratePerKatha: 2800000,
+    numEn: '28',
+    numBn: '২৮',
     rateFormattedBn: '২৮ লক্ষ টাকা/কাঠা',
     rateFormattedEn: '৳28 Lakh / Katha',
-    tagBn: 'সর্বোচ্চ বাণিজ্যিক সম্ভাবনা',
-    tagEn: 'Prime Commercial Corner',
+    tagBn: 'সর্বোচ্চ বাণিজ্যিক সম্ভাবনা ও প্রাইম কর্নার',
+    tagEn: 'Prime Commercial Corner & Avenue',
     type: 'Commercial',
-    isPopular: true
+    isPopular: true,
+    tierEn: 'Tier 1 • Prime Commercial',
+    tierBn: '১ম স্তর • প্রাইম বাণিজ্যিক',
+    meterPct: 100,
+    dpEn: '৳5.6 Lakh',
+    dpBn: '৫.৬ লক্ষ'
   },
   {
     id: 'commercial-general',
+    index: '02',
     titleBn: 'বাণিজ্যিক প্লট (অন্যান্য)',
     titleEn: 'Commercial Plot (General)',
     ratePerKatha: 2700000,
+    numEn: '27',
+    numBn: '২৭',
     rateFormattedBn: '২৭ লক্ষ টাকা/কাঠা',
     rateFormattedEn: '৳27 Lakh / Katha',
-    tagBn: 'এভিনিউ রোড ফ্রন্ট',
-    tagEn: 'Avenue Facing',
+    tagBn: '১০০ ফুট এভিনিউ রোড ফ্রন্ট সুবিধা',
+    tagEn: '100ft Avenue Road Frontage',
     type: 'Commercial',
-    isPopular: false
+    isPopular: false,
+    tierEn: 'Tier 2 • Avenue Front',
+    tierBn: '২য় স্তর • এভিনিউ ফ্রন্ট',
+    meterPct: 96,
+    dpEn: '৳5.4 Lakh',
+    dpBn: '৫.৪ লক্ষ'
   },
   {
     id: 'residential-corner',
+    index: '03',
     titleBn: 'আবাসিক প্লট (কর্ণার)',
     titleEn: 'Residential Plot (Corner)',
     ratePerKatha: 2200000,
+    numEn: '22',
+    numBn: '২২',
     rateFormattedBn: '২২ লক্ষ টাকা/কাঠা',
     rateFormattedEn: '৳22 Lakh / Katha',
-    tagBn: 'উভয় দিকে উন্মুক্ত বাতাস ও আলো',
-    tagEn: 'Dual Side Open View',
+    tagBn: 'উভয় দিকে উন্মুক্ত বাতাস ও লেক ভিউ',
+    tagEn: 'Dual Side Open View & Lake Breeze',
     type: 'Residential',
-    isPopular: true
+    isPopular: true,
+    tierEn: 'Tier 3 • Premium Corner',
+    tierBn: '৩য় স্তর • প্রিমিয়াম কর্ণার',
+    meterPct: 78,
+    dpEn: '৳4.4 Lakh',
+    dpBn: '৪.৪ লক্ষ'
   },
   {
     id: 'residential-south',
+    index: '04',
     titleBn: 'আবাসিক প্লট (দক্ষিণমুখী)',
     titleEn: 'Residential Plot (South Facing)',
     ratePerKatha: 2100000,
+    numEn: '21',
+    numBn: '২১',
     rateFormattedBn: '২১ লক্ষ টাকা/কাঠা',
     rateFormattedEn: '৳21 Lakh / Katha',
-    tagBn: 'দক্ষিণা বাতাস ও পর্যাপ্ত আলো',
-    tagEn: 'South Facing Breeze',
+    tagBn: 'দক্ষিণা বাতাস ও প্রাকৃতিক পর্যাপ্ত আলো',
+    tagEn: 'South Facing Sunlight & Airflow',
     type: 'Residential',
-    isPopular: false
+    isPopular: false,
+    tierEn: 'Tier 4 • South Facing',
+    tierBn: '৪র্থ স্তর • দক্ষিণমুখী আলো-বাতাস',
+    meterPct: 75,
+    dpEn: '৳4.2 Lakh',
+    dpBn: '৪.২ লক্ষ'
   },
   {
     id: 'residential-general',
-    titleBn: 'আবাসিক প্লট',
+    index: '05',
+    titleBn: 'আবাসিক প্লট (সাধারণ)',
     titleEn: 'Residential Plot (General)',
     ratePerKatha: 2000000,
+    numEn: '20',
+    numBn: '২০',
     rateFormattedBn: '২০ লক্ষ টাকা/কাঠা',
     rateFormattedEn: '৳20 Lakh / Katha',
-    tagBn: 'সেরা ভ্যালু ইনভেস্টমেন্ট',
-    tagEn: 'Best Value Investment',
+    tagBn: 'সেরা ভ্যালু ও সাশ্রয়ী দীর্ঘমেয়াদি বিনিয়োগ',
+    tagEn: 'Best Value & Smart Investment',
     type: 'Residential',
-    isPopular: false
+    isPopular: false,
+    tierEn: 'Tier 5 • Value Investment',
+    tierBn: '৫ম স্তর • সেরা সাশ্রয়ী',
+    meterPct: 71,
+    dpEn: '৳4.0 Lakh',
+    dpBn: '৪.০ লক্ষ'
   }
 ]
 
 // Commute Distance Landmarks from the brochure
 const commuteLandmarks = [
   {
+    sl: "01",
     nameBn: "বিরুলিয়া ব্রিজ",
     nameEn: "Birulia Bridge",
     timeBn: "৫ মিনিট",
     timeEn: "5 Mins",
-    icon: "🌁",
-    highlight: "সংলগ্ন"
+    iconType: "bridge-1",
+    badgeTone: "green",
+    highlight: "সংযোগ"
   },
   {
+    sl: "02",
     nameBn: "উত্তরা দিয়া বাড়ি প্রজেক্ট",
     nameEn: "Uttara Diabari Project",
     timeBn: "৫ - ১০ মিনিট",
-    timeEn: "5 - 10 Mins",
-    icon: "🚉",
+    timeEn: "5 – 10 Mins",
+    iconType: "buildings",
+    badgeTone: "green",
     highlight: "সরাসরি কানেক্টিভিটি"
   },
   {
+    sl: "03",
     nameBn: "উত্তরা মেট্রোরেল স্টেশন",
     nameEn: "Uttara Metro Rail Station",
     timeBn: "৫ - ১০ মিনিট",
-    timeEn: "5 - 10 Mins",
-    icon: "🚊",
+    timeEn: "5 – 10 Mins",
+    iconType: "metro",
+    badgeTone: "green",
     highlight: "দ্রুততম যোগাযোগ"
   },
   {
+    sl: "04",
     nameBn: "হযরত শাহজালাল (রঃ) আন্তর্জাতিক বিমান বন্দর",
     nameEn: "Hazrat Shahjalal Int'l Airport",
     timeBn: "১০ - ১৫ মিনিট",
-    timeEn: "10 - 15 Mins",
-    icon: "✈️",
-    highlight: "এক্সপ্রেসওয়ে এক্সেস"
+    timeEn: "10 – 15 Mins",
+    iconType: "airport",
+    badgeTone: "green",
+    highlight: "এয়ারপোর্টের এক্সেস"
   },
   {
+    sl: "05",
     nameBn: "তামান্না ফ্যামিলি পার্ক",
     nameEn: "Tamanna Family Park",
     timeBn: "৫ মিনিট",
     timeEn: "5 Mins",
-    icon: "🎡",
+    iconType: "park",
+    badgeTone: "green",
     highlight: "পারিবারিক বিনোদন"
   },
   {
+    sl: "06",
     nameBn: "জাতীয় উদ্ভিদ উদ্যান ৩ নং গেইট",
     nameEn: "National Botanical Garden Gate 3",
     timeBn: "৫ মিনিট",
     timeEn: "5 Mins",
-    icon: "🌳",
+    iconType: "botanical",
+    badgeTone: "green",
     highlight: "সবুজ পরিবেশ"
   },
   {
+    sl: "07",
     nameBn: "কাউন্দিয়া ব্রিজ (নির্মাণ কাজ চলমান)",
     nameEn: "Kaundia Bridge (Under Construction)",
     timeBn: "১০ মিনিট",
     timeEn: "10 Mins",
-    icon: "🌉",
+    iconType: "bridge-2",
+    badgeTone: "green",
     highlight: "চলমান উন্নয়ন"
   },
   {
+    sl: "08",
     nameBn: "গাবতলী বাস টার্মিনাল",
     nameEn: "Gabtoli Bus Terminal",
     timeBn: "১৫ মিনিট",
     timeEn: "15 Mins",
-    icon: "🚌",
-    highlight: "প্রধান ট্রানজিট"
+    iconType: "bus-terminal",
+    badgeTone: "green",
+    highlight: "প্রধান টার্মিনাল"
   },
   {
+    sl: "09",
     nameBn: "সাভার বাস স্ট্যান্ড",
     nameEn: "Savar Bus Stand",
     timeBn: "১০ - ২০ মিনিট",
-    timeEn: "10 - 20 Mins",
-    icon: "🚌",
+    timeEn: "10 – 20 Mins",
+    iconType: "bus",
+    badgeTone: "green",
     highlight: "সহজ যাতায়াত"
   },
   {
+    sl: "10",
     nameBn: "জাহাঙ্গীরনগর বিশ্ববিদ্যালয়",
     nameEn: "Jahangirnagar University",
     timeBn: "২০ মিনিট",
     timeEn: "20 Mins",
-    icon: "🎓",
+    iconType: "university",
+    badgeTone: "amber",
     highlight: "শিক্ষা জোন"
   }
 ]
 
+function renderCommuteIcon(type) {
+  switch (type) {
+    case 'bridge-1':
+      return (
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2 17h24" />
+          <path d="M9 17V6l-6 11" />
+          <path d="M9 6l5 11" />
+          <path d="M19 17V6l6 11" />
+          <path d="M19 6l-5 11" />
+          <path d="M6 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0" strokeWidth="1.4" />
+        </svg>
+      )
+    case 'buildings':
+      return (
+        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="4" y="4" width="9" height="17" rx="1" />
+          <path d="M13 9h7a1 1 0 0 1 1 1v11h-8" />
+          <line x1="7" y1="8" x2="10" y2="8" />
+          <line x1="7" y1="12" x2="10" y2="12" />
+          <line x1="7" y1="16" x2="10" y2="16" />
+          <line x1="16" y1="13" x2="18" y2="13" />
+          <line x1="16" y1="17" x2="18" y2="17" />
+          <line x1="2" y1="21" x2="24" y2="21" />
+        </svg>
+      )
+    case 'metro':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="5" y="3" width="14" height="15" rx="3" />
+          <path d="M5 11h14" />
+          <circle cx="8.5" cy="14.5" r="1" fill="currentColor" />
+          <circle cx="15.5" cy="14.5" r="1" fill="currentColor" />
+          <path d="M8 18l-2 3" />
+          <path d="M16 18l2 3" />
+        </svg>
+      )
+    case 'airport':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
+        </svg>
+      )
+    case 'park':
+      return (
+        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 4L4 13h3l-2 5h8l-2-5h3L9 4z" fill="currentColor" fillOpacity="0.15" />
+          <path d="M18 6l-4 7h2.5l-1.5 5h6l-1.5-5H22l-4-7z" fill="currentColor" fillOpacity="0.15" />
+          <line x1="9" y1="18" x2="9" y2="21" />
+          <line x1="18" y1="18" x2="18" y2="21" />
+          <line x1="3" y1="21" x2="23" y2="21" />
+        </svg>
+      )
+    case 'botanical':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 21V11" />
+          <path d="M12 15c-3.5 0-6-2.5-6-6 3.5 0 6 2.5 6 6z" fill="currentColor" fillOpacity="0.18" />
+          <path d="M12 13c3.5 0 6-2.5 6-6-3.5 0-6 2.5-6 6z" fill="currentColor" fillOpacity="0.18" />
+          <path d="M12 9c0-3.2 1.8-5.5 0-6-1.8.5 0 2.8 0 6z" />
+          <path d="M8 21h8" />
+        </svg>
+      )
+    case 'bridge-2':
+      return (
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2 16h24" />
+          <path d="M8 19V6" />
+          <path d="M20 19V6" />
+          <path d="M8 7c3 5 9 5 12 0" />
+          <path d="M2 16L8 7" />
+          <path d="M26 16L20 7" />
+          <line x1="14" y1="10.5" x2="14" y2="16" />
+        </svg>
+      )
+    case 'bus-terminal':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="4" y="4" width="16" height="13" rx="2" />
+          <path d="M4 11h16" />
+          <path d="M4 7h16" />
+          <circle cx="7.5" cy="14" r="1" fill="currentColor" />
+          <circle cx="16.5" cy="14" r="1" fill="currentColor" />
+          <path d="M6 17v2" />
+          <path d="M18 17v2" />
+        </svg>
+      )
+    case 'bus':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="5" y="4" width="14" height="13" rx="2.5" />
+          <path d="M5 11h14" />
+          <circle cx="8" cy="14" r="1" fill="currentColor" />
+          <circle cx="16" cy="14" r="1" fill="currentColor" />
+          <path d="M7 17v2" />
+          <path d="M17 17v2" />
+          <path d="M3 8v3" />
+          <path d="M21 8v3" />
+        </svg>
+      )
+    case 'university':
+      return (
+        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 4L2 9.5 13 15l11-5.5L13 4z" fill="currentColor" fillOpacity="0.16" />
+          <path d="M6 11.5v5c0 1.8 3.1 3.5 7 3.5s7-1.7 7-3.5v-5" />
+          <path d="M22 10v6" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
+
 // 12 Civic Amenities from brochure
 const civicAmenities = [
-  { id: 1, nameBn: "ডে-কেয়ার সেন্টার", nameEn: "Day-Care Center", icon: "👶", descBn: "কর্মজীবী পিতা-মাতার জন্য নিরাপদ ও আধুনিক চাইল্ড কেয়ার ব্যবস্থা", descEn: "Modern secure nursery for working parents" },
-  { id: 2, nameBn: "স্কুল, কলেজ ও বিশ্ববিদ্যালয়", nameEn: "Schools, Colleges & Unis", icon: "🎓", descBn: "আন্তর্জাতিক মানের শিক্ষাপ্রতিষ্ঠান ও সংলগ্ন ১৭টি খ্যাতনামা বিশ্ববিদ্যালয়", descEn: "Top educational institutes & 17 nearby renowned universities" },
-  { id: 3, nameBn: "কমিউনিটি সেন্টার", nameEn: "Community Center", icon: "🏛️", descBn: "পারিবারিক ও সামাজিক অনুষ্ঠানের জন্য সুবিশাল ব্যাঙ্কুয়েট হল", descEn: "Grand banquet hall for community & family celebrations" },
-  { id: 4, nameBn: "ইসলামিক সিটি ও কেন্দ্রীয় মসজিদ", nameEn: "Islamic City & Central Mosque", icon: "🕌", descBn: "নান্দনিক স্থাপত্যের সুবিশাল কেন্দ্রীয় মসজিদ ও ইসলামিক কমপ্লেক্স", descEn: "Grand architectural mosque & integrated Islamic complex" },
-  { id: 5, nameBn: "নিরাপত্তা ব্যবস্থা ও পুলিশ বক্স", nameEn: "24/7 Security & Police Box", icon: "👮", descBn: "সার্বক্ষণিক সিসিটিভি নজরদারি, আধুনিক নিরাপত্তা গেট ও পুলিশ ক্যাম্প", descEn: "Round-the-clock CCTV surveillance, gated security & police post" },
-  { id: 6, nameBn: "বাংলা ও ইংরেজি মাধ্যমের মাদ্রাসা", nameEn: "Integrated Madrasa", icon: "📖", descBn: "আধুনিক শিক্ষা ও ধর্মীয় জ্ঞানের সমন্বয়ে সমন্বিত মাদ্রাসা ব্যবস্থা", descEn: "Integrated modern Islamic & contemporary dual curriculum" },
-  { id: 7, nameBn: "শপিং সেন্টার, সিনে-ক্যাফে", nameEn: "Shopping Mall & Cine-Café", icon: "🛍️", descBn: "আধুনিক শপিং মল, ব্র্যান্ডেড আউটলেট, ফুডকোর্ট ও সিনে-ক্যাফে", descEn: "Mega shopping mall, branded outlets, food court & movie café" },
-  { id: 8, nameBn: "শিশু পার্ক ও অ্যামিউজমেন্ট পার্ক", nameEn: "Children & Theme Park", icon: "🎡", descBn: "শিশুদের খেলার রাইড, উন্মুক্ত গ্রিন পার্ক ও পরিবারের বিনোদন জোন", descEn: "Theme rides, kids outdoor playground & family green zones" },
-  { id: 9, nameBn: "ক্লিনিক ও ঢাকা আইকন হাসপাতাল", nameEn: "Dhaka Icon Hospital & Clinic", icon: "🏥", descBn: "২৪ ঘণ্টা জরুরি চিকিৎসা, আধুনিক ডায়াগনস্টিক ও স্পেশালাইজড কেয়ার", descEn: "24/7 emergency healthcare, diagnostic center & specialist care" },
-  { id: 10, nameBn: "জিমনেসিয়াম, খেলার মাঠ", nameEn: "Gymnasium & Sports Ground", icon: "🏋️", descBn: "আধুনিক ফিটনেস সেন্টার, ইনডোর গেমস ও সুবিশাল খেলার মাঠ", descEn: "State-of-the-art fitness gym, sports club & football pitch" },
-  { id: 11, nameBn: "কবরস্থান", nameEn: "Dedicated Graveyard", icon: "⚰️", descBn: "টাউনশিপের নিজস্ব সুপরিকল্পিত ও সংরক্ষিত কবরস্থান এলাকা", descEn: "Well-maintained dedicated township community graveyard" },
-  { id: 12, nameBn: "লেক ও পার্ক লেন ওয়াকওয়ে", nameEn: "Central Lake & Park Lane", icon: "🌊", descBn: "লেকভিউ সংলগ্ন ৮০ ও ৪০ ফুট প্রশস্ত গ্রিন প্রমেনেড ও জগিং ট্র্যাক", descEn: "80 & 40-foot wide scenic lakefront promenade & jogging tracks" }
+  {
+    id: 1,
+    sl: "01",
+    iconType: "daycare",
+    tagEn: "Child Care",
+    tagBn: "শিশু যত্ন",
+    badgeTone: "green",
+    nameBn: "ডে-কেয়ার সেন্টার",
+    nameEn: "Day-Care Center",
+    descBn: "কর্মজীবী পিতা-মাতার জন্য নিরাপদ ও আধুনিক চাইল্ড কেয়ার ব্যবস্থা",
+    descEn: "Modern secure nursery for working parents"
+  },
+  {
+    id: 2,
+    sl: "02",
+    iconType: "education",
+    tagEn: "Academic",
+    tagBn: "শিক্ষা জোন",
+    badgeTone: "green",
+    nameBn: "স্কুল, কলেজ ও বিশ্ববিদ্যালয়",
+    nameEn: "Schools, Colleges & Unis",
+    descBn: "আন্তর্জাতিক মানের শিক্ষাপ্রতিষ্ঠান ও সংলগ্ন ১৭টি খ্যাতনামা বিশ্ববিদ্যালয়",
+    descEn: "Top educational institutes & 17 nearby renowned universities"
+  },
+  {
+    id: 3,
+    sl: "03",
+    iconType: "community",
+    tagEn: "Social Hub",
+    tagBn: "সামাজিক কেন্দ্র",
+    badgeTone: "green",
+    nameBn: "কমিউনিটি সেন্টার",
+    nameEn: "Community Center",
+    descBn: "পারিবারিক ও সামাজিক অনুষ্ঠানের জন্য সুবিশাল ব্যাঙ্কুয়েট হল",
+    descEn: "Grand banquet hall for community & family celebrations"
+  },
+  {
+    id: 4,
+    sl: "04",
+    iconType: "mosque",
+    tagEn: "Spiritual",
+    tagBn: "ধর্মীয় কমপ্লেক্স",
+    badgeTone: "green",
+    nameBn: "ইসলামিক সিটি ও কেন্দ্রীয় মসজিদ",
+    nameEn: "Islamic City & Central Mosque",
+    descBn: "নান্দনিক স্থাপত্যের সুবিশাল কেন্দ্রীয় মসজিদ ও ইসলামিক কমপ্লেক্স",
+    descEn: "Grand architectural mosque & integrated Islamic complex"
+  },
+  {
+    id: 5,
+    sl: "05",
+    iconType: "security",
+    tagEn: "24/7 Safe",
+    tagBn: "২৪/৭ নিরাপত্তা",
+    badgeTone: "green",
+    nameBn: "নিরাপত্তা ব্যবস্থা ও পুলিশ বক্স",
+    nameEn: "24/7 Security & Police Box",
+    descBn: "সার্বক্ষণিক সিসিটিভি নজরদারি, আধুনিক নিরাপত্তা গেট ও পুলিশ ক্যাম্প",
+    descEn: "Round-the-clock CCTV surveillance, gated security & police post"
+  },
+  {
+    id: 6,
+    sl: "06",
+    iconType: "madrasa",
+    tagEn: "Dual Media",
+    tagBn: "দ্বিমুখী শিক্ষা",
+    badgeTone: "green",
+    nameBn: "বাংলা ও ইংরেজি মাধ্যমের মাদ্রাসা",
+    nameEn: "Integrated Madrasa",
+    descBn: "আধুনিক শিক্ষা ও ধর্মীয় জ্ঞানের সমন্বয়ে সমন্বিত মাদ্রাসা ব্যবস্থা",
+    descEn: "Integrated modern Islamic & contemporary dual curriculum"
+  },
+  {
+    id: 7,
+    sl: "07",
+    iconType: "shopping",
+    tagEn: "Lifestyle",
+    tagBn: "লাইফস্টাইল",
+    badgeTone: "green",
+    nameBn: "শপিং সেন্টার, সিনে-ক্যাফে",
+    nameEn: "Shopping Mall & Cine-Café",
+    descBn: "আধুনিক শপিং মল, ব্র্যান্ডেড আউটলেট, ফুডকোর্ট ও সিনে-ক্যাফে",
+    descEn: "Mega shopping mall, branded outlets, food court & movie café"
+  },
+  {
+    id: 8,
+    sl: "08",
+    iconType: "themepark",
+    tagEn: "Recreation",
+    tagBn: "বিনোদন পার্ক",
+    badgeTone: "amber",
+    nameBn: "শিশু পার্ক ও অ্যামিউজমেন্ট পার্ক",
+    nameEn: "Children & Theme Park",
+    descBn: "শিশুদের খেলার রাইড, উন্মুক্ত গ্রিন পার্ক ও পরিবারের বিনোদন জোন",
+    descEn: "Theme rides, kids outdoor playground & family green zones"
+  },
+  {
+    id: 9,
+    sl: "09",
+    iconType: "hospital",
+    tagEn: "24/7 Care",
+    tagBn: "২৪/৭ চিকিৎসা",
+    badgeTone: "green",
+    nameBn: "ক্লিনিক ও ঢাকা আইকন হাসপাতাল",
+    nameEn: "Dhaka Icon Hospital & Clinic",
+    descBn: "২৪ ঘণ্টা জরুরি চিকিৎসা, আধুনিক ডায়াগনস্টিক ও স্পেশালাইজড কেয়ার",
+    descEn: "24/7 emergency healthcare, diagnostic center & specialist care"
+  },
+  {
+    id: 10,
+    sl: "10",
+    iconType: "gym",
+    tagEn: "Fitness",
+    tagBn: "ফিটনেস ও মাঠ",
+    badgeTone: "green",
+    nameBn: "জিমনেসিয়াম, খেলার মাঠ",
+    nameEn: "Gymnasium & Sports Ground",
+    descBn: "আধুনিক ফিটনেস সেন্টার, ইনডোর গেমস ও সুবিশাল খেলার মাঠ",
+    descEn: "State-of-the-art fitness gym, sports club & football pitch"
+  },
+  {
+    id: 11,
+    sl: "11",
+    iconType: "graveyard",
+    tagEn: "Serene Zone",
+    tagBn: "সংরক্ষিত জোন",
+    badgeTone: "green",
+    nameBn: "কবরস্থান",
+    nameEn: "Dedicated Graveyard",
+    descBn: "টাউনশিপের নিজস্ব সুপরিকল্পিত ও সংরক্ষিত কবরস্থান এলাকা",
+    descEn: "Well-maintained dedicated township community graveyard"
+  },
+  {
+    id: 12,
+    sl: "12",
+    iconType: "lake",
+    tagEn: "Eco Promenade",
+    tagBn: "লেক ও পার্ক",
+    badgeTone: "amber",
+    nameBn: "লেক ও পার্ক লেন ওয়াকওয়ে",
+    nameEn: "Central Lake & Park Lane",
+    descBn: "লেকভিউ সংলগ্ন ৮০ ও ৪০ ফুট প্রশস্ত গ্রিন প্রমেনেড ও জগিং ট্র্যাক",
+    descEn: "80 & 40-foot wide scenic lakefront promenade & jogging tracks"
+  }
 ]
+
+function renderAmenityIcon(type) {
+  switch (type) {
+    case 'daycare':
+      // Smiling baby face with curl matching reference
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="13" r="7" />
+          <path d="M5 12c-1 0-1.5.8-1.5 1.5S4 15 5 15" />
+          <path d="M19 12c1 0 1.5.8 1.5 1.5S20 15 19 15" />
+          <path d="M12 6c0-2 1.8-2.5 2.5-1.5.6.8-.2 2-1.5 2" />
+          <circle cx="9.5" cy="12" r="0.8" fill="currentColor" stroke="none" />
+          <circle cx="14.5" cy="12" r="0.8" fill="currentColor" stroke="none" />
+          <path d="M9.8 15.2c1.2 1.1 3.2 1.1 4.4 0" />
+        </svg>
+      )
+    case 'education':
+      // Mortarboard graduation cap
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 4L2.5 9 12 14l9.5-5L12 4z" />
+          <path d="M6.5 11.2v4.8c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.8" />
+          <path d="M21.5 9v6" />
+        </svg>
+      )
+    case 'community':
+      // Classical pediment building with 3 columns
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9.5L12 4l9 5.5H3z" />
+          <line x1="6.5" y1="9.5" x2="6.5" y2="18" />
+          <line x1="12" y1="9.5" x2="12" y2="18" />
+          <line x1="17.5" y1="9.5" x2="17.5" y2="18" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+          <line x1="2" y1="20.5" x2="22" y2="20.5" />
+        </svg>
+      )
+    case 'mosque':
+      // Mosque dome with crescent & arched doorway
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12.8 2.8a1.6 1.6 0 1 0 0 2.6 1.3 1.3 0 0 1 0-2.6z" />
+          <path d="M6.5 13c0-3.4 2.5-5.6 5.5-7 3 1.4 5.5 3.6 5.5 7H6.5z" />
+          <rect x="5" y="13" width="14" height="7" />
+          <path d="M10 20v-3.5a2 2 0 0 1 4 0V20" />
+          <line x1="3" y1="20" x2="21" y2="20" />
+        </svg>
+      )
+    case 'security':
+      // Shield with checkmark
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3l7.5 3.2v5.3c0 4.8-3.2 8.6-7.5 9.8-4.3-1.2-7.5-5-7.5-9.8V6.2L12 3z" />
+          <path d="M9 12.2l2 2 4.2-4.2" />
+        </svg>
+      )
+    case 'madrasa':
+      // Open book
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2.5 6A2.5 2.5 0 0 1 5 3.5h7v15.5H5A2.5 2.5 0 0 0 2.5 21V6z" />
+          <path d="M21.5 6A2.5 2.5 0 0 0 19 3.5h-7v15.5h7a2.5 2.5 0 0 1 2.5 2V6z" />
+        </svg>
+      )
+    case 'shopping':
+      // Minimalist shopping bag
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5.5 7.5h13l1 12.5H4.5l1-12.5z" />
+          <path d="M9 7.5V5.5a3 3 0 0 1 6 0v2" />
+        </svg>
+      )
+    case 'themepark':
+      // Playground slide with ladder matching reference
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="9.5" cy="5.5" r="1.8" />
+          <path d="M5 20l3.5-10h3l1 10" />
+          <line x1="6.2" y1="13.5" x2="11.8" y2="13.5" />
+          <line x1="5.5" y1="16.8" x2="12.1" y2="16.8" />
+          <path d="M11.5 10c2.5 0 4.5 3.5 6.5 7.5.8 1.6 1.8 2.5 3 2.5" />
+          <path d="M11.5 13c1.8 0 3.5 3 5.2 6 .5.8 1.2 1 2.3 1" />
+        </svg>
+      )
+    case 'hospital':
+      // Hospital building with rounded cross header
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 8V6.5a4 4 0 0 1 8 0V8" />
+          <rect x="4" y="8" width="16" height="12" rx="1.5" />
+          <line x1="12" y1="5.5" x2="12" y2="8.5" />
+          <line x1="10.5" y1="7" x2="13.5" y2="7" />
+          <path d="M10 20v-4h4v4" />
+          <line x1="7" y1="11.5" x2="8.5" y2="11.5" />
+          <line x1="7" y1="14.5" x2="8.5" y2="14.5" />
+          <line x1="15.5" y1="11.5" x2="17" y2="11.5" />
+          <line x1="15.5" y1="14.5" x2="17" y2="14.5" />
+        </svg>
+      )
+    case 'gym':
+      // Horizontal dumbbell matching reference
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="8.5" width="2.5" height="7" rx="1" />
+          <rect x="6.5" y="6.5" width="2.5" height="11" rx="1" />
+          <rect x="15" y="6.5" width="2.5" height="11" rx="1" />
+          <rect x="18.5" y="8.5" width="2.5" height="7" rx="1" />
+          <line x1="9" y1="12" x2="15" y2="12" />
+        </svg>
+      )
+    case 'graveyard':
+      // Serene leaf / memorial tree on base matching reference
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3.5c-4 3-5.5 6.2-5.5 9a5.5 5.5 0 0 0 11 0c0-2.8-1.5-6-5.5-9z" />
+          <line x1="12" y1="8.5" x2="12" y2="20" />
+          <path d="M12 13.5l-2.5-2" />
+          <path d="M12 12l2.5-2" />
+          <line x1="6" y1="20" x2="18" y2="20" />
+        </svg>
+      )
+    case 'lake':
+      // Two trees over double water waves matching reference
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8.5 3.5L5 9.5h2.2L5.5 13h6l-1.7-3.5H12L8.5 3.5z" />
+          <line x1="8.5" y1="13" x2="8.5" y2="15" />
+          <path d="M16 5l-2.8 4.8h1.8L13.8 13h4.5l-1.2-3.2h1.7L16 5z" />
+          <line x1="16" y1="13" x2="16" y2="15" />
+          <path d="M3 17.2c1.8-1.4 3.6-1.4 5.4 0 1.8 1.4 3.6 1.4 5.4 0 1.8-1.4 3.6-1.4 5.4 0" />
+          <path d="M3 20.5c1.8-1.4 3.6-1.4 5.4 0 1.8 1.4 3.6 1.4 5.4 0 1.8-1.4 3.6-1.4 5.4 0" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
 
 // 17 Nearby Universities list from brochure
 const nearbyUnis = [
@@ -652,7 +1104,7 @@ function LeaderCard({ leader, lang }) {
           />
         ) : (
           <div className="leader-default-avatar">
-            <User size={54} className="leader-avatar-icon" strokeWidth={1.5} />
+            <User size={50} className="leader-avatar-icon" strokeWidth={1.5} />
           </div>
         )}
       </div>
@@ -661,8 +1113,8 @@ function LeaderCard({ leader, lang }) {
         <h3 className="leader-name">
           {isBn ? leader.nameBn : leader.nameEn}
         </h3>
+
         <div className="leader-role-badge">
-          <Briefcase size={14} className="leader-role-icon" />
           <span>{isBn ? leader.roleBn : leader.roleEn}</span>
         </div>
 
@@ -672,7 +1124,7 @@ function LeaderCard({ leader, lang }) {
             className="leader-phone-link"
             title={isBn ? `সরাসরি কল করুন: ${leader.phone}` : `Call directly: ${leader.phone}`}
           >
-            <Phone size={15} className="leader-phone-icon" />
+            <Phone size={13} className="leader-phone-icon" strokeWidth={1.8} />
             <span>{leader.phone}</span>
           </a>
         ) : (
@@ -777,6 +1229,37 @@ function App() {
   // Interactive Plot Calculator State
   const [calcSelectedPlotId, setCalcSelectedPlotId] = useState('residential-corner')
   const [mobilePlotId, setMobilePlotId] = useState('residential-general')
+  const [pricingCategory] = useState('all')
+  const plotScrollRef = useRef(null)
+  const [activePlotIndex, setActivePlotIndex] = useState(0)
+
+  const handlePlotScroll = () => {
+    if (!plotScrollRef.current) return
+    const el = plotScrollRef.current
+    const scrollLeft = el.scrollLeft
+    const cardEl = el.querySelector('.perfect-plot-card')
+    const cardWidth = cardEl ? cardEl.offsetWidth : 280
+    const index = Math.round(scrollLeft / (cardWidth + 14))
+    setActivePlotIndex(Math.min(Math.max(index, 0), plotPricingData.length - 1))
+  }
+
+  const scrollPlots = (direction) => {
+    if (!plotScrollRef.current) return
+    const el = plotScrollRef.current
+    const cardEl = el.querySelector('.perfect-plot-card')
+    const cardWidth = cardEl ? cardEl.offsetWidth : 280
+    const scrollAmount = (cardWidth + 14) * (direction === 'next' ? 1 : -1)
+    el.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+  }
+
+  const scrollToPlotIndex = (idx) => {
+    if (!plotScrollRef.current) return
+    const el = plotScrollRef.current
+    const cardEl = el.querySelector('.perfect-plot-card')
+    const cardWidth = cardEl ? cardEl.offsetWidth : 280
+    el.scrollTo({ left: idx * (cardWidth + 14), behavior: 'smooth' })
+    setActivePlotIndex(idx)
+  }
   const [showAllCommute, setShowAllCommute] = useState(false)
   const [showAllAmenities, setShowAllAmenities] = useState(false)
   const [showAllUnis, setShowAllUnis] = useState(false)
@@ -797,21 +1280,47 @@ function App() {
 
   // Visit Schedule Modal State
   const [visitModalOpen, setVisitModalOpen] = useState(false)
-  const [visitForm, setVisitForm] = useState({
-    name: '',
-    phone: '',
-    location: '',
-    purpose: 'Project Visit',
-    date: '',
-    timeSlot: '10:00 AM',
-    pickupLoc: '',
-    plotSize: '৩ কাঠা [3 Katha]',
-    investmentAmount: '৫০ লক্ষ - ১ কোটি টাকা (50 Lakh - 1 Crore BDT)'
-  })
-  const [visitSubmitting, setVisitSubmitting] = useState(false)
-  const [visitSuccess, setVisitSuccess] = useState(false)
+  const closeVisitModal = useCallback(() => setVisitModalOpen(false), [])
 
-  // Routing State ('home' | 'leadership-team' | 'corporate-about' | 'gallery')
+  // Booking Inquiry Modal State
+  const [bookingModalOpen, setBookingModalOpen] = useState(false)
+
+  // Supabase Auth State
+  const [currentUser, setCurrentUser] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUser(session?.user ?? null)
+    }).catch(() => {})
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const newUser = session?.user ?? null
+      setCurrentUser(prevUser => {
+        if (!prevUser && !newUser) return null
+        if (prevUser && newUser && prevUser.id === newUser.id && prevUser.email === newUser.email) {
+          // Keep identical reference across tab switching / token refresh events to prevent unmount glitch
+          return prevUser
+        }
+        return newUser
+      })
+    })
+
+    return () => {
+      subscription?.unsubscribe()
+    }
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut()
+      setCurrentUser(null)
+      navigateTo('login')
+    } catch {
+      // ignore
+    }
+  }
+
+  // Routing State ('home' | 'leadership-team' | 'corporate-about' | 'gallery' | 'login' | 'admin')
   const [currentRoute, setCurrentRoute] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase()
@@ -824,6 +1333,12 @@ function App() {
       }
       if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
         return 'gallery'
+      }
+      if (hash === '#login' || hash === '#/login' || path === '/login') {
+        return 'login'
+      }
+      if (hash === '#admin' || hash === '#/admin' || path === '/admin' || hash === '#profile' || hash === '#/profile' || path === '/profile') {
+        return 'admin'
       }
     }
     return 'home'
@@ -848,6 +1363,12 @@ function App() {
         }
       } else if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
         setCurrentRoute('gallery')
+        window.scrollTo(0, 0)
+      } else if (hash === '#login' || hash === '#/login' || path === '/login') {
+        setCurrentRoute('login')
+        window.scrollTo(0, 0)
+      } else if (hash === '#admin' || hash === '#/admin' || path === '/admin' || hash === '#profile' || hash === '#/profile' || path === '/profile') {
+        setCurrentRoute('admin')
         window.scrollTo(0, 0)
       } else {
         setCurrentRoute('home')
@@ -881,6 +1402,14 @@ function App() {
       window.location.hash = '#gallery'
       setCurrentRoute('gallery')
       window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (route === 'login') {
+      window.location.hash = '#login'
+      setCurrentRoute('login')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (route === 'admin') {
+      window.location.hash = '#admin'
+      setCurrentRoute('admin')
+      window.scrollTo({ top: 0 })
     } else {
       window.location.hash = targetHash ? `#${targetHash}` : '#'
       setCurrentRoute('home')
@@ -989,21 +1518,47 @@ function App() {
     setIsSubmitting(true)
     addLog(`Submitting plot inquiry from ${formData.name} (${formData.phone})...`, 'info')
 
-    try {
-      const { data, error } = await supabase.from('inquiries').insert([
-        {
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          message: `[Dhaka Icon City Booking] Plot Type: ${formData.plotCategory} | Size: ${formData.plotSize} | Note: ${formData.message}`
-        }
-      ]).select()
+    const inquiryRecord = {
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email ? formData.email.trim() : null,
+      plot_category: formData.plotCategory,
+      plot_size: formData.plotSize,
+      message: formData.message?.trim() 
+        ? `[Dhaka Icon City Booking] Plot: ${formData.plotCategory} | Size: ${formData.plotSize} | Note: ${formData.message.trim()}`
+        : `[Dhaka Icon City Booking] Plot: ${formData.plotCategory} | Size: ${formData.plotSize}`,
+      status: 'pending'
+    }
 
-      if (error) {
-        addLog(`DB insert error: ${error.message}. Form handled locally.`, 'error')
-      } else {
-        addLog('✓ Inquiry successfully logged to Supabase.', 'success')
-      }
+    // LocalStorage fallback backup
+    try {
+      const existing = JSON.parse(localStorage.getItem('dz_local_inquiries') || '[]')
+      existing.unshift({ ...inquiryRecord, created_at: new Date().toISOString() })
+      localStorage.setItem('dz_local_inquiries', JSON.stringify(existing.slice(0, 50)))
+    } catch {
+      // ignore
+    }
+
+    try {
+      const dbInsertTask = (async () => {
+        try {
+          const { error } = await supabase.from('inquiries').insert([inquiryRecord])
+          if (error) {
+            addLog(`DB Notice: ${error.message}. Form handled locally.`, 'error')
+          } else {
+            addLog('✓ Inquiry successfully saved to Supabase inquiries table.', 'success')
+          }
+        } catch (dbErr) {
+          addLog(`DB error: ${dbErr.message}`, 'error')
+        }
+      })()
+
+      // Keep response instant (<300ms) so user is not blocked
+      await Promise.race([
+        dbInsertTask,
+        new Promise((resolve) => setTimeout(resolve, 300))
+      ])
+
       setFormSuccess(true)
       setFormData({
         name: '',
@@ -1021,52 +1576,6 @@ function App() {
     }
   }
 
-  // Visit Schedule Modal Form Handler
-  const handleVisitSubmit = async (e) => {
-    e.preventDefault()
-    setVisitSubmitting(true)
-
-    try {
-      let dynamicDetails = `Purpose: ${visitForm.purpose}`
-      let plotSizeVal = 'N/A'
-      
-      if (visitForm.purpose === 'Project Visit') {
-        dynamicDetails += ` | Date: ${visitForm.date || 'Flexible'} (${visitForm.timeSlot}) | Pickup: ${visitForm.pickupLoc || 'N/A'}`
-      } else if (visitForm.purpose === 'Buy Plot') {
-        dynamicDetails += ` | Plot Size: ${visitForm.plotSize}`
-        plotSizeVal = visitForm.plotSize
-      } else if (visitForm.purpose === 'Office Visit') {
-        dynamicDetails += ` | Date: ${visitForm.date || 'Flexible'} (${visitForm.timeSlot})`
-      } else if (visitForm.purpose === 'Intersted patner') {
-        dynamicDetails += ` | Approx Investment: ${visitForm.investmentAmount}`
-        plotSizeVal = `Invest: ${visitForm.investmentAmount}`
-      }
-
-      const { data, error } = await supabase.from('inquiries').insert([
-        {
-          name: visitForm.name,
-          phone: visitForm.phone,
-          email: visitForm.location ? `Location: ${visitForm.location}` : 'N/A',
-          plot_category: `Schedule: ${visitForm.purpose}`,
-          plot_size: plotSizeVal,
-          message: `Location: ${visitForm.location || 'N/A'} | ${dynamicDetails}`
-        }
-      ]).select()
-
-      if (error) {
-        addLog(`DB Notice: ${error.message}. Form handled locally.`, 'error')
-      } else {
-        addLog(`✓ ${visitForm.purpose} schedule logged to Supabase.`, 'success')
-      }
-      setVisitSuccess(true)
-    } catch (err) {
-      addLog(`Error during submit: ${err.message}`, 'error')
-      setVisitSuccess(true)
-    } finally {
-      setVisitSubmitting(false)
-    }
-  }
-
   // Prefill form from calculator or pricing cards
   const selectPlotForBooking = (plotTitle, kathaCount = 3) => {
     setFormData(prev => ({
@@ -1074,14 +1583,15 @@ function App() {
       plotCategory: plotTitle,
       plotSize: `${kathaCount} কাঠা [${kathaCount} Katha]`
     }))
-    document.getElementById('booking-form-section')?.scrollIntoView({ behavior: 'smooth' })
+    setBookingModalOpen(true)
   }
 
   return (
     <div className={`app-root ${lang === 'bn' ? 'font-bengali' : 'font-english'}`}>
-      
-      {/* 1. TOP NOTICE & RAJUK BADGE BAR */}
-      <div className="top-announcement-bar">
+      {currentRoute !== 'login' && currentRoute !== 'admin' && (
+        <>
+          {/* 1. TOP NOTICE & RAJUK BADGE BAR */}
+          <div className="top-announcement-bar">
         <div className="top-announcement-container">
           <div className="rajuk-top-badge">
             <ShieldCheck size={14} className="rajuk-shield-icon" />
@@ -1116,7 +1626,7 @@ function App() {
             </ul>
           </nav>
 
-          {/* Header Action Right: Round Push-Switch Language Toggle */}
+          {/* Header Action Right: Round Language Toggle (Left) + Sign In Button */}
           <div className="header-action-group">
             <button 
               type="button"
@@ -1135,6 +1645,41 @@ function App() {
                 {lang === 'bn' ? 'EN' : 'BN'}
               </span>
             </button>
+
+            {currentUser ? (
+              <div className="navbar-user-group">
+                <button 
+                  type="button" 
+                  className="navbar-user-pill"
+                  onClick={() => navigateTo('admin')}
+                  title={currentUser.email}
+                >
+                  <span className="navbar-user-dot" />
+                  <span className="navbar-user-email">
+                    {currentUser.user_metadata?.full_name?.split(' ')[0] || currentUser.email?.split('@')[0]}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="navbar-logout-btn"
+                  onClick={handleLogout}
+                  title={lang === 'bn' ? 'লগআউট' : 'Sign Out'}
+                  aria-label="Logout"
+                >
+                  <LogOut size={14} />
+                </button>
+              </div>
+            ) : (
+              <button 
+                type="button"
+                className={`navbar-login-btn ${currentRoute === 'login' ? 'active' : ''}`}
+                onClick={() => navigateTo('login')}
+                title={lang === 'bn' ? 'লগইন করুন' : 'Sign In'}
+                aria-label="Login"
+              >
+                <User size={16} className="navbar-login-icon" />
+              </button>
+            )}
 
             {/* Mobile Hamburger Button */}
             <button 
@@ -1169,6 +1714,29 @@ function App() {
             <li><a href="#leadership-team" className={currentRoute === 'leadership-team' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
             <li><a href="#gallery" className={currentRoute === 'gallery' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('gallery'); }}>{t.navGallery}</a></li>
             <li><a href="#booking-form-section" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
+            {currentUser ? (
+              <li className="mobile-nav-login-item">
+                <button
+                  type="button"
+                  className={`mobile-nav-login-btn ${currentRoute === 'admin' ? 'active' : ''}`}
+                  onClick={() => { setMobileMenuOpen(false); navigateTo('admin'); }}
+                >
+                  <Building2 size={18} />
+                  <span>{lang === 'bn' ? 'এডমিন ড্যাশবোর্ড' : 'Admin Panel'}</span>
+                </button>
+              </li>
+            ) : (
+              <li className="mobile-nav-login-item">
+                <button
+                  type="button"
+                  className={`mobile-nav-login-btn ${currentRoute === 'login' ? 'active' : ''}`}
+                  onClick={() => { setMobileMenuOpen(false); navigateTo('login'); }}
+                >
+                  <User size={18} />
+                  <span>{lang === 'bn' ? 'লগইন' : 'Sign In'}</span>
+                </button>
+              </li>
+            )}
           </ul>
 
           <div className="mobile-drawer-footer">
@@ -1230,6 +1798,8 @@ function App() {
           <span>{lang === 'bn' ? 'প্ল্যান' : 'Plan'}</span>
         </button>
       </div>
+        </>
+      )}
 
       {currentRoute === 'corporate-about' ? (
         <CorporateAboutPage 
@@ -1239,18 +1809,54 @@ function App() {
         />
       ) : currentRoute === 'leadership-team' ? (
         <main className="leadership-page-main">
-          {/* Dedicated Page Hero */}
-          <section className="leadership-page-hero">
+          {/* 1. Dedicated Page Hero (Matching Revised Centered Reference) */}
+          <section className="section-header-center bod-header-banner leadership-page-hero">
+            {/* Top Green + Centered Gold Accent Border Bar */}
+            <div className="bod-banner-top-accent" aria-hidden="true">
+              <span className="bod-top-gold-seg" />
+            </div>
+
+            {/* Right Decorative Translucent Ring */}
+            <div className="bod-banner-ring" aria-hidden="true" />
+
             <div className="section-container">
-              <div className="leadership-hero-content">
-                <h1 className="leadership-page-title">{t.leadershipTitle}</h1>
-                <div className="section-divider-line" />
-                <p className="leadership-page-subtitle">{t.leadershipSubtitle}</p>
+              <div className="bod-banner-grid">
+                {/* Center Title & Subtitle Block */}
+                <div className="bod-banner-center">
+                  <div className="bod-center-kicker-row">
+                    <span className="bod-kicker-side-rule" aria-hidden="true" />
+                    <span className="bod-center-kicker-text">
+                      {lang === 'bn' ? 'প্রতিশ্রুতির নেপথ্যের কারিগর' : 'THE PEOPLE BEHIND THE PROMISE'}
+                    </span>
+                    <span className="bod-kicker-side-rule" aria-hidden="true" />
+                  </div>
+
+                  <h1 className="bod-center-title">
+                    {lang === 'bn' ? (
+                      <>
+                        <span className="bod-title-navy">পরিচালনা </span>
+                        <span className="bod-title-green">পর্ষদ</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="bod-title-navy">Board of </span>
+                        <span className="bod-title-green">Directors</span>
+                      </>
+                    )}
+                  </h1>
+
+                  <div className="amenities-dual-divider bod-center-dual-divider" aria-hidden="true">
+                    <span className="divider-seg-green" />
+                    <span className="divider-seg-gold" />
+                  </div>
+
+                  <p className="bod-center-subtitle">{t.leadershipSubtitle}</p>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Full Board of Directors Grid */}
+          {/* 2. Full Board of Directors Grid */}
           <section className="leadership-full-roster-section">
             <div className="section-container">
               <div className="leadership-grid leadership-page-grid">
@@ -1261,18 +1867,30 @@ function App() {
             </div>
           </section>
 
-          {/* Founder Directors Section */}
+          {/* 3. Founder Directors Section */}
           <FounderDirectorSection lang={lang} />
 
-          {/* Consultation CTA Banner */}
+          {/* 4. Executive Consultation CTA Banner */}
           <section className="leadership-cta-section">
             <div className="section-container">
               <div className="leadership-cta-box">
                 <div className="lead-cta-text">
-                  <h3>{lang === 'bn' ? 'সরাসরি আমাদের বোর্ড অব ডিরেক্টরস বা বিশেষজ্ঞ টিমের সাথে পরামর্শ করতে চান?' : 'Want to Consult Directly with Our Board of Directors?'}</h3>
-                  <p>{lang === 'bn' ? 'ঢাকা আইকন সিটির ভবিষ্যৎ সম্ভাবনা ও নিরাপদ প্লট ক্রয়ে বিশেষজ্ঞ পরামর্শ ও সাইট ভিজিট বুক করুন।' : 'Book a priority VIP site visit or executive consultation at our Gulshan corporate office.'}</p>
+                  <span className="lead-cta-kicker">
+                    {lang === 'bn' ? 'সরাসরি বোর্ড ও উপদেষ্টা ডেস্ক' : 'DIRECT BOARD & ADVISORY ACCESS'}
+                  </span>
+                  <h3>
+                    {lang === 'bn'
+                      ? 'সরাসরি আমাদের বোর্ড অব ডিরেক্টরস বা বিশেষজ্ঞ টিমের সাথে পরামর্শ করতে চান?'
+                      : 'Want to Consult Directly with Our Board of Directors?'}
+                  </h3>
+                  <p>
+                    {lang === 'bn'
+                      ? 'গুলশান-০১ কর্পোরেট হেড অফিসে বসে ঢাকা আইকন সিটির ভবিষ্যৎ সম্ভাবনা ও নিরাপদ প্লট ক্রয়ে বিশেষজ্ঞ পরামর্শ ও সাইট ভিজিট বুক করুন।'
+                      : 'Book a priority VIP site visit or executive consultation at our Level-10 Gulshan corporate headquarters.'}
+                  </p>
                 </div>
                 <button 
+                  type="button"
                   className="btn-lead-schedule-visit"
                   onClick={() => setVisitModalOpen(true)}
                 >
@@ -1289,6 +1907,23 @@ function App() {
           lang={lang}
           onScheduleVisit={() => setVisitModalOpen(true)}
           navigateTo={navigateTo}
+        />
+      ) : currentRoute === 'login' ? (
+        <LoginPage 
+          lang={lang}
+          setLang={setLang}
+          navigateTo={navigateTo}
+          user={currentUser}
+          onLoginSuccess={(u) => {
+            setCurrentUser(u)
+          }}
+          onLogout={handleLogout}
+        />
+      ) : currentRoute === 'admin' ? (
+        <AdminDashboard
+          user={currentUser}
+          navigateTo={navigateTo}
+          onLogout={handleLogout}
         />
       ) : (
         <>
@@ -1340,14 +1975,11 @@ function App() {
             <div className="hero-visual-column">
               <div className="hero-visual-card">
                 <div className="hero-card-media-wrap">
-                  <img 
-                    src="/dhaka-icon-hero.jpg" 
-                    alt={lang === 'bn' ? 'ঢাকা আইকন সিটি - লাক্সারি স্মার্ট মেগা টাউনশিপ' : 'Dhaka Icon City - Luxury Smart Township'} 
-                    className="hero-card-img"
-                    loading="eager"
-                    fetchPriority="high"
+                  <HeroVideoPlayer
+                    videoSrc="/video/Dhaka%20Icon%20City.MP4"
+                    poster="/dhaka-icon-hero.jpg"
+                    lang={lang}
                   />
-                  <div className="hero-card-overlay-gradient"></div>
                 </div>
               </div>
             </div>
@@ -1393,15 +2025,15 @@ function App() {
         </div>
       </section>
 
-      {/* 2. OUR PROJECTS HIGHLIGHT SECTION */}
+      {/* 2. FEATURED PROJECT HIGHLIGHT SECTION (Matching Attached Design) */}
       <section className="project-highlight-section" id="featured-project">
         <div className="section-container">
           <div className="project-highlight-grid">
             {/* Left Narrative Column */}
             <div className="project-highlight-content">
               <div className="project-highlight-kicker">
-                <span className="kicker-dash">—</span>
-                <span className="kicker-text">{lang === 'bn' ? 'আমাদের প্রকল্পসমূহ' : 'OUR PROJECTS'}</span>
+                <span className="kicker-line" />
+                <span className="kicker-text">{lang === 'bn' ? 'ফিচার্ড প্রজেক্ট' : 'FEATURED PROJECT'}</span>
               </div>
               
               <h2 className="project-highlight-title">
@@ -1409,45 +2041,73 @@ function App() {
               </h2>
               
               <p className="project-highlight-subtitle">
-                {lang === 'bn' ? 'ফিউচার স্মার্ট ওনারশিপ সিটি' : 'Future Smart Ownership City'}
+                {lang === 'bn' ? 'নিজের করুন এক স্মার্ট ভবিষ্যৎ' : 'Own a Smarter Future'}
               </p>
               
               <p className="project-highlight-desc">
                 {lang === 'bn' 
-                  ? 'আধুনিক সকল নাগরিক সুযোগ-সুবিধা, সম্পূর্ণ নিষ্কণ্টক আইনি দলিল এবং আপনার ও আপনার পরিবারের নিরাপদ ভবিষ্যৎ বিনির্মাণে এক আধুনিক মেগা টাউনশিপ।'
-                  : 'A modern township with modern facilities, secure investment and a better tomorrow for you and your family.'}
+                  ? 'আধুনিক জীবনযাপন, নিরাপদ বিনিয়োগ এবং আপনার পরিবারের জন্য দীর্ঘমেয়াদী মূল্যায়নে সুপরিকল্পিত এক মেগা টাউনশিপ।'
+                  : 'A thoughtfully planned township designed for modern living, secure investment, and lasting value for your family.'}
               </p>
               
               <div className="project-highlight-btn-wrap">
                 <a 
-                  href="#corporate-about" 
+                  href="#pricing-calculator" 
                   className="btn-project-highlight"
                   onClick={(e) => {
                     e.preventDefault()
-                    navigateTo('corporate-about')
+                    const targetEl = document.getElementById('pricing-calculator') || document.getElementById('project-masterplan')
+                    if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' })
                   }}
                 >
-                  <span>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</span>
-                  <ChevronRight size={17} />
+                  <span>{lang === 'bn' ? 'প্রকল্পটি ঘুরে দেখুন' : 'Explore the Project'}</span>
+                  <ArrowRight size={18} />
                 </a>
               </div>
             </div>
 
             {/* Right Media Card Column */}
             <div className="project-highlight-media">
-              <div className="project-media-card">
-                <img 
-                  src="/dhaka_icon_township.jpg" 
-                  alt={lang === 'bn' ? 'ঢাকা আইকন সিটি মেগা টাউনশিপ' : 'Dhaka Icon City Master Township'} 
-                  className="project-media-img"
-                  loading="lazy"
-                />
-                
-                {/* Curved Trusted Partner Badge */}
-                <div className="project-trusted-badge">
-                  <span className="badge-line-sub">{lang === 'bn' ? 'আপনার' : 'Your'}</span>
-                  <strong className="badge-line-main">{lang === 'bn' ? 'বিশ্বস্ত অংশীদার' : 'Trusted Partner'}</strong>
-                  <span className="badge-line-sub">{lang === 'bn' ? 'রিয়েল এস্টেট খাতে' : 'in Real Estate'}</span>
+              <div className="project-media-frame">
+                {/* Architectural Tech Outline & Corner Accents */}
+                <div className="project-frame-decorations" aria-hidden="true">
+                  <div className="project-frame-outer-line" />
+                  <div className="project-frame-inner-line" />
+                  <div className="project-frame-teal-accent" />
+                  <div className="project-frame-lime-bar" />
+                  <div className="project-frame-bracket" />
+                </div>
+
+                {/* Main Architectural Chamfered Media Card */}
+                <div className="project-media-card-wrapper">
+                  <div className="project-media-card">
+                    <img 
+                      src="/dhaka_icon_township.jpg" 
+                      alt={lang === 'bn' ? 'ঢাকা আইকন সিটি মেগা টাউনশিপ' : 'Dhaka Icon City Master Township'} 
+                      className="project-media-img"
+                      loading="lazy"
+                    />
+
+                    {/* Top Right Floating Architectural Tagline */}
+                    <div className="project-media-tagline">
+                      <span className="tagline-line">{lang === 'bn' ? 'একটি উজ্জ্বল' : 'A BRIGHTER'}</span>
+                      <span className="tagline-line">{lang === 'bn' ? 'আগামী' : 'TOMORROW'}</span>
+                      <span className="tagline-line">{lang === 'bn' ? 'এখানেই' : 'LIVES HERE'}</span>
+                    </div>
+                    
+                    {/* Floating Chamfered Trusted Partner Badge with Glowing Lime Border */}
+                    <div className="project-trusted-badge">
+                      <div className="project-trusted-badge-inner">
+                        <div className="project-badge-icon">
+                          <ShieldCheck size={28} strokeWidth={2} />
+                        </div>
+                        <div className="project-badge-texts">
+                          <strong className="badge-line-main">{lang === 'bn' ? 'বিশ্বস্ত অংশীদার' : 'Trusted Partner'}</strong>
+                          <span className="badge-line-sub">{lang === 'bn' ? 'রিয়েল এস্টেট খাতে' : 'in Real Estate'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1455,12 +2115,27 @@ function App() {
         </div>
       </section>
 
-      {/* 3. WHY CHOOSE US SECTION */}
+      {/* 3. WHY CHOOSE US SECTION (Redesigned with minimal animation & architectural aesthetics) */}
       <section className="why-choose-us-section" id="why-choose-us">
-        <div className="section-container">
+        {/* Background Decorative Architecture & Organic Waves */}
+        <div className="why-bg-elements" aria-hidden="true">
+          <div className="why-bg-curve-top" />
+          <div className="why-bg-curve-bottom" />
+          <div className="why-bg-building">
+            <img 
+              src="/why-us-architectural.jpg" 
+              alt="" 
+              loading="lazy"
+              className="why-bg-building-img" 
+            />
+          </div>
+        </div>
+
+        <div className="section-container why-section-container">
           <div className="why-choose-grid">
             {/* Left Narrative Column */}
             <div className="why-choose-content">
+              <div className="why-accent-line" />
               <h2 className="why-choose-title">
                 {lang === 'bn' ? 'কেন আমাদের নির্বাচন করবেন?' : 'Why Choose Us?'}
               </h2>
@@ -1476,13 +2151,13 @@ function App() {
               </p>
             </div>
 
-            {/* Right 6-Feature Card Grid */}
+            {/* Right 6-Feature Card Grid (3x2 Matrix matching user reference) */}
             <div className="why-choose-features-card">
               <div className="why-features-grid">
                 {/* 1. RAJUK Registered & Approved */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <ShieldCheck size={24} />
+                    <ShieldCheck size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'রাজউক নিবন্ধিত ও অনুমোদিত' : 'RAJUK Registered & Approved'}
@@ -1492,7 +2167,7 @@ function App() {
                 {/* 2. Prime Location in Dhaka */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <MapPin size={24} />
+                    <MapPin size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'ঢাকার সন্নিকটে প্রাইম লোকেশন' : 'Prime Location in Dhaka'}
@@ -1502,7 +2177,7 @@ function App() {
                 {/* 3. Transparent Process */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <CheckCircle2 size={24} />
+                    <CheckCircle2 size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'শতভাগ স্বচ্ছ প্রক্রিয়া' : 'Transparent Process'}
@@ -1512,7 +2187,7 @@ function App() {
                 {/* 4. Trusted by Investors */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <Users size={24} />
+                    <Users size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'বিনিয়োগকারীদের আস্থা' : 'Trusted by Investors'}
@@ -1522,7 +2197,7 @@ function App() {
                 {/* 5. Modern Infrastructure */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <Building2 size={24} />
+                    <Building2 size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'আধুনিক অবকাঠামো' : 'Modern Infrastructure'}
@@ -1532,7 +2207,7 @@ function App() {
                 {/* 6. Future Appreciation */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
-                    <TrendingUp size={24} />
+                    <TrendingUp size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
                     {lang === 'bn' ? 'ভবিষ্যৎ মূল্যবৃদ্ধি' : 'Future Appreciation'}
@@ -1545,226 +2220,538 @@ function App() {
       </section>
 
       {/* 4. PHASE 1 OFFICIAL PRICING & INTERACTIVE CALCULATOR */}
-      <section className="pricing-section" id="pricing-calculator">
+      <section className="pricing-section perfect-plot-section" id="pricing-calculator">
+        {/* Subtle decorative leaf watermark */}
+        <div className="leaf-decorative-watermark" aria-hidden="true">
+          <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M180 20C120 40 80 90 70 160C100 130 140 110 180 20Z" fill="rgba(0, 132, 80, 0.05)" />
+            <path d="M140 60C100 80 60 120 40 180C70 150 110 130 140 60Z" fill="rgba(0, 132, 80, 0.035)" />
+            <path d="M190 10C150 30 110 70 90 130C120 100 160 80 190 10Z" fill="rgba(0, 132, 80, 0.04)" />
+          </svg>
+        </div>
+
         <div className="section-container">
           
-          <div className="section-header-center">
-            <h2 className="section-main-heading">{t.pricingTitle}</h2>
-            <div className="section-divider-line" />
-            <p className="section-sub-desc">{t.pricingSubtitle}</p>
-          </div>
+          {/* Top Header Row matching the design image */}
+          <div className="perfect-plot-header-wrap">
+            <div className="perfect-plot-header-left">
+              <div className="accent-bar-green" />
+              <h2 className="perfect-plot-main-heading">
+                {lang === 'bn' ? 'আপনার পছন্দের প্লটটি বেছে নিন' : 'Find your perfect plot'}
+              </h2>
+              <p className="perfect-plot-sub-desc">
+                {lang === 'bn' ? 'স্বচ্ছ মূল্য। সহজ মালিকানা।' : 'Transparent pricing. Flexible ownership.'}
+              </p>
+            </div>
 
-          {/* Mobile-only dropdown to choose which plot card to show */}
-          <div className="mobile-plot-select-wrap">
-            <CustomSelect
-              id="mobile-plot-select"
-              value={mobilePlotId}
-              onChange={setMobilePlotId}
-              ariaLabel={lang === 'bn' ? 'প্লটের ধরন নির্বাচন করুন' : 'Select plot type'}
-              options={plotPricingData.map((p) => ({
-                value: p.id,
-                label: lang === 'bn' ? p.titleBn : p.titleEn,
-                sub: lang === 'bn' ? p.rateFormattedBn : p.rateFormattedEn
-              }))}
-            />
-          </div>
-
-          {/* Pricing Cards Grid matching the brochure exactly */}
-          <div className="pricing-cards-grid">
-            {plotPricingData.map((plot) => (
-              <div key={plot.id} className={`pricing-card ${plot.isPopular ? 'featured-card' : ''} ${plot.id === mobilePlotId ? 'mobile-active' : 'mobile-inactive'}`}>
-                {plot.isPopular && (
-                  <div className="popular-badge">
-                    <Sparkles size={13} />
-                    <span>{lang === 'bn' ? 'সর্বাধিক চাহিদাসম্পন্ন' : 'High Demand'}</span>
-                  </div>
-                )}
-                
-                <div className="pricing-card-header">
-                  <span className={`plot-type-chip ${plot.type.toLowerCase()}`}>{plot.type}</span>
-                  <h3 className="plot-card-title">{lang === 'bn' ? plot.titleBn : plot.titleEn}</h3>
-                  <p className="plot-card-tagline">{lang === 'bn' ? plot.tagBn : plot.tagEn}</p>
-                </div>
-
-                <div className="pricing-card-amount">
-                  <span className="price-num">{lang === 'bn' ? plot.rateFormattedBn : plot.rateFormattedEn}</span>
-                </div>
-
-                <div className="pricing-terms-list">
-                  <div className="term-item">
-                    <Check size={16} className="text-emerald" />
-                    <span>{lang === 'bn' ? 'ডাউন পেমেন্ট মাত্র ২০%' : '20% Down Payment'}</span>
-                  </div>
-                  <div className="term-item">
-                    <Check size={16} className="text-emerald" />
-                    <span>{lang === 'bn' ? '৩, ৫, ১০ কাঠা ও ১ বিঘা' : '3, 5, 10 Katha & 1 Bigha'}</span>
-                  </div>
-                  <div className="term-item">
-                    <Check size={16} className="text-emerald" />
-                    <span>{lang === 'bn' ? '১ থেকে ৫ বছর মেয়াদি সহজ কিস্তি' : '1 to 5 Year Flexible Installments'}</span>
-                  </div>
-                  <div className="term-item">
-                    <Check size={16} className="text-emerald" />
-                    <span>{lang === 'bn' ? '১০০% নিষ্কণ্টক জমি হস্তান্তর' : '100% Mutation & Freehold'}</span>
+            <div className="perfect-plot-header-right">
+              <div className="trust-markers-group">
+                <div className="trust-item">
+                  <ShieldCheck size={18} className="trust-icon" />
+                  <div className="trust-text">
+                    <span className="bold-line">100%</span>
+                    <span className="sub-line">{lang === 'bn' ? 'নিষ্কণ্টক দলিল' : 'Clear Title'}</span>
                   </div>
                 </div>
-
-                <button 
-                  className={`btn-select-plot ${plot.isPopular ? 'btn-primary-emerald' : 'btn-outline-dark'}`}
-                  onClick={() => {
-                    setCalcSelectedPlotId(plot.id)
-                    selectPlotForBooking(lang === 'bn' ? plot.titleBn : plot.titleEn, calcKatha)
-                  }}
-                >
-                  <span>Book Now</span>
-                  <ArrowUpRight size={16} />
-                </button>
+                <div className="trust-divider" />
+                <div className="trust-item">
+                  <Sprout size={18} className="trust-icon" />
+                  <div className="trust-text">
+                    <span className="bold-line">{lang === 'bn' ? 'সহজ' : 'Flexible'}</span>
+                    <span className="sub-line">{lang === 'bn' ? 'কিস্তি সুবিধা' : 'Payment Plans'}</span>
+                  </div>
+                </div>
+                <div className="trust-divider" />
+                <div className="trust-item">
+                  <Users size={18} className="trust-icon" />
+                  <div className="trust-text">
+                    <span className="bold-line">{lang === 'bn' ? 'নিরাপদ' : 'A Smarter'}</span>
+                    <span className="sub-line">{lang === 'bn' ? 'ভবিষ্যৎ' : 'Tomorrow'}</span>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
 
-          <div className="pricing-bottom-notice">
-            <p>{t.downPaymentNotice}</p>
+          {/* Pricing Cards Row: Desktop 5-Col Grid & Touch-Smooth Snap Carousel on Mobile */}
+          <div 
+            className="perfect-plot-cards-wrapper" 
+            ref={plotScrollRef} 
+            onScroll={handlePlotScroll}
+          >
+            <div className="perfect-plot-cards-grid">
+              {plotPricingData
+                .filter(p => pricingCategory === 'all' || p.type.toLowerCase() === pricingCategory)
+                .map((plot) => {
+                  const isCommercial = plot.type.toLowerCase() === 'commercial'
+                  const isSelectedForCalc = plot.id === calcSelectedPlotId
+
+                  return (
+                    <div 
+                      key={plot.id} 
+                      className={`perfect-plot-card ${plot.isPopular ? 'card-featured' : ''} ${isSelectedForCalc ? 'card-selected' : ''}`}
+                    >
+                      {/* Top Row: High Demand badge on left (if featured) and index code on right */}
+                      <div className="card-top-row">
+                        {plot.isPopular ? (
+                          <div className="badge-high-demand">
+                            <Zap size={10} fill="currentColor" />
+                            <span>{lang === 'bn' ? 'সর্বাধিক চাহিদাসম্পন্ন' : 'High Demand'}</span>
+                          </div>
+                        ) : (
+                          <div className="empty-badge-spacer" />
+                        )}
+                        <span className="card-index-code">#{plot.index}</span>
+                      </div>
+
+                      {/* Category Tag */}
+                      <div className="card-category-row">
+                        <span className={`category-tag ${isCommercial ? 'commercial' : 'residential'}`}>
+                          {isCommercial ? (lang === 'bn' ? 'বাণিজ্যিক' : 'COMMERCIAL') : (lang === 'bn' ? 'আবাসিক' : 'RESIDENTIAL')}
+                        </span>
+                      </div>
+
+                      {/* Title & Tagline */}
+                      <div className="card-title-block">
+                        <h3 className="card-main-title">
+                          {lang === 'bn' ? (
+                            plot.titleBn
+                          ) : (
+                            <>
+                              {plot.titleEn.includes('(') ? (
+                                <>
+                                  <span>{plot.titleEn.split('(')[0].trim()}</span>
+                                  <span className="title-paren">({plot.titleEn.split('(')[1]}</span>
+                                </>
+                              ) : (
+                                <span>{plot.titleEn}</span>
+                              )}
+                            </>
+                          )}
+                        </h3>
+                        <p className="card-sub-tagline">{lang === 'bn' ? plot.tagBn : plot.tagEn}</p>
+                      </div>
+
+                      {/* Price Block */}
+                      <div className="card-price-block">
+                        <div className="price-num-row">
+                          <span className="currency-taka">৳</span>
+                          <span className="price-bold-num">{lang === 'bn' ? plot.numBn : plot.numEn}</span>
+                          <div className="price-suffix-col">
+                            <span className="suffix-lakh">{lang === 'bn' ? 'লক্ষ' : 'Lakh'}</span>
+                            <span className="suffix-katha">{lang === 'bn' ? '/ কাঠা' : '/ Katha'}</span>
+                          </div>
+                        </div>
+
+                        {/* Tier & Meter Bar */}
+                        <div className="tier-meter-container">
+                          <div className="tier-text-row">
+                            <span className="tier-name">{lang === 'bn' ? plot.tierBn : plot.tierEn}</span>
+                            <span className="tier-pct">{plot.meterPct}%</span>
+                          </div>
+                          <div className="tier-bar-track">
+                            <div 
+                              className={`tier-bar-fill ${isCommercial ? 'fill-commercial' : 'fill-residential'}`} 
+                              style={{ width: `${plot.meterPct}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Down Payment Pill */}
+                      <div className="down-payment-pill">
+                        <span className="dp-dot" />
+                        <span className="dp-title">{lang === 'bn' ? '২০% ডাউন পেমেন্ট:' : '20% Down Payment:'}</span>
+                        <span className="dp-amount">
+                          <span className="dp-taka-sym">৳ </span>{lang === 'bn' ? `${plot.dpBn} টাকা` : plot.dpEn}
+                        </span>
+                      </div>
+
+                      {/* Features List (Exactly 3 items) */}
+                      <ul className="card-specs-list">
+                        <li>
+                          <Check size={14} className="spec-check-icon" />
+                          <span>{lang === 'bn' ? '২০% ন্যূনতম ডাউন পেমেন্ট' : '20% Minimum Down Payment'}</span>
+                        </li>
+                        <li>
+                          <Check size={14} className="spec-check-icon" />
+                          <span>{lang === 'bn' ? '৩, ৫, ১০ কাঠা ও ১ বিঘা' : '3, 5, 10 Katha & 1 Bigha'}</span>
+                        </li>
+                        <li>
+                          <Check size={14} className="spec-check-icon" />
+                          <span>{lang === 'bn' ? '১ থেকে ৫ বছর মেয়াদি সহজ কিস্তি' : '1 to 5 Yrs Flexible EMI'}</span>
+                        </li>
+                      </ul>
+
+                      {/* CTA Actions */}
+                      <div className="card-cta-row">
+                        <button 
+                          type="button" 
+                          className="btn-view-plot"
+                          onClick={() => {
+                            setCalcSelectedPlotId(plot.id)
+                            setMobilePlotId(plot.id)
+                            selectPlotForBooking(lang === 'bn' ? plot.titleBn : plot.titleEn, calcKatha)
+                          }}
+                        >
+                          <Calendar size={14} />
+                          <span>{lang === 'bn' ? 'বুকিং করুন' : 'Book Now'}</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+            </div>
+          </div>
+
+          {/* Section Footer Bar with Centered Interactive Arrow Controls & Animated Pill Indicator */}
+          <div className="perfect-plot-footer-bar">
+            <div className="carousel-nav-indicator">
+              <button 
+                type="button" 
+                className="arrow-cue" 
+                onClick={() => scrollPlots('prev')}
+                aria-label="Previous plot"
+              >
+                ←
+              </button>
+              <div className="indicator-track" role="tablist">
+                {plotPricingData
+                  .filter(p => pricingCategory === 'all' || p.type.toLowerCase() === pricingCategory)
+                  .map((plot, i) => (
+                    <button
+                      key={plot.id}
+                      type="button"
+                      className={`indicator-dot ${i === activePlotIndex ? 'active' : ''}`}
+                      onClick={() => scrollToPlotIndex(i)}
+                      aria-label={`Go to plot ${i + 1}`}
+                    />
+                  ))}
+              </div>
+              <button 
+                type="button" 
+                className="arrow-cue" 
+                onClick={() => scrollPlots('next')}
+                aria-label="Next plot"
+              >
+                →
+              </button>
+            </div>
           </div>
 
           {/* INTERACTIVE EMI & DOWN PAYMENT CALCULATOR */}
-          <div className="calculator-box-wrapper">
+          <div className="calculator-box-wrapper" id="calculator-section">
+            {/* Top Header Row matching design */}
             <div className="calculator-box-header">
-              <div className="calc-header-title">
-                <Calculator size={26} className="text-emerald" />
-                <div>
-                  <h3>{t.calcTitle}</h3>
+              <div className="calc-header-left">
+                <div className="calc-header-icon-box">
+                  <Calculator size={24} color="#ffffff" strokeWidth={2.2} />
+                </div>
+                <div className="calc-header-titles">
+                  <h3 className="calc-main-heading">
+                    {lang === 'bn' ? 'ইন্টারেক্টিভ প্লট ও ইএমআই ক্যালকুলেটর' : 'Interactive Plot & EMI Calculator'}
+                  </h3>
+                  <p className="calc-main-subtext">
+                    {lang === 'bn' 
+                      ? 'প্লট অপশন বেছে নিন, বিনিয়োগ হিসাব করুন এবং সহজেই পরিকল্পনা করুন।'
+                      : 'Explore plot options, calculate your investment and plan with ease.'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="calc-header-right">
+                <div className="calc-leaf-tagline">
+                  <span className="calc-tagline-top">A SMARTER TOMORROW</span>
+                  <span className="calc-tagline-bottom">BEGINS WITH THE RIGHT PLOT</span>
+                  <div className="calc-tagline-bar" />
                 </div>
               </div>
             </div>
 
             <div className="calculator-grid">
-              {/* Left Form Inputs */}
+              {/* Left Column: Form Controls / Inputs Card */}
               <div className="calc-inputs-col">
-                {/* 1. Category */}
-                <div className="calc-form-group">
-                  <label className="calc-label">{t.selectCategory}</label>
-                  <div className="calc-category-mobile">
-                    <CustomSelect
-                      id="calc-category-select"
-                      value={calcSelectedPlotId}
-                      onChange={setCalcSelectedPlotId}
-                      ariaLabel={t.selectCategory}
-                      options={plotPricingData.map((p) => ({
-                        value: p.id,
-                        label: lang === 'bn' ? p.titleBn : p.titleEn,
-                        sub: lang === 'bn' ? p.rateFormattedBn : p.rateFormattedEn
-                      }))}
-                    />
-                  </div>
-                  <div className="calc-category-selector">
-                    {plotPricingData.map((p) => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        className={`category-pill-btn ${calcSelectedPlotId === p.id ? 'active' : ''}`}
-                        onClick={() => setCalcSelectedPlotId(p.id)}
-                      >
-                        <span>{lang === 'bn' ? p.titleBn : p.titleEn}</span>
-                        <small>{lang === 'bn' ? p.rateFormattedBn : p.rateFormattedEn}</small>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <div className="calc-controls-card">
+                  {/* 1. Category Selection */}
+                  <div className="calc-section-group">
+                    <div className="calc-section-header">
+                      <div className="calc-section-title-row">
+                        <LayoutGrid size={18} className="calc-section-icon" />
+                        <h4 className="calc-section-title">
+                          {lang === 'bn' ? 'প্লটের ক্যাটাগরি নির্বাচন করুন' : 'Select Plot Category'}
+                        </h4>
+                      </div>
+                      <p className="calc-section-subtitle">
+                        {lang === 'bn' 
+                          ? 'আপনার পরিকল্পনার সাথে মানানসই অবস্থান ও ক্যাটাগরি বেছে নিন।' 
+                          : 'Choose the location and category that fits your plan.'}
+                      </p>
+                    </div>
 
-                {/* 2. Katha Size */}
-                <div className="calc-form-group">
-                  <label className="calc-label">{t.selectSize}: <strong className="text-emerald">{calcKatha} {lang === 'bn' ? 'কাঠা' : 'Katha'}</strong></label>
-                  <div className="katha-preset-buttons">
-                    {[3, 5, 10, 20].map((k) => (
-                      <button
-                        key={k}
-                        type="button"
-                        className={`katha-btn ${calcKatha === k ? 'active' : ''}`}
-                        onClick={() => setCalcKatha(k)}
-                      >
-                        {k === 20 ? (lang === 'bn' ? '১ বিঘা (২০ কাঠা)' : '1 Bigha (20 Katha)') : `${k} ${lang === 'bn' ? 'কাঠা' : 'Katha'}`}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                    <div className="calc-category-cards-grid">
+                      {plotPricingData.map((plot) => {
+                        const isSelected = calcSelectedPlotId === plot.id
+                        const isCommercial = plot.type.toLowerCase() === 'commercial'
 
-                {/* 3. Payment Tenure */}
-                <div className="calc-form-group">
-                  <label className="calc-label">{t.selectTenure}</label>
-                  <CustomSelect
-                    id="calc-tenure-select"
-                    value={calcTenure}
-                    onChange={setCalcTenure}
-                    ariaLabel={t.selectTenure}
-                    options={[
-                      { value: 'lump', label: t.tenureLumpSum },
-                      { value: '1yr', label: t.tenure1Yr },
-                      { value: '2yr', label: t.tenure2Yr },
-                      { value: '3yr', label: t.tenure3Yr },
-                      { value: '5yr', label: t.tenure5Yr }
-                    ]}
-                  />
+                        return (
+                          <div
+                            key={plot.id}
+                            role="button"
+                            tabIndex={0}
+                            className={`calc-plot-option-card ${isSelected ? 'selected' : ''}`}
+                            onClick={() => setCalcSelectedPlotId(plot.id)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                setCalcSelectedPlotId(plot.id)
+                              }
+                            }}
+                          >
+                            <div className="plot-option-left">
+                              {isCommercial ? (
+                                <Building2 size={24} className="plot-option-icon commercial" />
+                              ) : (
+                                <Home size={24} className="plot-option-icon residential" />
+                              )}
+                              <div className="plot-option-texts">
+                                <span className="plot-option-title">
+                                  {lang === 'bn' ? plot.titleBn : plot.titleEn}
+                                </span>
+                                <span className="plot-option-rate">
+                                  {lang === 'bn' ? plot.rateFormattedBn : `৳${plot.numEn} Lakh / Katha`}
+                                </span>
+                              </div>
+                            </div>
+
+                            {isSelected && (
+                              <div className="plot-option-check-badge">
+                                <Check size={11} strokeWidth={3.5} />
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 2. Katha Size */}
+                  <div className="calc-section-group">
+                    <div className="calc-section-header">
+                      <div className="calc-section-title-row">
+                        <Layers size={18} className="calc-section-icon" />
+                        <h4 className="calc-section-title">
+                          {lang === 'bn' ? 'প্লটের আকার (কাঠা):' : 'Plot Size (Katha):'}{' '}
+                          <span className="calc-katha-highlight">
+                            {calcKatha === 20 ? (lang === 'bn' ? '১ বিঘা (২০ কাঠা)' : '1 Bigha (20 Katha)') : `${calcKatha} ${lang === 'bn' ? 'কাঠা' : 'Katha'}`}
+                          </span>
+                        </h4>
+                      </div>
+                      <p className="calc-section-subtitle">
+                        {lang === 'bn' 
+                          ? 'আপনি যে পরিমাণ জমি কিনতে চান তা নির্বাচন করুন।' 
+                          : 'Select the total plot size you want to purchase.'}
+                      </p>
+                    </div>
+
+                    <div className="katha-preset-buttons">
+                      {[3, 5, 10, 20].map((k) => (
+                        <button
+                          key={k}
+                          type="button"
+                          className={`katha-btn ${calcKatha === k ? 'active' : ''}`}
+                          onClick={() => setCalcKatha(k)}
+                        >
+                          {k === 20 ? (lang === 'bn' ? '১ বিঘা (২০ কাঠা)' : '1 Bigha (20 Katha)') : `${k} ${lang === 'bn' ? 'কাঠা' : 'Katha'}`}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 3. Payment Plan Tenure */}
+                  <div className="calc-section-group">
+                    <div className="calc-section-header">
+                      <div className="calc-section-title-row">
+                        <Calendar size={18} className="calc-section-icon" />
+                        <h4 className="calc-section-title">
+                          {lang === 'bn' ? 'পেমেন্ট প্ল্যান সময়কাল' : 'Payment Plan Tenure'}
+                        </h4>
+                      </div>
+                      <p className="calc-section-subtitle">
+                        {lang === 'bn' 
+                          ? 'আপনার পছন্দের পরিশোধের সময়কাল নির্বাচন করুন।' 
+                          : 'Choose your preferred payment duration.'}
+                      </p>
+                    </div>
+
+                    <div className="calc-tenure-dropdown-wrap">
+                      <CustomSelect
+                        id="calc-tenure-select"
+                        value={calcTenure}
+                        onChange={setCalcTenure}
+                        ariaLabel={lang === 'bn' ? 'পেমেন্ট প্ল্যান সময়কাল' : 'Payment Plan Tenure'}
+                        options={[
+                          { value: '3yr', label: lang === 'bn' ? '৩ বছর (৩৬ কিস্তি)' : '3 Years (36 Installments)' },
+                          { value: '2yr', label: lang === 'bn' ? '২ বছর (২৪ কিস্তি)' : '2 Years (24 Installments)' },
+                          { value: '1yr', label: lang === 'bn' ? '১ বছর (১২ কিস্তি)' : '1 Year (12 Installments)' },
+                          { value: '5yr', label: lang === 'bn' ? '৫ বছর (৬০ কিস্তি)' : '5 Years (60 Installments)' },
+                          { value: 'lump', label: lang === 'bn' ? 'এককালীন পরিশোধ (Lump Sum)' : 'Lump Sum Payment' }
+                        ]}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Right Summary Card */}
+              {/* Right Column: Investment Summary Card */}
               <div className="calc-summary-col">
                 <div className="calc-result-card">
-                  <div className="result-card-header">
-                    <span className="result-badge">Investment Summary</span>
-                    <h4>{lang === 'bn' ? currentPlotObj.titleBn : currentPlotObj.titleEn} - {calcKatha} {lang === 'bn' ? 'কাঠা' : 'Katha'}</h4>
+                  {/* Top Header of Summary */}
+                  <div className="summary-card-header">
+                    <div className="summary-header-icon-wrap">
+                      <FileText size={20} className="summary-doc-icon" />
+                    </div>
+                    <div className="summary-title-col">
+                      <div className="summary-top-tag-row">
+                        <span className="summary-tag-text">INVESTMENT SUMMARY</span>
+                        <div className="summary-header-accent-line" />
+                      </div>
+                      <p className="summary-header-desc">
+                        {lang === 'bn' ? 'এখানে আপনার নির্বাচিত প্লটের বিস্তারিত বিবরণ দেওয়া হলো।' : "Here's a detailed breakdown of your selected plot."}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="result-breakdown">
-                    <div className="result-row total-row">
-                      <span>{t.calcTotal}:</span>
-                      <strong className="text-price">{formatLakhText(calculatedTotalPrice)} ({formatBdt(calculatedTotalPrice)})</strong>
+                  {/* Selected Plot Badge & Title */}
+                  <div className="summary-selected-plot-banner">
+                    <Home size={22} className="summary-plot-icon" />
+                    <h4 className="summary-plot-title">
+                      {lang === 'bn' ? currentPlotObj.titleBn : currentPlotObj.titleEn} – {calcKatha === 20 ? (lang === 'bn' ? '১ বিঘা' : '1 Bigha') : `${calcKatha} ${lang === 'bn' ? 'কাঠা' : 'Katha'}`}
+                    </h4>
+                  </div>
+
+                  {/* Breakdown List */}
+                  <div className="summary-breakdown-table">
+                    <div className="summary-row">
+                      <span className="summary-label">{lang === 'bn' ? 'মোট প্লটের মূল্য:' : 'Total Plot Price:'}</span>
+                      <div className="summary-val-stack">
+                        <strong className="val-bold blue">{formatLakhText(calculatedTotalPrice)}</strong>
+                        <span className="val-sub blue">({formatBdt(calculatedTotalPrice)})</span>
+                      </div>
                     </div>
 
-                    <div className="result-row down-payment-row">
-                      <span>{t.calcDownPayment} (20%):</span>
-                      <strong className="text-emerald">{formatLakhText(calculatedDownPayment)} ({formatBdt(calculatedDownPayment)})</strong>
+                    <div className="summary-row">
+                      <span className="summary-label">{lang === 'bn' ? '২০% ডাউন পেমেন্ট (২০%):' : '20% Down Payment (20%):'}</span>
+                      <div className="summary-val-stack">
+                        <strong className="val-bold green">{formatLakhText(calculatedDownPayment)}</strong>
+                        <span className="val-sub green">({formatBdt(calculatedDownPayment)})</span>
+                      </div>
                     </div>
 
-                    <div className="result-row">
-                      <span>{t.calcRemaining} (80%):</span>
-                      <span>{formatLakhText(calculatedRemaining)}</span>
+                    <div className="summary-row-divider" />
+
+                    <div className="summary-row">
+                      <span className="summary-label">{lang === 'bn' ? 'অবশিষ্ট কিস্তি ব্যালেন্স (৮০%):' : 'Remaining Balance (80%):'}</span>
+                      <div className="summary-val-stack">
+                        <strong className="val-bold slate">{formatLakhText(calculatedRemaining)}</strong>
+                      </div>
                     </div>
+
+                    <div className="summary-row-divider" />
 
                     {calcTenure !== 'lump' && (
-                      <div className="result-row emi-row">
-                        <span>{t.calcMonthly}:</span>
-                        <strong className="text-emi">{formatBdt(getMonthlyEmi())} / {lang === 'bn' ? 'মাস' : 'Month'}</strong>
+                      <div className="summary-row emi-highlight-row">
+                        <span className="summary-label">{lang === 'bn' ? 'আনুমানিক মাসিক কিস্তি:' : 'Estimated Monthly EMI:'}</span>
+                        <div className="summary-val-stack">
+                          <strong className="val-bold gold">{formatBdt(getMonthlyEmi())} / Month</strong>
+                        </div>
                       </div>
                     )}
                   </div>
 
+                  {/* Action Booking Button */}
                   <button 
-                    className="btn-book-from-calc"
+                    type="button"
+                    className="btn-summary-book-now"
                     onClick={() => selectPlotForBooking(`${lang === 'bn' ? currentPlotObj.titleBn : currentPlotObj.titleEn}`, calcKatha)}
                   >
-                    <Calendar size={16} />
-                    <span>{t.btnBookCalculated}</span>
-                    <ChevronRight size={16} />
+                    <Calendar size={18} />
+                    <span>{lang === 'bn' ? 'এখনই এই প্লটটি বুক করুন' : 'Book This Selected Plot Now'}</span>
+                    <ChevronRight size={18} />
                   </button>
+
+                  {/* Trust markers below button */}
+                  <div className="summary-trust-markers">
+                    <div className="summary-trust-item">
+                      <ShieldCheck size={16} />
+                      <span>{lang === 'bn' ? 'নিরাপদ বিনিয়োগ' : 'Secure Investment'}</span>
+                    </div>
+                    <div className="summary-trust-item">
+                      <BarChart2 size={16} />
+                      <span>{lang === 'bn' ? 'স্বচ্ছ মূল্য' : 'Transparent Pricing'}</span>
+                    </div>
+                    <div className="summary-trust-item">
+                      <Users size={16} />
+                      <span>{lang === 'bn' ? 'উজ্জ্বল ভবিষ্যৎ' : 'A Brighter Future'}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
       {/* 5. LEADERSHIP TEAM PREVIEW */}
       <section className="leadership-section" id="leadership-preview">
-        <div className="section-container">
-          <div className="section-header-center">
-            <h2 className="section-main-heading">{t.leadershipTitle}</h2>
-            <div className="section-divider-line" />
-            <p className="section-sub-desc">{t.leadershipSubtitle}</p>
+        {/* Full-Width Editorial Header Banner matching attached design */}
+        <div className="section-header-center bod-header-banner">
+          {/* Top Green + Centered Gold Accent Border Bar */}
+          <div className="bod-banner-top-accent" aria-hidden="true">
+            <span className="bod-top-gold-seg" />
           </div>
 
+          {/* Right Decorative Translucent Ring */}
+          <div className="bod-banner-ring" aria-hidden="true" />
+
+          <div className="section-container">
+            <div className="bod-banner-grid">
+              {/* Center Title & Subtitle Block */}
+              <div className="bod-banner-center">
+                <div className="bod-center-kicker-row">
+                  <span className="bod-kicker-side-rule" aria-hidden="true" />
+                  <span className="bod-center-kicker-text">
+                    {lang === 'bn' ? 'প্রতিশ্রুতির নেপথ্যের কারিগর' : 'THE PEOPLE BEHIND THE PROMISE'}
+                  </span>
+                  <span className="bod-kicker-side-rule" aria-hidden="true" />
+                </div>
+
+                <h2 className="bod-center-title">
+                  {lang === 'bn' ? (
+                    <>
+                      <span className="bod-title-navy">পরিচালনা </span>
+                      <span className="bod-title-green">পর্ষদ</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="bod-title-navy">Board of </span>
+                      <span className="bod-title-green">Directors</span>
+                    </>
+                  )}
+                </h2>
+
+                <div className="amenities-dual-divider bod-center-dual-divider" aria-hidden="true">
+                  <span className="divider-seg-green" />
+                  <span className="divider-seg-gold" />
+                </div>
+
+                <p className="bod-center-subtitle">{t.leadershipSubtitle}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section-container">
           <div className="leadership-grid">
             {leadershipTeam.slice(0, 6).map((leader) => (
               <LeaderCard key={leader.id} leader={leader} lang={lang} />
@@ -1780,7 +2767,7 @@ function App() {
                 navigateTo('leadership-team')
               }}
             >
-              <span>See More</span>
+              <span>{lang === 'bn' ? 'সকল পরিচালনা পর্ষদ সদস্য দেখুন (১৫)' : 'See More'}</span>
               <ArrowRight size={16} />
             </a>
           </div>
@@ -1789,42 +2776,125 @@ function App() {
 
       {/* 6. MASTER PLAN SECTION & ROAD NETWORK */}
       <section className="masterplan-section" id="masterplan">
-        <div className="section-container">
+        {/* Diagonal Dark Emerald Background Panel & Decorative Elements */}
+        <div className="masterplan-bg-diagonal" aria-hidden="true">
+          <div className="mp-bg-arc mp-bg-arc-1" />
+          <div className="mp-bg-arc mp-bg-arc-2" />
+          <div className="mp-corner-watermark">
+            <span>{lang === 'bn' ? 'প্রজন্মের জন্য' : 'A TOWNSHIP'}</span>
+            <span>{lang === 'bn' ? 'একটি উপশহর' : 'FOR GENERATIONS'}</span>
+          </div>
+        </div>
+
+        <div className="section-container masterplan-container">
           <div className="masterplan-grid">
+            {/* Left Column: Kicker, Heading, Callout, 01-04 Timeline & CTA */}
             <div className="masterplan-content-col">
-              <h2 className="masterplan-heading">{t.masterplanTitle}</h2>
-              <div className="section-divider-line" />
-              <p className="masterplan-desc-text">{t.masterplanDesc}</p>
+              <div className="mp-kicker-row">
+                <span className="mp-kicker-line" aria-hidden="true" />
+                <span className="mp-kicker-text">
+                  {lang === 'bn' ? 'মাস্টার প্ল্যান / কৌশলগত নেটওয়ার্ক' : 'MASTER PLAN / STRATEGIC NETWORK'}
+                </span>
+              </div>
+
+              <h2 className="masterplan-heading">
+                {lang === 'bn' ? (
+                  <>
+                    <span className="mp-title-dark">আধুনিক মাস্টার প্ল্যান ও</span>
+                    <br />
+                    <span className="mp-title-green">রোড নেটওয়ার্ক</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="mp-title-dark">Master Plan &amp; Strategic</span>
+                    <br />
+                    <span className="mp-title-green">Road Network</span>
+                  </>
+                )}
+              </h2>
+
+              <div className="mp-desc-callout">
+                <span className="mp-callout-leaf" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3C11.5 3 6 7.5 6 14C6 16.5 7 18.5 8.5 20C15 20 19.5 14.5 19.5 9C19.5 6.5 18.5 4.5 17 3Z" fill="#469668" fillOpacity="0.22" stroke="#2f7d52" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 21C7.5 17.5 11.5 13.5 16.5 8.5" stroke="#2f7d52" strokeWidth="1.8" strokeLinecap="round"/>
+                  </svg>
+                </span>
+                <p className="masterplan-desc-text">{t.masterplanDesc}</p>
+              </div>
 
               <div className="masterplan-features-list">
+                {/* 01 */}
                 <div className="mp-feature-item">
-                  <div className="mp-feature-icon">🛣️</div>
-                  <div>
-                    <h4>100' Wide Main Avenue Road #01</h4>
+                  <div className="mp-step-rail" aria-hidden="true">
+                    <span className="mp-step-num">01</span>
+                    <span className="mp-step-line" />
+                  </div>
+                  <div className="mp-feature-icon-circle" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 19L9 5" />
+                      <path d="M20 19L15 5" />
+                      <line x1="12" y1="6" x2="12" y2="8" />
+                      <line x1="12" y1="11" x2="12" y2="13" />
+                      <line x1="12" y1="16" x2="12" y2="18" />
+                    </svg>
+                  </div>
+                  <div className="mp-feature-body">
+                    <h4>100&apos; Wide Main Avenue Road #01</h4>
                     <p>{lang === 'bn' ? 'প্রকল্পের প্রবেশদ্বার থেকে কেন্দ্রীয় লেক পর্যন্ত ১০০ ফুট প্রশস্ত মূল এভিনিউ' : '100 feet wide arterial grand boulevard connecting the entrance to the lake'}</p>
                   </div>
                 </div>
 
+                {/* 02 */}
                 <div className="mp-feature-item">
-                  <div className="mp-feature-icon">🌊</div>
-                  <div>
-                    <h4>80' & 40' Wide Lake View Boulevards</h4>
+                  <div className="mp-step-rail" aria-hidden="true">
+                    <span className="mp-step-num">02</span>
+                    <span className="mp-step-line" />
+                  </div>
+                  <div className="mp-feature-icon-circle" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M2 9.5c1.8-1.8 3.6-1.8 5.4 0 1.8 1.8 3.6 1.8 5.4 0 1.8-1.8 3.6-1.8 5.4 0 1.2 1.2 2.5 1.5 3.8.5" />
+                      <path d="M2 15.5c1.8-1.8 3.6-1.8 5.4 0 1.8 1.8 3.6 1.8 5.4 0 1.8-1.8 3.6-1.8 5.4 0 1.2 1.2 2.5 1.5 3.8.5" />
+                    </svg>
+                  </div>
+                  <div className="mp-feature-body">
+                    <h4>80&apos; &amp; 40&apos; Wide Lake View Boulevards</h4>
                     <p>{lang === 'bn' ? 'প্রাকৃতিক লেকের দুপাশ দিয়ে ৮০ ও ৪০ ফুট প্রশস্ত মনোরম লেকভিউ রোড ও ওয়াকওয়ে' : '80 & 40 feet wide scenic lakeside promenades and tree-lined walkways'}</p>
                   </div>
                 </div>
 
+                {/* 03 */}
                 <div className="mp-feature-item">
-                  <div className="mp-feature-icon">🚗</div>
-                  <div>
-                    <h4>60' Connecting Avenues & 30'/25' Internal Roads</h4>
+                  <div className="mp-step-rail" aria-hidden="true">
+                    <span className="mp-step-num">03</span>
+                    <span className="mp-step-line" />
+                  </div>
+                  <div className="mp-feature-icon-circle" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 17h14v-5l-2-5H7L5 12v5Z" />
+                      <path d="M6 17v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2" />
+                      <path d="M15 17v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2" />
+                      <circle cx="8" cy="14" r="1" fill="currentColor" />
+                      <circle cx="16" cy="14" r="1" fill="currentColor" />
+                      <path d="M5 12h14" />
+                    </svg>
+                  </div>
+                  <div className="mp-feature-body">
+                    <h4>60&apos; Connecting Avenues &amp; 30&apos;/25&apos; Internal Roads</h4>
                     <p>{lang === 'bn' ? 'প্রতিটি আবাসিক ও বাণিজ্যিক ব্লকে সহজ ও বাধাহীন গাড়ী চলাচলের আধুনিক নেটওয়ার্ক' : 'Wide grid system providing direct seamless vehicle access to every single plot'}</p>
                   </div>
                 </div>
 
+                {/* 04 */}
                 <div className="mp-feature-item">
-                  <div className="mp-feature-icon">🌳</div>
-                  <div>
-                    <h4>Park Lane, Green Belt & Central Promenade</h4>
+                  <div className="mp-step-rail" aria-hidden="true">
+                    <span className="mp-step-num">04</span>
+                  </div>
+                  <div className="mp-feature-icon-circle" aria-hidden="true">
+                    <Trees size={21} strokeWidth={2} />
+                  </div>
+                  <div className="mp-feature-body">
+                    <h4>Park Lane, Green Belt &amp; Central Promenade</h4>
                     <p>{lang === 'bn' ? 'পার্ক লেন, বৃক্ষরোপণ করিডোর ও উন্মুক্ত সবুজ পার্ক জোন' : 'Lush landscaped green belts, park lane walking corridors & recreation grounds'}</p>
                   </div>
                 </div>
@@ -1837,18 +2907,74 @@ function App() {
                 >
                   <Eye size={18} />
                   <span>{t.viewFullMasterplan}</span>
+                  <ChevronRight size={16} className="mp-btn-chevron" />
                 </button>
+                <span className="mp-action-divider" aria-hidden="true" />
+                <span className="mp-action-tagline">
+                  {lang === 'bn' ? 'সবুজ  •  স্মার্ট  •  উজ্জ্বল আগামী' : 'A GREENER  •  SMARTER  •  BRIGHTER TOMORROW'}
+                </span>
               </div>
             </div>
 
+            {/* Right Column: Editorial Quote, Map Card & Value Pillars */}
             <div className="masterplan-image-col">
+              <div className="mp-editorial-quote">
+                <span className="mp-quote-mark" aria-hidden="true">&ldquo;</span>
+                <div className="mp-quote-body">
+                  <p className="mp-quote-text">
+                    {lang === 'bn' ? (
+                      <>সুপরিকল্পিত যোগাযোগ ব্যবস্থা<br />আগামীর বাসযোগ্য সুন্দর ভবিষ্যৎ</>
+                    ) : (
+                      <>Thoughtfully connected<br />a more livable tomorrow</>
+                    )}
+                  </p>
+                  <span className="mp-quote-bar" aria-hidden="true" />
+                </div>
+              </div>
+
               <div className="masterplan-preview-card" onClick={() => setMasterplanModalOpen(true)}>
                 <img src="/dhaka-icon-masterplan.jpg" alt="Dhaka Icon City Master Plan" className="masterplan-img-preview" />
-                <div className="masterplan-overlay-hint">
-                  <Eye size={28} />
-                  <span>{lang === 'bn' ? 'বড় করে মাস্টার প্ল্যান দেখতে ক্লিক করুন' : 'Click to View Full Resolution Map'}</span>
+              </div>
+
+              <div className="mp-pillars-strip">
+                <div className="mp-pillar-item">
+                  <span className="mp-pillar-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M17 3C11.5 3 6 7.5 6 14C6 16.5 7 18.5 8.5 20C15 20 19.5 14.5 19.5 9C19.5 6.5 18.5 4.5 17 3Z" fill="#5bb381" fillOpacity="0.25" stroke="#68c38f" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M5 21C7.5 17.5 11.5 13.5 16.5 8.5" stroke="#68c38f" strokeWidth="1.7" strokeLinecap="round"/>
+                    </svg>
+                  </span>
+                  <div className="mp-pillar-text">
+                    <span>{lang === 'bn' ? 'সুপরিকল্পিত' : 'WELL-PLANNED'}</span>
+                    <span>{lang === 'bn' ? 'কমিউনিটি' : 'COMMUNITIES'}</span>
+                  </div>
                 </div>
-                <div className="masterplan-badge-tag">DHAKA ICON CITY MASTER PLAN</div>
+
+                <div className="mp-pillar-item">
+                  <span className="mp-pillar-icon" aria-hidden="true">
+                    <Users size={20} strokeWidth={1.7} />
+                  </span>
+                  <div className="mp-pillar-text">
+                    <span>{lang === 'bn' ? 'সংযুক্ত' : 'CONNECTED'}</span>
+                    <span>{lang === 'bn' ? 'জীবনযাত্রা' : 'LIVING'}</span>
+                  </div>
+                </div>
+
+                <div className="mp-pillar-item">
+                  <span className="mp-pillar-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#68c38f" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 12l6-6 4 4 8-8" />
+                      <path d="M16 2h5v5" />
+                      <rect x="4" y="16" width="3" height="5" rx="0.5" />
+                      <rect x="10.5" y="13" width="3" height="8" rx="0.5" />
+                      <rect x="17" y="9" width="3" height="12" rx="0.5" />
+                    </svg>
+                  </span>
+                  <div className="mp-pillar-text">
+                    <span>{lang === 'bn' ? 'সমৃদ্ধ' : 'HIGHER'}</span>
+                    <span>{lang === 'bn' ? 'আগামী' : 'TOMORROWS'}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1857,35 +2983,202 @@ function App() {
 
       {/* 6. STRATEGIC LOCATION & CONNECTIVITY (RADIAL TIMINGS + 17 UNIVERSITIES) */}
       <section className="connectivity-section" id="connectivity-location">
-        <div className="section-container">
-          <div className="section-header-center">
-            <h2 className="section-main-heading">{t.locTitle}</h2>
-            <div className="section-divider-line" />
-            <p className="section-sub-desc">{t.locDesc}</p>
+        {/* Atmospheric Twilight Riverside & Birulia Bridge Hero Banner */}
+        <div className="connectivity-hero-banner">
+          {/* Scenic Vector Illustration of Turag River, Skyline & Cable-Stayed Birulia Bridge */}
+          <div className="conn-banner-art" aria-hidden="true">
+            <svg className="conn-bridge-svg" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="riverGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#0d3d4d" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#041923" stopOpacity="0.85" />
+                </linearGradient>
+                <linearGradient id="bridgeLight" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.15" />
+                  <stop offset="50%" stopColor="#e2e8f0" stopOpacity="0.55" />
+                  <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.2" />
+                </linearGradient>
+              </defs>
+              {/* Distant Left City Skyline & Lush Botanical Foliage */}
+              <rect x="65" y="175" width="26" height="65" fill="#0d2f42" opacity="0.65" />
+              <rect x="96" y="190" width="20" height="50" fill="#0a2636" opacity="0.65" />
+              <rect x="135" y="168" width="30" height="72" fill="#0d2f42" opacity="0.7" />
+              <rect x="170" y="185" width="22" height="55" fill="#092230" opacity="0.6" />
+              <path d="M0 245 Q90 210 210 232 T430 242 L430 265 L0 265 Z" fill="#07222c" opacity="0.85" />
+              <path d="M160 242 C185 198 245 198 275 242 Z" fill="#0a2e36" opacity="0.75" />
+
+              {/* Right Cable-Stayed Birulia Bridge Illustration */}
+              <g opacity="0.72">
+                {/* Bridge Pylons */}
+                <path d="M1125 250 L1132 128 L1139 128 L1146 250" stroke="#cbd5e1" strokeWidth="2.5" fill="none" />
+                <path d="M1195 250 L1202 118 L1209 118 L1216 250" stroke="#e2e8f0" strokeWidth="3" fill="none" />
+                {/* Stay Cables Left Pylon */}
+                <line x1="1134" y1="136" x2="1035" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                <line x1="1134" y1="148" x2="1055" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                <line x1="1134" y1="160" x2="1075" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                <line x1="1134" y1="172" x2="1095" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                <line x1="1137" y1="136" x2="1175" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                <line x1="1137" y1="152" x2="1165" y2="218" stroke="#94a3b8" strokeWidth="1" opacity="0.65" />
+                {/* Stay Cables Right Pylon */}
+                <line x1="1204" y1="126" x2="1150" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1204" y1="140" x2="1168" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1204" y1="154" x2="1184" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1207" y1="126" x2="1335" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1207" y1="138" x2="1310" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1207" y1="150" x2="1285" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1207" y1="162" x2="1260" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                <line x1="1207" y1="174" x2="1238" y2="218" stroke="#cbd5e1" strokeWidth="1.1" opacity="0.75" />
+                {/* Bridge Deck & Piers */}
+                <rect x="980" y="216" width="460" height="6" fill="url(#bridgeLight)" />
+                <rect x="1030" y="222" width="8" height="32" fill="#64748b" opacity="0.6" />
+                <rect x="1130" y="222" width="12" height="34" fill="#94a3b8" opacity="0.75" />
+                <rect x="1200" y="222" width="14" height="34" fill="#cbd5e1" opacity="0.8" />
+                <rect x="1315" y="222" width="10" height="32" fill="#64748b" opacity="0.6" />
+                <rect x="1395" y="222" width="8" height="32" fill="#64748b" opacity="0.5" />
+              </g>
+
+              {/* Turag River Surface & Shimmering Reflections */}
+              <rect x="0" y="252" width="1440" height="108" fill="url(#riverGlow)" />
+              <line x1="0" y1="252" x2="1440" y2="252" stroke="#38bdf8" strokeOpacity="0.22" strokeWidth="1" />
+              <line x1="1080" y1="264" x2="1280" y2="264" stroke="#7dd3fc" strokeOpacity="0.22" strokeWidth="1.5" />
+              <line x1="1120" y1="274" x2="1240" y2="274" stroke="#7dd3fc" strokeOpacity="0.16" strokeWidth="1.2" />
+            </svg>
           </div>
 
-          {/* Commute Times Radial / Grid Cards matching the brochure */}
-          <div className="commute-grid-container">
-            <div className="commute-header-strip">
-              <div className="commute-strip-title">
-                <Navigation size={20} className="text-emerald" />
-                <span>{t.distanceTitle}</span>
-              </div>
-              <span className="commute-strip-bridge">বিরুলিয়া সেতু ⟵ সংলগ্ন ⟶ ঢাকা আইকন সিটি</span>
+          <div className="section-container conn-banner-container">
+            {/* Left Side Motto */}
+            <div className="conn-side-motto conn-side-motto-left" aria-hidden="true">
+              <span>BETTER</span>
+              <span>CONNECTIONS</span>
+              <span>BRIGHTER</span>
+              <span>TOMORROWS</span>
+              <i className="conn-motto-bar" />
             </div>
 
+            {/* Center Editorial Title & Narrative */}
+            <div className="conn-hero-center">
+              <div className="conn-location-kicker">
+                <span className="conn-kicker-rule" aria-hidden="true" />
+                <span className="conn-kicker-badge">
+                  <MapPin size={14} className="conn-kicker-pin" />
+                  <span>{lang === 'bn' ? 'ডিএনসিসি অঞ্চল-১, ঢাকা' : 'DNCC ZONE-1, DHAKA'}</span>
+                </span>
+                <span className="conn-kicker-rule" aria-hidden="true" />
+              </div>
+
+              <h2 className="conn-main-heading">
+                {lang === 'bn' ? (
+                  <>
+                    <span className="conn-title-white">তুরাগ নদীর পশ্চিম তীরে</span>
+                    <br />
+                    <span className="conn-title-mint">বীরুলিয়া সেতু সংলগ্ন প্রাইম লোকেশন</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="conn-title-white">Western Bank of Turag River</span>
+                    <br />
+                    <span className="conn-title-mint">Adjoining Birulia Bridge</span>
+                  </>
+                )}
+              </h2>
+
+              <div className="conn-tricolor-divider" aria-hidden="true" />
+
+              <p className="conn-sub-desc">{t.locDesc}</p>
+            </div>
+
+            {/* Right Side Motto */}
+            <div className="conn-side-motto conn-side-motto-right" aria-hidden="true">
+              <span>RIVERSIDE</span>
+              <span>CONNECTS</span>
+              <span>A BRIGHTER</span>
+              <span>DHAKA</span>
+              <i className="conn-motto-bar" />
+            </div>
+          </div>
+        </div>
+
+        <div className="section-container connectivity-body-container">
+          {/* Elevated White Commute Card Container */}
+          <div className="commute-grid-container">
+            {/* Top Eyebrow & Bridge Connection Pill */}
+            <div className="commute-top-bar">
+              <div className="commute-eyebrow">
+                <span className="commute-eyebrow-bar" aria-hidden="true" />
+                <span>{lang === 'bn' ? 'গুরুত্বপূর্ণ সবকিছুর আরও কাছে' : 'LIVE CLOSER TO WHAT MATTERS'}</span>
+              </div>
+
+              <div className="commute-strip-bridge">
+                <MapPin size={14} className="commute-bridge-pin" />
+                <span>বিরুলিয়া সেতু ⟵ সংযোগ ⟶ ঢাকা আইকন সিটি</span>
+              </div>
+            </div>
+
+            {/* Second Row: Main Card Title + Travel Time Guide Legend */}
+            <div className="commute-header-strip">
+              <div className="commute-title-block">
+                <div className="commute-strip-title">
+                  <Navigation size={21} className="commute-nav-icon" />
+                  <h3>{t.distanceTitle}</h3>
+                </div>
+                <p className="commute-strip-sub">
+                  {lang === 'bn'
+                    ? 'প্রধান গন্তব্যসমূহ • স্বল্প দূরত্ব • আরও সংযুক্ত আগামী'
+                    : 'KEY DESTINATIONS. SHORTER JOURNEYS. A MORE CONNECTED TOMORROW.'}
+                </p>
+              </div>
+
+              <div className="commute-time-guide">
+                <span className="time-guide-heading">
+                  {lang === 'bn' ? 'যাতায়াত সময় নির্দেশিকা' : 'TRAVEL TIME GUIDE'}
+                </span>
+                <div className="time-guide-items">
+                  <div className="time-guide-item">
+                    <span className="tg-dot tg-dot-fast" />
+                    <div className="tg-text">
+                      <strong>&le; 5 Mins</strong>
+                      <span>{lang === 'bn' ? 'অতি নিকটে' : 'Very Close'}</span>
+                    </div>
+                  </div>
+                  <div className="time-guide-item">
+                    <span className="tg-dot tg-dot-near" />
+                    <div className="tg-text">
+                      <strong>6 &ndash; 15 Mins</strong>
+                      <span>{lang === 'bn' ? 'কাছাকাছি' : 'Nearby'}</span>
+                    </div>
+                  </div>
+                  <div className="time-guide-item">
+                    <span className="tg-dot tg-dot-reach" />
+                    <div className="tg-text">
+                      <strong>16 &ndash; 20 Mins</strong>
+                      <span>{lang === 'bn' ? 'হাতের নাগালে' : 'Within Reach'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 5x2 Grid of 10 Commute Cards */}
             <div className="commute-cards-grid">
               {commuteLandmarks.map((item, idx) => (
                 <div key={idx} className={`commute-card ${idx >= 4 && !showAllCommute ? 'commute-extra-hidden' : ''}`}>
                   <div className="commute-card-top">
-                    <span className="commute-icon">{item.icon}</span>
-                    <span className="commute-time-badge">{lang === 'bn' ? item.timeBn : item.timeEn}</span>
+                    <div className="commute-card-num-icon">
+                      <span className="commute-sl-badge">{item.sl}</span>
+                      <span className="commute-svg-icon" aria-hidden="true">
+                        {renderCommuteIcon(item.iconType)}
+                      </span>
+                    </div>
+                    <span className={`commute-time-badge ${item.badgeTone === 'amber' ? 'badge-amber' : 'badge-green'}`}>
+                      {lang === 'bn' ? item.timeBn : item.timeEn}
+                    </span>
                   </div>
                   <h4 className="commute-landmark-name">{lang === 'bn' ? item.nameBn : item.nameEn}</h4>
                   <div className="commute-highlight-tag">{item.highlight}</div>
                 </div>
               ))}
             </div>
+
             {commuteLandmarks.length > 4 && (
               <button
                 type="button"
@@ -1905,15 +3198,63 @@ function App() {
 
           {/* 17 Renowned Universities Section */}
           <div className="universities-showcase-box">
+            {/* Top Eyebrow & Distance Pill */}
+            <div className="commute-top-bar unis-top-bar">
+              <div className="commute-eyebrow">
+                <span className="commute-eyebrow-bar" aria-hidden="true" />
+                <span>{lang === 'bn' ? 'উচ্চশিক্ষার অনন্য কেন্দ্রবিন্দু' : 'PREMIER EDUCATION CORRIDOR'}</span>
+              </div>
+
+              <div className="commute-strip-bridge unis-radius-badge">
+                <GraduationCap size={15} className="commute-bridge-pin" />
+                <span>{lang === 'bn' ? '৩ – ৫ কি.মি. ব্যাসার্ধের মধ্যে ১৭টি বিশ্ববিদ্যালয়' : 'Within 3 – 5 KM Academic Radius'}</span>
+              </div>
+            </div>
+
+            {/* Header Row: Title Block + Education Hub Guide */}
             <div className="unis-header">
-              <h3>{lang === 'bn' ? 'প্রকল্পের ৩ থেকে ৫ কিলোমিটারের মধ্যে রয়েছে ১৭টি স্বনামধন্য বিশ্ববিদ্যালয়' : '17 Renowned Universities Located Within 3 to 5 KM'}</h3>
-              <p>{lang === 'bn' ? 'আধুনিক শিক্ষানগরীর প্রাণকেন্দ্রে আপনার সন্তানের নিশ্চিত ও নিরাপদ ভবিষ্যৎ গড়ে তুলুন।' : 'Invest in the heart of Dhaka’s upcoming premier education hub for your family.'}</p>
+              <div className="commute-title-block unis-title-block">
+                <div className="commute-strip-title">
+                  <GraduationCap size={23} className="commute-nav-icon unis-title-icon" />
+                  <h3>{lang === 'bn' ? 'প্রকল্পের ৩ থেকে ৫ কিলোমিটারের মধ্যে রয়েছে ১৭টি স্বনামধন্য বিশ্ববিদ্যালয়' : '17 Renowned Universities Located Within 3 to 5 KM'}</h3>
+                </div>
+                <p className="unis-subtitle-desc">
+                  {lang === 'bn'
+                    ? 'আধুনিক শিক্ষানগরীর প্রাণকেন্দ্রে আপনার সন্তানের নিশ্চিত ও নিরাপদ ভবিষ্যৎ গড়ে তুলুন।'
+                    : 'Invest in the heart of Dhaka’s upcoming premier education hub for your family.'}
+                </p>
+              </div>
+
+              <div className="commute-time-guide unis-hub-guide">
+                <span className="time-guide-heading">
+                  {lang === 'bn' ? 'শিক্ষা জোন হাইলাইটস' : 'EDUCATION HUB HIGHLIGHTS'}
+                </span>
+                <div className="time-guide-items">
+                  <div className="time-guide-item">
+                    <span className="tg-dot tg-dot-fast" />
+                    <div className="tg-text">
+                      <strong>17+ Campuses</strong>
+                      <span>{lang === 'bn' ? 'সরকারি ও বেসরকারি' : 'Public & Private'}</span>
+                    </div>
+                  </div>
+                  <div className="time-guide-item">
+                    <span className="tg-dot tg-dot-near" />
+                    <div className="tg-text">
+                      <strong>3 &ndash; 5 KM</strong>
+                      <span>{lang === 'bn' ? 'স্বল্প দূরত্ব' : 'Close Proximity'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="unis-pills-wrap">
               {nearbyUnis.map((uni, idx) => (
                 <div key={idx} className={`uni-pill-item ${idx >= 4 && !showAllUnis ? 'uni-extra-hidden' : ''}`}>
                   <span className="uni-num">{String(idx + 1).padStart(2, '0')}</span>
+                  <span className="uni-item-icon" aria-hidden="true">
+                    <GraduationCap size={16} strokeWidth={1.8} />
+                  </span>
                   <span className="uni-name">{uni}</span>
                 </div>
               ))}
@@ -1941,23 +3282,58 @@ function App() {
 
       {/* 7. SOCIAL & CIVIC AMENITIES (12 AMENITIES FROM BROCHURE) */}
       <section className="amenities-section" id="civic-amenities">
-        <div className="section-container">
-          <div className="section-header-center">
-            <h2 className="section-main-heading">{t.amenitiesTitle}</h2>
-            <div className="section-divider-line" />
-            <p className="section-sub-desc">{t.amenitiesSubtitle}</p>
+        {/* Decorative Botanical Corner Accents */}
+        <div className="amenities-corner-decor amenities-decor-tl" aria-hidden="true">
+          <svg width="180" height="220" viewBox="0 0 180 220" fill="none">
+            <path d="M-20 190 C30 140 60 60 140 -10" stroke="#dfd5be" strokeWidth="1.2" />
+            <path d="M-10 210 C45 160 80 95 165 10" stroke="#e6decb" strokeWidth="0.9" />
+            <path d="M10 135 C20 90 55 55 95 40 C75 85 45 120 10 135 Z" fill="#1b5e3f" fillOpacity="0.06" />
+            <path d="M-5 95 C10 55 40 25 75 15 C60 55 30 80 -5 95 Z" fill="#1b5e3f" fillOpacity="0.04" />
+          </svg>
+        </div>
+        <div className="amenities-corner-decor amenities-decor-br" aria-hidden="true">
+          <svg width="200" height="240" viewBox="0 0 200 240" fill="none">
+            <path d="M210 30 C160 90 125 165 45 250" stroke="#dfd5be" strokeWidth="1.2" />
+            <path d="M220 60 C170 115 140 180 65 260" stroke="#e6decb" strokeWidth="0.9" />
+            <path d="M190 130 C165 155 130 195 110 235 C150 220 180 175 190 130 Z" fill="#1b5e3f" fillOpacity="0.08" />
+          </svg>
+        </div>
+
+        <div className="section-container amenities-container">
+          {/* Centered Header Matching Reference */}
+          <div className="amenities-center-header">
+            <div className="amenities-kicker-row">
+              <span className="amenities-kicker-rule" aria-hidden="true" />
+              <span className="amenities-kicker-text">
+                {lang === 'bn' ? 'হাতের নাগালে পরিপূর্ণ জীবনযাত্রা' : 'A COMPLETE LIFE WITHIN REACH'}
+              </span>
+              <span className="amenities-kicker-rule" aria-hidden="true" />
+            </div>
+
+            <h2 className="amenities-main-title">{t.amenitiesTitle}</h2>
+
+            <div className="amenities-dual-divider" aria-hidden="true">
+              <span className="divider-seg-green" />
+              <span className="divider-seg-gold" />
+            </div>
+
+            <p className="amenities-sub-desc">{t.amenitiesSubtitle}</p>
           </div>
 
+          {/* 4x3 Grid of 12 Minimal Cards */}
           <div className="amenities-grid-12">
             {civicAmenities.map((amenity, idx) => (
-              <div key={amenity.id} className={`amenity-card ${idx >= 4 && !showAllAmenities ? 'amenity-extra-hidden' : ''}`}>
-                <div className="amenity-icon-box">{amenity.icon}</div>
+              <div key={amenity.id} className={`amenity-card ${idx >= 6 && !showAllAmenities ? 'amenity-extra-hidden' : ''}`}>
+                <div className="amenity-icon-box" aria-hidden="true">
+                  {renderAmenityIcon(amenity.iconType)}
+                </div>
                 <h3 className="amenity-card-title">{lang === 'bn' ? amenity.nameBn : amenity.nameEn}</h3>
                 <p className="amenity-card-desc">{lang === 'bn' ? amenity.descBn : amenity.descEn}</p>
               </div>
             ))}
           </div>
-          {civicAmenities.length > 4 && (
+
+          {civicAmenities.length > 6 && (
             <button
               type="button"
               id="amenities-see-all-btn"
@@ -1967,7 +3343,7 @@ function App() {
               <span>
                 {showAllAmenities
                   ? (lang === 'bn' ? 'কম দেখুন' : 'Show Less')
-                  : (lang === 'bn' ? 'সব দেখুন' : 'See All')}
+                  : (lang === 'bn' ? 'সব দেখুন (১২)' : 'See All Amenities (12)')}
               </span>
               <ChevronDown size={16} className={showAllAmenities ? 'flip' : ''} />
             </button>
@@ -1978,70 +3354,83 @@ function App() {
       {/* 8. LIVE SITE DEVELOPMENT PROGRESS GALLERY */}
       <section className="gallery-section" id="site-gallery">
         <div className="section-container">
-          <div className="section-header-center">
-            <h2 className="section-main-heading">{t.galleryTitle}</h2>
-            <div className="section-divider-line" />
-            <p className="section-sub-desc">{t.gallerySubtitle}</p>
+          <div className="amenities-center-header gallery-center-header">
+            <div className="amenities-kicker-row">
+              <span className="amenities-kicker-rule" aria-hidden="true" />
+              <span className="amenities-kicker-text">
+                {lang === 'bn' ? 'সরেজমিন প্রকল্প অগ্রগতি' : 'LIVE ON-SITE PROGRESS'}
+              </span>
+              <span className="amenities-kicker-rule" aria-hidden="true" />
+            </div>
+
+            <h2 className="amenities-main-title">{t.galleryTitle}</h2>
+
+            <div className="amenities-dual-divider" aria-hidden="true">
+              <span className="divider-seg-green" />
+              <span className="divider-seg-gold" />
+            </div>
+
+            <p className="amenities-sub-desc">{t.gallerySubtitle}</p>
           </div>
 
           <div className="gallery-photos-grid">
             {/* 1. Turag River Dredging & Slurry Sand Filling */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/field-dredging-sandfilling-inspection.jpg')}>
-              <img src="/gallery/field-dredging-sandfilling-inspection.jpg" alt="Active Sandfilling Pipeline Turag River" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">লাইভ প্রজেক্ট ওয়ার্ক</span>
-                <h4>{lang === 'bn' ? 'তুরাগ নদী সংলগ্ন বালু ভরাট ও ড্রেজিং পাইপলাইন' : 'Turag River Dredging & Slurry Sand Filling'}</h4>
-                <p>{lang === 'bn' ? 'তুরাগ নদীর পাড়ে পাইপলাইনে দ্রুতগতির বালু ভরাট ও সাইট উন্নয়ন' : 'Active land elevation and infrastructure preparation along Turag river'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/field-dredging-sandfilling-inspection.jpg" alt="Active Sandfilling Pipeline Turag River" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
 
             {/* 2. Investor & Client VIP Site Inspection Visit */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/vip-client-site-inspection-delegation.jpg')}>
-              <img src="/gallery/vip-client-site-inspection-delegation.jpg" alt="Investor & Client VIP Site Inspection Visit" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">সাইট ভিজিট</span>
-                <h4>{lang === 'bn' ? 'সম্মানিত ক্রেতা ও বিনিয়োগকারীদের সাইট পরিদর্শন' : 'Investor & Client VIP Site Inspection Visit'}</h4>
-                <p>{lang === 'bn' ? 'বার্ষিক মেলা ও সাইট ডেলিগেশনে সম্মানিত গ্রাহকদের সরাসরি পরিদর্শন' : 'Direct on-site plot verification with company executives and investors'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/vip-client-site-inspection-delegation.jpg" alt="Investor & Client VIP Site Inspection Visit" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
 
             {/* 3. Dhaka Icon City Master Plan Pavilion */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/dhaka-icon-masterplan-pavilion.jpg')}>
-              <img src="/gallery/dhaka-icon-masterplan-pavilion.jpg" alt="Dhaka Icon City Master Plan Pavilion" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">মাস্টার প্ল্যান</span>
-                <h4>{lang === 'bn' ? 'ঢাকা আইকন সিটি মেগা মাস্টারপ্ল্যান প্যাভিলিয়ন' : 'Dhaka Icon City Master Plan Pavilion'}</h4>
-                <p>{lang === 'bn' ? 'গ্রাহকদের সামনে প্রকল্পের পুঙ্খানুপুঙ্খ মাস্টারপ্ল্যান উপস্থাপন' : 'Interactive masterplan presentation & project layout consultation'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/dhaka-icon-masterplan-pavilion.jpg" alt="Dhaka Icon City Master Plan Pavilion" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
 
             {/* 4. Executive Boardroom Meeting */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/corporate-boardroom-meeting.jpg')}>
-              <img src="/gallery/corporate-boardroom-meeting.jpg" alt="Corporate Boardroom Meeting" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">বোর্ডরুম বৈঠক</span>
-                <h4>{lang === 'bn' ? 'উচ্চপদস্থ পরিচালনা পর্ষদের কর্পোরেট বৈঠক' : 'Executive Boardroom Strategy & Management Meeting'}</h4>
-                <p>{lang === 'bn' ? 'চেয়ারম্যান মহোদয়ের সভাপতিত্বে প্রকল্প অগ্রগতি পর্যালোচনা' : 'Strategic project milestone reviews chaired by Company Leadership'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/corporate-boardroom-meeting.jpg" alt="Corporate Boardroom Meeting" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
 
             {/* 5. Turag Riverfront Sand Field Inspection */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/turag-riverfront-sandfield-visit.jpg')}>
-              <img src="/gallery/turag-riverfront-sandfield-visit.jpg" alt="Turag Riverfront Sand Reclaimed Field" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">মাঠ পরিদর্শন</span>
-                <h4>{lang === 'bn' ? 'তুরাগ নদীর তীরবর্তী বালু ভরাট ভূমিতে সরেজমিন পরিদর্শন' : 'Turag Riverfront Field Progress Inspection'}</h4>
-                <p>{lang === 'bn' ? 'নদীর পাড়ঘেঁষা ভরাটকৃত জমিতে সাইট ইঞ্জিনিয়ার ও গ্রাহকবৃন্দের যৌথ পরিদর্শন' : 'Site engineers and client delegation inspecting freshly leveled ground'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/turag-riverfront-sandfield-visit.jpg" alt="Turag Riverfront Sand Reclaimed Field" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
 
             {/* 6. Internal Access Road Paving */}
             <div className="gallery-item-card" onClick={() => setActiveGalleryModalImg('/gallery/access-road-brick-paving-inspection.jpg')}>
-              <img src="/gallery/access-road-brick-paving-inspection.jpg" alt="Internal Access Road Brick Soling" className="gallery-img" />
-              <div className="gallery-img-overlay">
-                <span className="gallery-badge">অবকাঠামো</span>
-                <h4>{lang === 'bn' ? 'অভ্যন্তরীণ সংযোগ সড়ক ও ব্রিক সলিং পর্যবেক্ষণ' : 'Internal Access Road Paving & Infrastructure'}</h4>
-                <p>{lang === 'bn' ? 'প্রকল্পের প্রবেশ পথ ও অভ্যন্তরীণ সংযোগ সড়ক নির্মাণ কাজ পরিদর্শন' : 'Internal roadway development, brick soling and soil compaction'}</p>
+              <div className="gallery-img-frame">
+                <img src="/gallery/access-road-brick-paving-inspection.jpg" alt="Internal Access Road Brick Soling" className="gallery-img" loading="lazy" />
+                <span className="gallery-zoom-btn" aria-hidden="true">
+                  <Eye size={17} />
+                </span>
               </div>
             </div>
           </div>
@@ -2053,8 +3442,9 @@ function App() {
               className="btn-view-full-gallery"
               onClick={() => navigateTo('gallery')}
             >
-              <span>{lang === 'bn' ? 'গ্যালারি দেখুন' : 'Explore Gallery'}</span>
-              <ChevronRight size={18} />
+              <Eye size={18} />
+              <span>{lang === 'bn' ? 'সম্পূর্ণ গ্যালারি দেখুন' : 'Explore Gallery'}</span>
+              <ChevronRight size={17} className="gallery-cta-chevron" />
             </button>
           </div>
         </div>
@@ -2161,37 +3551,106 @@ function App() {
       <section className="booking-form-section" id="booking-form-section">
         <div className="section-container">
           <div className="booking-form-wrapper">
+            {/* Left Info Column */}
             <div className="form-info-side">
-              <span className="section-tag-badge">GET IN TOUCH</span>
+              <div className="booking-kicker-badge">
+                <Sparkles size={13} />
+                <span>
+                  {lang === 'bn' ? 'ভিআইপি প্লট বুকিং ও সাইট ভিজিট' : 'PRIORITY PLOT & VIP TOUR'}
+                </span>
+              </div>
+
               <h2 className="form-main-heading">{t.formTitle}</h2>
-              <div className="section-divider-line" />
+
+              <div className="amenities-dual-divider booking-left-divider" aria-hidden="true">
+                <span className="divider-seg-green" />
+                <span className="divider-seg-gold" />
+              </div>
+
               <p className="form-desc-text">{t.formSubtitle}</p>
 
-              <div className="form-direct-perks">
-                <div className="perk-row">
-                  <CheckCircle2 size={20} className="text-emerald" />
-                  <span>{lang === 'bn' ? 'ফ্রি সাইট ভিজিট ও কোম্পানির নিজস্ব ট্রান্সপোর্ট সুবিধা' : 'Free VIP site inspection with company transport'}</span>
+              {/* Minimal 2x2 Highlights Grid */}
+              <div className="form-direct-perks minimal-perks-grid">
+                <div className="perk-row perk-pill">
+                  <div className="perk-icon-box">
+                    <Navigation size={16} />
+                  </div>
+                  <div className="perk-content">
+                    <strong>{lang === 'bn' ? 'ফ্রি সাইট ট্রান্সপোর্ট' : 'Chauffeured Site Visit'}</strong>
+                    <span>{lang === 'bn' ? 'গুলশান, উত্তরা ও মিরপুর থেকে পিকআপ' : 'Pick-up from Gulshan, Uttara & Mirpur'}</span>
+                  </div>
                 </div>
-                <div className="perk-row">
-                  <CheckCircle2 size={20} className="text-emerald" />
-                  <span>{lang === 'bn' ? 'সরাসরি হেড অফিসে দলিল ও খতিয়ান যাচাইয়ের সুযোগ' : 'Direct title deed & mutation paper verification at HQ'}</span>
+
+                <div className="perk-row perk-pill">
+                  <div className="perk-icon-box">
+                    <ShieldCheck size={16} />
+                  </div>
+                  <div className="perk-content">
+                    <strong>{lang === 'bn' ? '১০০% নিষ্কণ্টক দলিল' : '100% Legal & RAJUK'}</strong>
+                    <span>{lang === 'bn' ? 'সরাসরি হেড অফিসে দলিল যাচাই' : 'Direct title & record verification'}</span>
+                  </div>
                 </div>
-                <div className="perk-row">
-                  <CheckCircle2 size={20} className="text-emerald" />
-                  <span>{lang === 'bn' ? 'কাস্টমাইজড কিস্তি ও আকর্ষণীয় ডাউন পেমেন্ট ডিসকাউন্ট' : 'Customized installment schedule & exclusive down payment discounts'}</span>
+
+                <div className="perk-row perk-pill">
+                  <div className="perk-icon-box">
+                    <Calculator size={16} />
+                  </div>
+                  <div className="perk-content">
+                    <strong>{lang === 'bn' ? '২০% ডাউন পেমেন্ট' : '20% Down Payment'}</strong>
+                    <span>{lang === 'bn' ? '১২ থেকে ৬০ মাসের সহজ কিস্তি' : 'Flexible 12 to 60 month EMI'}</span>
+                  </div>
+                </div>
+
+                <div className="perk-row perk-pill">
+                  <div className="perk-icon-box">
+                    <Compass size={16} />
+                  </div>
+                  <div className="perk-content">
+                    <strong>{lang === 'bn' ? 'প্রাইম লোকেশন ও ভিউ' : 'Prime Avenue Plots'}</strong>
+                    <span>{lang === 'bn' ? '১০০ ফুট এভিনিউ ও লেকভিউ প্লট' : '100ft main avenue & lakefront'}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="hotline-box-highlight">
-                <Phone size={24} className="text-emerald" />
-                <div>
-                  <span className="hl-label">{lang === 'bn' ? 'সরাসরি হটলাইনে কথা বলুন:' : 'Direct Sales Hotline:'}</span>
-                  <a href="tel:+8801815311232" className="hl-number">+880 1815-311232</a>
+              {/* Compact Hotline Strip */}
+              <div className="hotline-box-highlight minimal-hotline">
+                <div className="hotline-box-left">
+                  <div className="hotline-phone-badge">
+                    <Phone size={18} />
+                  </div>
+                  <div>
+                    <span className="hl-label">
+                      {lang === 'bn' ? 'সরাসরি সেলস ও অ্যাডভাইজরি হটলাইন' : 'Direct Sales & Advisory Desk'}
+                    </span>
+                    <a href="tel:+8801815311232" className="hl-number">+880 1815-311232</a>
+                  </div>
+                </div>
+                <div className="hotline-hours-pill">
+                  <Clock size={12} />
+                  <span>{lang === 'bn' ? 'শনি – বৃহস্পতি • ১০ AM – ৭ PM' : 'Sat – Thu • 10 AM – 7 PM'}</span>
                 </div>
               </div>
             </div>
 
+            {/* Right Form Column */}
             <div className="form-card-side">
+              <div className="booking-form-card-header">
+                <div className="booking-form-header-top">
+                  <span className="booking-form-status-dot" aria-hidden="true" />
+                  <span className="booking-form-kicker">
+                    {lang === 'bn' ? 'সরাসরি ডেভেলপার ডেস্ক • ফেজ ১' : 'DIRECT DEVELOPER DESK • PHASE 1'}
+                  </span>
+                </div>
+                <h3 className="booking-form-card-title">
+                  {lang === 'bn' ? 'প্লট বুকিং ও সাইট ভিজিট' : 'Priority Plot & Site Visit'}
+                </h3>
+                <p className="booking-form-card-sub">
+                  {lang === 'bn'
+                    ? 'তথ্য দিয়ে ফর্মটি পূরণ করুন — দ্রুততম সময়ে আমাদের টিম আপনার সাথে যোগাযোগ করবে।'
+                    : 'Fill out this quick form — our property advisor will connect with you promptly.'}
+                </p>
+              </div>
+
               {formSuccess ? (
                 <div className="form-success-box">
                   <CheckCircle2 size={64} className="text-emerald success-big-icon" />
@@ -2212,7 +3671,7 @@ function App() {
                       <input 
                         type="text" 
                         className="text-input-field" 
-                        placeholder={lang === 'bn' ? 'উদাঃ মোঃ রফিকুল ইসলাম' : 'e.g. Rafiqul Islam'}
+                        placeholder={lang === 'bn' ? 'উদাঃ মোঃ রফিকুল ইসলাম' : 'e.g. Mohammad Rafiqul Islam'}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
@@ -2232,18 +3691,18 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="form-group-item">
-                    <label className="input-label">{t.lblEmail}</label>
-                    <input 
-                      type="email" 
-                      className="text-input-field" 
-                      placeholder="e.g. client@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                  </div>
-
                   <div className="form-row-2">
+                    <div className="form-group-item">
+                      <label className="input-label">{t.lblEmail}</label>
+                      <input 
+                        type="email" 
+                        className="text-input-field" 
+                        placeholder={lang === 'bn' ? 'উদাঃ name@example.com (ঐচ্ছিক)' : 'e.g. name@example.com (optional)'}
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      />
+                    </div>
+
                     <div className="form-group-item">
                       <label className="input-label">{t.lblPlotType}</label>
                       <select 
@@ -2251,37 +3710,55 @@ function App() {
                         value={formData.plotCategory}
                         onChange={(e) => setFormData({ ...formData, plotCategory: e.target.value })}
                       >
-                        <option value="বাণিজ্যিক প্লট (কর্ণার) [Commercial Corner]">বাণিজ্যিক প্লট (কর্ণার) [Commercial Corner]</option>
-                        <option value="বাণিজ্যিক প্লট (সাধারণ) [Commercial General]">বাণিজ্যিক প্লট (সাধারণ) [Commercial General]</option>
-                        <option value="আবাসিক প্লট (কর্ণার) [Residential Corner]">আবাসিক প্লট (কর্ণার) [Residential Corner]</option>
-                        <option value="আবাসিক প্লট (দক্ষিণমুখী) [Residential South]">আবাসিক প্লট (দক্ষিণমুখী) [Residential South]</option>
-                        <option value="আবাসিক প্লট (সাধারণ) [Residential General]">আবাসিক প্লট (সাধারণ) [Residential General]</option>
+                        <option value="বাণিজ্যিক প্লট (কর্ণার) [Commercial Corner]">
+                          {lang === 'bn' ? 'বাণিজ্যিক প্লট (কর্ণার) — ২৮ লক্ষ/কাঠা' : 'Commercial Plot (Corner) — ৳28L/Katha'}
+                        </option>
+                        <option value="বাণিজ্যিক প্লট (সাধারণ) [Commercial General]">
+                          {lang === 'bn' ? 'বাণিজ্যিক প্লট (সাধারণ) — ২৭ লক্ষ/কাঠা' : 'Commercial Plot (General) — ৳27L/Katha'}
+                        </option>
+                        <option value="আবাসিক প্লট (কর্ণার) [Residential Corner]">
+                          {lang === 'bn' ? 'আবাসিক প্লট (কর্ণার) — ২৪ লক্ষ/কাঠা' : 'Residential Plot (Corner) — ৳24L/Katha'}
+                        </option>
+                        <option value="আবাসিক প্লট (দক্ষিণমুখী) [Residential South]">
+                          {lang === 'bn' ? 'আবাসিক প্লট (দক্ষিণমুখী) — ২২ লক্ষ/কাঠা' : 'Residential Plot (South-Facing) — ৳22L/Katha'}
+                        </option>
+                        <option value="আবাসিক প্লট (সাধারণ) [Residential General]">
+                          {lang === 'bn' ? 'আবাসিক প্লট (সাধারণ) — ২০ লক্ষ/কাঠা' : 'Residential Plot (General) — ৳20L/Katha'}
+                        </option>
                       </select>
                     </div>
+                  </div>
 
-                    <div className="form-group-item">
-                      <label className="input-label">{t.lblPlotSize}</label>
-                      <select 
-                        className="select-input-field"
-                        value={formData.plotSize}
-                        onChange={(e) => setFormData({ ...formData, plotSize: e.target.value })}
-                      >
-                        <option value="৩ কাঠা [3 Katha]">৩ কাঠা [3 Katha]</option>
-                        <option value="৫ কাঠা [5 Katha]">৫ কাঠা [5 Katha]</option>
-                        <option value="১০ কাঠা [10 Katha]">১০ কাঠা [10 Katha]</option>
-                        <option value="১ বিঘা (২০ কাঠা) [1 Bigha / 20 Katha]">১ বিঘা (২০ কাঠা) [1 Bigha / 20 Katha]</option>
-                      </select>
-                    </div>
+                  <div className="form-group-item">
+                    <label className="input-label">{t.lblPlotSize}</label>
+                    <select 
+                      className="select-input-field"
+                      value={formData.plotSize}
+                      onChange={(e) => setFormData({ ...formData, plotSize: e.target.value })}
+                    >
+                      <option value="৩ কাঠা [3 Katha]">
+                        {lang === 'bn' ? '৩ কাঠা (২,১৬০ বর্গফুট)' : '3 Katha (2,160 Sq. Ft.)'}
+                      </option>
+                      <option value="৫ কাঠা [5 Katha]">
+                        {lang === 'bn' ? '৫ কাঠা (৩,৬০০ বর্গফুট)' : '5 Katha (3,600 Sq. Ft.)'}
+                      </option>
+                      <option value="১০ কাঠা [10 Katha]">
+                        {lang === 'bn' ? '১০ কাঠা (৭,২০০ বর্গফুট)' : '10 Katha (7,200 Sq. Ft.)'}
+                      </option>
+                      <option value="১ বিঘা (২০ কাঠা) [1 Bigha / 20 Katha]">
+                        {lang === 'bn' ? '১ বিঘা / ২০ কাঠা (১৪,৪০০ বর্গফুট)' : '1 Bigha / 20 Katha (14,400 Sq. Ft.)'}
+                      </option>
+                    </select>
                   </div>
 
                   <div className="form-group-item">
                     <label className="input-label">{t.lblMessage}</label>
                     <textarea 
                       className="textarea-input-field"
-                      placeholder={lang === 'bn' ? 'কোন তারিখে সাইট ভিজিট করতে চান অথবা আপনার বিশেষ কোনো প্রশ্ন থাকলে লিখুন...' : 'Preferred site inspection date or custom requirements...'}
+                      placeholder={lang === 'bn' ? 'পছন্দের ভিজিট তারিখ, পিকআপ লোকেশন বা কোনো জিজ্ঞাসা থাকলে লিখুন...' : 'Preferred visit date, pickup location, or custom queries...'}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={3}
+                      rows={2}
                     />
                   </div>
 
@@ -2294,6 +3771,15 @@ function App() {
                     <span>{isSubmitting ? t.formSubmitting : t.btnSubmitForm}</span>
                     <ChevronRight size={18} />
                   </button>
+
+                  <div className="booking-privacy-note">
+                    <ShieldCheck size={14} className="text-emerald" />
+                    <span>
+                      {lang === 'bn'
+                        ? 'আপনার তথ্য ১০০% সুরক্ষিত ও গোপনীয় • কোনো বাধ্যবাধকতা ছাড়া ফ্রি কনসালটেশন'
+                        : '100% Confidential • Zero Obligation • Direct Developer Consultation'}
+                    </span>
+                  </div>
                 </form>
               )}
             </div>
@@ -2304,73 +3790,158 @@ function App() {
       )}
 
       {/* 12. CORPORATE FOOTER */}
-      <footer className="elite-corporate-footer">
+      {currentRoute !== 'login' && currentRoute !== 'admin' && (
+        <footer className="elite-corporate-footer">
+          <div className="footer-top-accent-line" aria-hidden="true" />
         <div className="footer-container">
           <div className="footer-top-grid">
-            {/* Brand Column */}
+            {/* Column 1: Brand & RAJUK Credentials */}
             <div className="footer-brand-col">
-              <div className="footer-logo-row">
-                <img src="/Logo.png" alt="Elite Iconic" className="footer-brand-logo" />
-                <div>
+              <div className="footer-logo-row" onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>
+                <div className="footer-logo-badge">
+                  <img src="/Logo.png" alt="Elite Iconic" className="footer-brand-logo" />
+                </div>
+                <div className="footer-brand-titles">
                   <h3 className="footer-brand-title">ELITE ICONIC</h3>
-                  <p className="footer-brand-sub">properties & Construction limited</p>
+                  <p className="footer-brand-sub">PROPERTIES & CONSTRUCTION LIMITED</p>
                 </div>
               </div>
+
               <p className="footer-about-text">
                 {lang === 'bn' 
-                  ? 'ঢাকা আইকন সিটি—মিরপুর ১৪ ও বীরুলিয়া সেতু সংলগ্ন ২,৫০০ কাঠার মেগা প্লটেড উপশহর। টেকসই আবাসন ও আস্থার অনন্য প্রতীক।' 
+                  ? 'ঢাকা আইকন সিটি—মিরপুর ১৪ ও বিরুলিয়া সেতু সংলগ্ন ২,৫০০ কাঠার মেগা প্লটেড উপশহর। টেকসই আবাসন ও আস্থার অনন্য প্রতীক।' 
                   : 'Dhaka Icon City—2,500 Katha premier plotted township adjoining Birulia Bridge & Mirpur 14. Building sustainable investments and trusted communities.'}
               </p>
+
               <div className="footer-rajuk-stamp">
-                <ShieldCheck size={16} className="text-emerald" />
-                <span>রাজউক নিবন্ধন: RAJUK/DC/REDMR 001262/24</span>
+                <span className="footer-rajuk-icon">
+                  <ShieldCheck size={16} />
+                </span>
+                <div className="footer-rajuk-meta">
+                  <span className="footer-rajuk-label">
+                    {lang === 'bn' ? 'রাজউক অনুমোদিত ও নিবন্ধিত' : 'RAJUK Registered Developer'}
+                  </span>
+                  <strong className="footer-rajuk-code">RAJUK/DC/REDMR 001262/24</strong>
+                </div>
               </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Column 2: Quick Navigation */}
             <div className="footer-links-col">
-              <h4 className="footer-heading">ঢাকা আইকন সিটি</h4>
+              <h4 className="footer-heading">
+                {lang === 'bn' ? 'ঢাকা আইকন সিটি' : 'Dhaka Icon City'}
+              </h4>
               <ul className="footer-links-list">
-                <li><a href="#corporate-about" onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</a></li>
-                <li><a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{lang === 'bn' ? 'পরিচালনা পর্ষদ' : 'Board of Directors'}</a></li>
-                <li><a href="#gallery" onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{lang === 'bn' ? 'ফটো ও ইভেন্ট গ্যালারি' : 'Photo & Event Gallery'}</a></li>
-                <li><a href="#pricing-calculator" onClick={(e) => { e.preventDefault(); navigateTo('home', 'pricing-calculator'); }}>{lang === 'bn' ? 'ইন্টারেক্টিভ ক্যালকুলেটর' : 'Interactive Calculator'}</a></li>
-                <li><a href="#connectivity-location" onClick={(e) => { e.preventDefault(); navigateTo('home', 'connectivity-location'); }}>{lang === 'bn' ? 'দূরত্ব ও যাতায়াত' : 'Connectivity & Location'}</a></li>
-                <li><a href="#civic-amenities" onClick={(e) => { e.preventDefault(); navigateTo('home', 'civic-amenities'); }}>{lang === 'bn' ? '১২টি নাগরিক সুবিধা' : '12 Civic Amenities'}</a></li>
+                <li>
+                  <a href="#corporate-about" onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#leadership-team" onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'পরিচালনা পর্ষদ' : 'Board of Directors'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#gallery" onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'ফটো ও ইভেন্ট গ্যালারি' : 'Photo & Event Gallery'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing-calculator" onClick={(e) => { e.preventDefault(); navigateTo('home', 'pricing-calculator'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'ইন্টারেক্টিভ ক্যালকুলেটর' : 'Interactive Calculator'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#connectivity-location" onClick={(e) => { e.preventDefault(); navigateTo('home', 'connectivity-location'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'দূরত্ব ও যাতায়াত' : 'Connectivity & Location'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#civic-amenities" onClick={(e) => { e.preventDefault(); navigateTo('home', 'civic-amenities'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? '১২টি নাগরিক সুবিধা' : '12 Civic Amenities'}</span>
+                  </a>
+                </li>
               </ul>
             </div>
 
-            {/* Corporate Office Details */}
-            <div className="footer-links-col">
-              <h4 className="footer-heading">কর্পোরেট প্রধান অফিস</h4>
-              <p className="footer-office-address">
-                📍 <strong>Nafi Tower, Level 10</strong><br />
-                53 Gulshan Avenue, Gulshan-01,<br />
-                Dhaka-1212, Bangladesh
-              </p>
+            {/* Column 3: Corporate Headquarters */}
+            <div className="footer-links-col footer-contact-col">
+              <h4 className="footer-heading">
+                {lang === 'bn' ? 'কর্পোরেট প্রধান কার্যালয়' : 'Corporate Headquarters'}
+              </h4>
+              <div className="footer-address-card">
+                <span className="footer-addr-pin">
+                  <MapPin size={15} />
+                </span>
+                <p className="footer-office-address">
+                  <strong>Nafi Tower, Level 10</strong><br />
+                  53 Gulshan Avenue, Gulshan-01,<br />
+                  Dhaka-1212, Bangladesh
+                </p>
+              </div>
               <div className="footer-contact-links">
-                <a href="tel:+8801815311232"><Phone size={14} /> +880 1815-311232</a>
-                <a href="mailto:info@eliteiconic.com"><Mail size={14} /> info@eliteiconic.com</a>
-                <a href="https://www.eliteiconic.com" target="_blank" rel="noopener noreferrer"><ExternalLink size={14} /> www.eliteiconic.com</a>
+                <a href="tel:+8801815311232" className="footer-contact-pill">
+                  <span className="footer-contact-icon"><Phone size={13} /></span>
+                  <span>+880 1815-311232</span>
+                </a>
+                <a href="mailto:info@eliteiconic.com" className="footer-contact-pill">
+                  <span className="footer-contact-icon"><Mail size={13} /></span>
+                  <span>info@eliteiconic.com</span>
+                </a>
+                <a href="https://www.eliteiconic.com" target="_blank" rel="noopener noreferrer" className="footer-contact-pill">
+                  <span className="footer-contact-icon"><ExternalLink size={13} /></span>
+                  <span>www.eliteiconic.com</span>
+                </a>
               </div>
             </div>
 
-            {/* Affiliations Badges */}
-            <div className="footer-links-col">
-              <h4 className="footer-heading">অ্যাফিলিয়েশন ও পার্টনার</h4>
-              <p className="footer-partner-desc">
-                • Goldeneye Developers Ltd<br />
-                • DD REG (Dhaka Developers & Real Estate Group)<br />
-                • Real Estate & Housing Association
-              </p>
+            {/* Column 4: Affiliations & VIP Schedule CTA */}
+            <div className="footer-links-col footer-partner-col">
+              <h4 className="footer-heading">
+                {lang === 'bn' ? 'অ্যাফিলিয়েশন ও পার্টনার' : 'Affiliations & Partners'}
+              </h4>
+              <ul className="footer-partner-list">
+                <li>
+                  <span className="partner-bullet"><Award size={13} /></span>
+                  <span>Goldeneye Developers Ltd</span>
+                </li>
+                <li>
+                  <span className="partner-bullet"><Award size={13} /></span>
+                  <span>DD REG (Dhaka Developers & Real Estate Group)</span>
+                </li>
+                <li>
+                  <span className="partner-bullet"><Award size={13} /></span>
+                  <span>Real Estate & Housing Association</span>
+                </li>
+              </ul>
+
+              <button
+                type="button"
+                className="footer-vip-visit-btn"
+                onClick={() => setVisitModalOpen(true)}
+              >
+                <Calendar size={15} />
+                <span>{lang === 'bn' ? 'প্রকল্প পরিদর্শন বুক করুন' : 'Schedule Site Visit'}</span>
+                <ArrowUpRight size={15} />
+              </button>
             </div>
           </div>
 
           <div className="footer-bottom-bar">
-            <p>© {new Date().getFullYear()} Elite Iconic Properties & Construction Limited. All rights reserved.</p>
+            <p className="footer-copyright">
+              © {new Date().getFullYear()} <strong>Elite Iconic Properties & Construction Limited</strong>. {lang === 'bn' ? 'সর্বস্বত্ব সংরক্ষিত।' : 'All rights reserved.'}
+            </p>
           </div>
         </div>
       </footer>
+      )}
 
       {/* MASTER PLAN HIGH RESOLUTION MODAL */}
       {masterplanModalOpen && (
@@ -2481,277 +4052,29 @@ function App() {
       )}
 
       {/* VIP SITE VISIT & CONSULTATION SCHEDULE MODAL */}
-      {visitModalOpen && (
-        <div className="elite-modal-overlay" onClick={() => setVisitModalOpen(false)}>
-          <div className="visit-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="visit-modal-header">
-              <div className="visit-modal-title-box">
-                <div className="visit-modal-icon-wrap">
-                  <Calendar size={22} className="text-emerald" />
-                </div>
-                <div>
-                  <h3 className="visit-modal-title">
-                    {lang === 'bn' ? 'শিডিউল বুকিং ও কনসালটেশন' : 'Schedule & Consultation'}
-                  </h3>
-                  <p className="visit-modal-subtitle">
-                    {lang === 'bn' ? 'ঢাকা আইকন সিটির সার্বিক তথ্য, সাইট পরিদর্শন ও কনসালটেশন' : 'VIP site visit, office consultation & investment inquiries'}
-                  </p>
-                </div>
-              </div>
-              <button 
-                type="button"
-                className="modal-close-btn"
-                onClick={() => {
-                  setVisitModalOpen(false)
-                  setVisitSuccess(false)
-                }}
-                aria-label="Close"
-              >
-                <X size={20} />
-              </button>
-            </div>
+      <VisitScheduleModal
+        isOpen={visitModalOpen}
+        onClose={closeVisitModal}
+        lang={lang}
+        onLog={addLog}
+      />
 
-            {visitSuccess ? (
-              <div className="visit-success-state">
-                <div className="visit-success-icon-wrap">
-                  <CheckCircle2 size={54} className="text-emerald" />
-                </div>
-                <h4>{lang === 'bn' ? 'আপনার শিডিউল নিশ্চিত করা হয়েছে!' : 'Schedule Confirmed!'}</h4>
-                <p>
-                  {lang === 'bn' 
-                    ? `ধন্যবাদ ${visitForm.name || ''}! আপনার অনুরোধটি সফলভাবে গৃহীত হয়েছে। আমাদের সিনিয়র কনসালটেন্ট দ্রুত আপনার সাথে যোগাযোগ করবেন।`
-                    : `Thank you ${visitForm.name || ''}! Your request has been received. Our senior representative will contact you shortly.`
-                  }
-                </p>
-                <div className="visit-summary-badge">
-                  {visitForm.purpose === 'Project Visit' && (
-                    <span>🚗 {lang === 'bn' ? 'প্রকল্প পরিদর্শন' : 'Project Visit'} | 📅 {visitForm.date || 'আসন্ন তারিখ'} | ⏰ {visitForm.timeSlot}</span>
-                  )}
-                  {visitForm.purpose === 'Office Visit' && (
-                    <span>🏢 {lang === 'bn' ? 'হেড অফিস মিটিং' : 'Office Visit'} | 📅 {visitForm.date || 'আসন্ন তারিখ'} | ⏰ {visitForm.timeSlot}</span>
-                  )}
-                  {visitForm.purpose === 'Buy Plot' && (
-                    <span>🏡 {lang === 'bn' ? 'প্লট ক্রয়' : 'Buy Plot'} | সাইজ: {visitForm.plotSize}</span>
-                  )}
-                  {visitForm.purpose === 'Intersted patner' && (
-                    <span>💼 {lang === 'bn' ? 'পার্টনারশিপ / ইনভেস্টমেন্ট' : 'Interested Partner'} | বাজেট: {visitForm.investmentAmount}</span>
-                  )}
-                  {(visitForm.purpose === 'Attend seminar' || visitForm.purpose === 'online cosultation') && (
-                    <span>📋 {lang === 'bn' ? 'উদ্দেশ্য' : 'Purpose'}: {visitForm.purpose}</span>
-                  )}
-                </div>
-                <button 
-                  type="button" 
-                  className="btn-modal-done"
-                  onClick={() => {
-                    setVisitModalOpen(false)
-                    setVisitSuccess(false)
-                  }}
-                >
-                  {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleVisitSubmit} className="visit-schedule-form">
-                {/* Row 1: Name and Phone */}
-                <div className="form-row-2">
-                  <div className="form-group-item">
-                    <label className="input-label">{lang === 'bn' ? 'আপনার নাম *' : 'Full Name *'}</label>
-                    <input 
-                      type="text" 
-                      className="text-input-field" 
-                      placeholder={lang === 'bn' ? 'উদাঃ মোঃ আরিফুল ইসলাম' : 'e.g. Ariful Islam'}
-                      value={visitForm.name}
-                      onChange={(e) => setVisitForm({ ...visitForm, name: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group-item">
-                    <label className="input-label">{lang === 'bn' ? 'মোবাইল নম্বর *' : 'Mobile Number *'}</label>
-                    <input 
-                      type="tel" 
-                      className="text-input-field" 
-                      placeholder="+880 18XX-XXXXXX"
-                      value={visitForm.phone}
-                      onChange={(e) => setVisitForm({ ...visitForm, phone: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Row 2: Location and Purpose of Schedule */}
-                <div className="form-row-2">
-                  <div className="form-group-item">
-                    <label className="input-label">{lang === 'bn' ? 'বর্তমান লোকেশন / ঠিকানা *' : 'Location / Address *'}</label>
-                    <input 
-                      type="text" 
-                      className="text-input-field" 
-                      placeholder={lang === 'bn' ? 'উদাঃ উত্তরা / ধানমন্ডি / মিরপুর / প্রবাসী' : 'e.g. Uttara / Dhanmondi / Expatriate'}
-                      value={visitForm.location}
-                      onChange={(e) => setVisitForm({ ...visitForm, location: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group-item">
-                    <label className="input-label">{lang === 'bn' ? 'উদ্দেশ্য (Purpose of Schedule) *' : 'Purpose of Schedule *'}</label>
-                    <select 
-                      className="select-input-field"
-                      value={visitForm.purpose}
-                      onChange={(e) => setVisitForm({ ...visitForm, purpose: e.target.value })}
-                    >
-                      <option value="Project Visit">{lang === 'bn' ? 'প্রকল্প পরিদর্শন (Project Visit)' : 'Project Visit'}</option>
-                      <option value="Buy Plot">{lang === 'bn' ? 'প্লট ক্রয় (Buy Plot)' : 'Buy Plot'}</option>
-                      <option value="Attend seminar">{lang === 'bn' ? 'সেমিনারে অংশগ্রহণ (Attend Seminar)' : 'Attend Seminar'}</option>
-                      <option value="online cosultation">{lang === 'bn' ? 'অনলাইন পরামর্শ (Online Consultation)' : 'Online Consultation'}</option>
-                      <option value="Office Visit">{lang === 'bn' ? 'হেড অফিস পরিদর্শন (Office Visit)' : 'Office Visit'}</option>
-                      <option value="Intersted patner">{lang === 'bn' ? 'বিজনেস / ইনভেস্টর পার্টনার (Interested Partner)' : 'Interested Partner'}</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* CONDITIONAL: Project Visit -> Date, Time, Pickup Location */}
-                {visitForm.purpose === 'Project Visit' && (
-                  <div className="modal-dynamic-box">
-                    <div className="form-row-2">
-                      <div className="form-group-item">
-                        <label className="input-label">{lang === 'bn' ? 'ভিজিটের তারিখ *' : 'Visit Date *'}</label>
-                        <input 
-                          type="date" 
-                          className="text-input-field" 
-                          value={visitForm.date}
-                          onChange={(e) => setVisitForm({ ...visitForm, date: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group-item">
-                        <label className="input-label">{lang === 'bn' ? 'পছন্দের সময় *' : 'Preferred Time *'}</label>
-                        <select 
-                          className="select-input-field"
-                          value={visitForm.timeSlot}
-                          onChange={(e) => setVisitForm({ ...visitForm, timeSlot: e.target.value })}
-                        >
-                          <option value="10:00 AM">সকাল ১০:০০ টা (Morning 10:00 AM)</option>
-                          <option value="12:30 PM">দুপুর ১২:৩০ টা (Noon 12:30 PM)</option>
-                          <option value="03:30 PM">বিকাল ০৩:৩০ টা (Afternoon 03:30 PM)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="form-group-item" style={{ marginTop: '12px' }}>
-                      <label className="input-label">{lang === 'bn' ? 'পিকআপ লোকেশন লিখুন *' : 'Pickup Location *'}</label>
-                      <input 
-                        type="text" 
-                        className="text-input-field" 
-                        placeholder={lang === 'bn' ? 'উদাঃ গুলশান অফিস / উত্তরা হাউজ বিল্ডিং / মিরপুর-১০' : 'e.g. Gulshan Office / Uttara / Mirpur 10'}
-                        value={visitForm.pickupLoc}
-                        onChange={(e) => setVisitForm({ ...visitForm, pickupLoc: e.target.value })}
-                        required
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* CONDITIONAL: Buy Plot -> Ask Plot Size */}
-                {visitForm.purpose === 'Buy Plot' && (
-                  <div className="modal-dynamic-box">
-                    <div className="form-group-item">
-                      <label className="input-label">{lang === 'bn' ? 'আগ্রহী প্লটের সাইজ নির্বাচন করুন *' : 'Interested Plot Size *'}</label>
-                      <select 
-                        className="select-input-field"
-                        value={visitForm.plotSize}
-                        onChange={(e) => setVisitForm({ ...visitForm, plotSize: e.target.value })}
-                      >
-                        <option value="৩ কাঠা [3 Katha]">৩ কাঠা [3 Katha] - স্ট্যান্ডার্ড রেসিডেন্সিয়াল</option>
-                        <option value="৫ কাঠা [5 Katha]">৫ কাঠা [5 Katha] - এক্সক্লুসিভ ভিলা/ডুপ্লেক্স</option>
-                        <option value="১০ কাঠা [10 Katha]">১০ কাঠা [10 Katha] - প্রিমিয়াম এস্টেট</option>
-                        <option value="১ বিঘা [1 Bigha]">১ বিঘা [1 Bigha] - লাক্সারি গ্র্যান্ড এস্টেট</option>
-                        <option value="কমার্শিয়াল / বড় প্লট [Commercial]">কমার্শিয়াল / কর্নার / বড় প্লট</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* CONDITIONAL: Office Visit -> Date and Time */}
-                {visitForm.purpose === 'Office Visit' && (
-                  <div className="modal-dynamic-box">
-                    <div className="form-row-2">
-                      <div className="form-group-item">
-                        <label className="input-label">{lang === 'bn' ? 'অফিস মিটিংয়ের তারিখ *' : 'Office Visit Date *'}</label>
-                        <input 
-                          type="date" 
-                          className="text-input-field" 
-                          value={visitForm.date}
-                          onChange={(e) => setVisitForm({ ...visitForm, date: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group-item">
-                        <label className="input-label">{lang === 'bn' ? 'পছন্দের সময় *' : 'Preferred Time *'}</label>
-                        <select 
-                          className="select-input-field"
-                          value={visitForm.timeSlot}
-                          onChange={(e) => setVisitForm({ ...visitForm, timeSlot: e.target.value })}
-                        >
-                          <option value="11:00 AM">সকাল ১১:০০ টা (Morning 11:00 AM)</option>
-                          <option value="02:30 PM">দুপুর ০২:৩০ টা (Afternoon 02:30 PM)</option>
-                          <option value="04:30 PM">বিকাল ০৪:৩০ টা (Evening 04:30 PM)</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#64748b' }}>
-                      📍 নাফি টাওয়ার, লেভেল ১০, ৫৩ গুলশান এভিনিউ, ঢাকা-১২১২
-                    </div>
-                  </div>
-                )}
-
-                {/* CONDITIONAL: Interested Partner -> Approx Investment Amount */}
-                {visitForm.purpose === 'Intersted patner' && (
-                  <div className="modal-dynamic-box">
-                    <div className="form-group-item">
-                      <label className="input-label">{lang === 'bn' ? 'সম্ভাব্য বিনিয়োগের পরিমাণ (Approx. Investment) *' : 'Approx. Investment Amount *'}</label>
-                      <select 
-                        className="select-input-field"
-                        value={visitForm.investmentAmount}
-                        onChange={(e) => setVisitForm({ ...visitForm, investmentAmount: e.target.value })}
-                      >
-                        <option value="২৫ - ৫০ লক্ষ টাকা (25 - 50 Lakh BDT)">২৫ - ৫০ লক্ষ টাকা (25 - 50 Lakh BDT)</option>
-                        <option value="৫০ লক্ষ - ১ কোটি টাকা (50 Lakh - 1 Crore BDT)">৫০ লক্ষ - ১ কোটি টাকা (50 Lakh - 1 Crore BDT)</option>
-                        <option value="১ কোটি - ৩ কোটি টাকা (1 - 3 Crore BDT)">১ কোটি - ৩ কোটি টাকা (1 - 3 Crore BDT)</option>
-                        <option value="৩ কোটি - ৫ কোটি টাকা (3 - 5 Crore BDT)">৩ কোটি - ৫ কোটি টাকা (3 - 5 Crore BDT)</option>
-                        <option value="৫ কোটি+ টাকা (5+ Crore BDT)">৫ কোটি+ টাকা (5+ Crore BDT)</option>
-                        <option value="আলোচনা সাপেক্ষে (Negotiable / Custom)">আলোচনা সাপেক্ষে (Negotiable / Custom)</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* Submit & Cancel Footer */}
-                <div className="visit-modal-footer">
-                  <button 
-                    type="button" 
-                    className="btn-modal-cancel"
-                    onClick={() => setVisitModalOpen(false)}
-                  >
-                    {lang === 'bn' ? 'বাতিল' : 'Cancel'}
-                  </button>
-                  <button 
-                    type="submit" 
-                    className="btn-modal-submit"
-                    disabled={visitSubmitting}
-                  >
-                    <Calendar size={16} />
-                    <span>{visitSubmitting ? (lang === 'bn' ? 'পাঠানো হচ্ছে...' : 'Submitting...') : (lang === 'bn' ? 'নিশ্চিত করুন' : 'Confirm')}</span>
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
+      {/* BOOKING INQUIRY MODAL (form-card-side popup) */}
+      <BookingModal
+        isOpen={bookingModalOpen}
+        onClose={() => {
+          setBookingModalOpen(false)
+          setFormSuccess(false)
+        }}
+        lang={lang}
+        t={t}
+        formData={formData}
+        setFormData={setFormData}
+        handleSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        formSuccess={formSuccess}
+        setFormSuccess={setFormSuccess}
+      />
 
     </div>
   )
