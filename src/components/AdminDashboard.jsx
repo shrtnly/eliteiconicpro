@@ -945,8 +945,6 @@ Ask me anything about the business, or click one of the frequently asked options
   // Top Loading Progress Bar Controller (YouTube / Vercel style)
   const [topProgress, setTopProgress] = useState(0)
   const [progressVisible, setProgressVisible] = useState(false)
-  const [bootProgress, setBootProgress] = useState(14)
-  const [bootStatusText, setBootStatusText] = useState('Verifying administrator session...')
   const progressTimerRef = useRef(null)
 
   const triggerProgress = useCallback(() => {
@@ -973,35 +971,6 @@ Ask me anything about the business, or click one of the frequently asked options
       }, 200)
     }, 260)
   }, [])
-
-  // Boot loader progress sequence during checking
-  useEffect(() => {
-    if (authState === 'checking') {
-      const t1 = setTimeout(() => {
-        setBootProgress(42)
-        setBootStatusText('Connecting to Supabase Cloud Database...')
-      }, 90)
-
-      const t2 = setTimeout(() => {
-        setBootProgress(78)
-        setBootStatusText('Syncing live plot registries & CRM data...')
-      }, 240)
-
-      const t3 = setTimeout(() => {
-        setBootProgress(96)
-        setBootStatusText('Calibrating DataBrain analytics engine...')
-      }, 380)
-
-      return () => {
-        clearTimeout(t1)
-        clearTimeout(t2)
-        clearTimeout(t3)
-      }
-    } else if (authState === 'ok') {
-      setBootProgress(100)
-      setBootStatusText('DataBrain Command Center Ready!')
-    }
-  }, [authState])
 
   const handleSubTabChange = (id) => {
     if (id !== activeSubTab) triggerProgress()
@@ -1452,65 +1421,9 @@ Ask me anything about the business, or click one of the frequently asked options
     return (
       <div className="adm-gate">
         {authState === 'checking' ? (
-          <>
-            <div className="adm-page-top-progress" style={{ opacity: 1 }}>
-              <div className="adm-page-top-progress-bar" style={{ width: `${bootProgress}%` }} />
-            </div>
-
-            <div className="adm-boot-card">
-              <div className="adm-boot-brand-wrap">
-                <img 
-                  src="/elite-iconic-logo.png" 
-                  alt="Elite Iconic Properties & Construction Limited" 
-                  className="adm-boot-logo"
-                />
-                <div className="adm-boot-badge">
-                  <span className="adm-boot-pulsing-dot" />
-                  <span>DATABRAIN OS 2.0</span>
-                </div>
-              </div>
-
-              <div className="adm-boot-header">
-                <h2>Command Center Initialization</h2>
-                <p>Loading real-time executive dashboard & enterprise asset telemetry</p>
-              </div>
-
-              {/* Dynamic Animated Progress Bar */}
-              <div className="adm-boot-progress-container">
-                <div className="adm-boot-progress-track">
-                  <div 
-                    className="adm-boot-progress-fill"
-                    style={{ width: `${bootProgress}%` }}
-                  >
-                    <div className="adm-boot-progress-shimmer" />
-                  </div>
-                </div>
-
-                <div className="adm-boot-progress-meta">
-                  <span className="adm-boot-status-text">
-                    <Loader2 size={13} className="adm-spin" />
-                    <span>{bootStatusText}</span>
-                  </span>
-                  <strong className="adm-boot-pct">{bootProgress}%</strong>
-                </div>
-              </div>
-
-              <div className="adm-boot-pills-row">
-                <span className="adm-boot-minipill">
-                  <CheckCircle2 size={12} className="text-emerald" />
-                  <span>Supabase Engine</span>
-                </span>
-                <span className="adm-boot-minipill">
-                  <CheckCircle2 size={12} className="text-emerald" />
-                  <span>Dhaka Icon City</span>
-                </span>
-                <span className="adm-boot-minipill">
-                  <CheckCircle2 size={12} className="text-emerald" />
-                  <span>Live CRM Sync</span>
-                </span>
-              </div>
-            </div>
-          </>
+          <div className="adm-simple-loader-wrap">
+            <div className="adm-simple-circle-spinner" />
+          </div>
         ) : (
           <div className="adm-gate-card">
             {authState === 'guest' && (

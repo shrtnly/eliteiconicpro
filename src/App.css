@@ -12634,6 +12634,28 @@ h1, h2, h3, h4, h5, h6, p, li, a, span, strong, label {
   background: #fef3c7;
 }
 
+.btn-alert-emergency {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #008450 0%, #00683e 100%);
+  color: #ffffff;
+  border: 1px solid #008450;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 132, 80, 0.25);
+}
+
+.btn-alert-emergency:hover {
+  background: linear-gradient(135deg, #00683e 0%, #004d2e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 132, 80, 0.35);
+}
+
 .login-alert .alert-icon {
   flex-shrink: 0;
   margin-top: 1px;
