@@ -21,6 +21,7 @@ import {
   GraduationCap, 
   Layers, 
   Eye, 
+  Images, 
   Share2, 
   FileText, 
   Navigation, 
@@ -51,6 +52,8 @@ import FounderDirectorSection from './components/FounderDirectorSection'
 import { founderDirectors } from './data/founderDirectorsData'
 import CorporateAboutPage from './components/CorporateAboutPage'
 import GalleryPage from './components/GalleryPage'
+import LegalDocumentsPage from './components/LegalDocumentsPage'
+import LegalDocumentsSection from './components/LegalDocumentsSection'
 import LoginPage from './components/LoginPage'
 import AdminDashboard from './components/AdminDashboard'
 import HeroVideoPlayer from './components/HeroVideoPlayer'
@@ -67,6 +70,7 @@ const translations = {
     navAbout: "আমাদের সম্পর্কে",
     navLeadership: "পরিচালনা পর্ষদ",
     navGallery: "গ্যালারি",
+    navLegal: "আইনগত ডকুমেন্টস",
     navContact: "যোগাযোগ",
     bookVisitBtn: "ভিজিট শিডিউল",
     
@@ -175,6 +179,7 @@ const translations = {
     navAbout: "About Us",
     navLeadership: "Board of Directors",
     navGallery: "Gallery",
+    navLegal: "Legal Documents",
     navContact: "Contact",
     bookVisitBtn: "Book VIP Site Visit",
 
@@ -1363,6 +1368,9 @@ function App() {
       if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
         return 'gallery'
       }
+      if (hash === '#legal-documents' || hash === '#/legal-documents' || path === '/legal-documents' || hash === '#legal' || hash === '#/legal' || path === '/legal' || hash === '#documents' || hash === '#approvals') {
+        return 'legal-documents'
+      }
       if (hash === '#login' || hash === '#/login' || path === '/login') {
         return 'login'
       }
@@ -1392,6 +1400,9 @@ function App() {
         }
       } else if (hash === '#gallery' || hash === '#/gallery' || path === '/gallery' || hash === '#site-gallery-page') {
         setCurrentRoute('gallery')
+        window.scrollTo(0, 0)
+      } else if (hash === '#legal-documents' || hash === '#/legal-documents' || path === '/legal-documents' || hash === '#legal' || hash === '#/legal' || path === '/legal' || hash === '#documents' || hash === '#approvals') {
+        setCurrentRoute('legal-documents')
         window.scrollTo(0, 0)
       } else if (hash === '#login' || hash === '#/login' || path === '/login') {
         setCurrentRoute('login')
@@ -1430,6 +1441,10 @@ function App() {
     } else if (route === 'gallery') {
       window.location.hash = '#gallery'
       setCurrentRoute('gallery')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (route === 'legal-documents') {
+      window.location.hash = '#legal-documents'
+      setCurrentRoute('legal-documents')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else if (route === 'login') {
       window.location.hash = '#login'
@@ -1650,6 +1665,7 @@ function App() {
               <li><a href="#" className={`nav-link ${currentRoute === 'home' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>{t.navHome}</a></li>
               <li><a href="#corporate-about" className={`nav-link ${currentRoute === 'corporate-about' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
               <li><a href="#leadership-team" className={`nav-link ${currentRoute === 'leadership-team' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+              <li><a href="#legal-documents" className={`nav-link ${currentRoute === 'legal-documents' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('legal-documents'); }}>{t.navLegal}</a></li>
               <li><a href="#gallery" className={`nav-link ${currentRoute === 'gallery' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{t.navGallery}</a></li>
               <li><a href="#booking-form-section" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
             </ul>
@@ -1741,6 +1757,7 @@ function App() {
             <li><a href="#" className={currentRoute === 'home' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home'); }}>{t.navHome}</a></li>
             <li><a href="#corporate-about" className={currentRoute === 'corporate-about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
             <li><a href="#leadership-team" className={currentRoute === 'leadership-team' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+            <li><a href="#legal-documents" className={currentRoute === 'legal-documents' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('legal-documents'); }}>{t.navLegal}</a></li>
             <li><a href="#gallery" className={currentRoute === 'gallery' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('gallery'); }}>{t.navGallery}</a></li>
             <li><a href="#booking-form-section" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
             {currentUser ? (
@@ -1933,6 +1950,12 @@ function App() {
         </main>
       ) : currentRoute === 'gallery' ? (
         <GalleryPage 
+          lang={lang}
+          onScheduleVisit={() => setVisitModalOpen(true)}
+          navigateTo={navigateTo}
+        />
+      ) : currentRoute === 'legal-documents' ? (
+        <LegalDocumentsPage 
           lang={lang}
           onScheduleVisit={() => setVisitModalOpen(true)}
           navigateTo={navigateTo}
@@ -3464,16 +3487,28 @@ function App() {
             </div>
           </div>
 
-          {/* Full Gallery CTA Button */}
+          {/* Revised Full Gallery CTA Button */}
           <div className="gallery-section-cta-wrap">
             <button 
               type="button"
               className="btn-view-full-gallery"
               onClick={() => navigateTo('gallery')}
+              aria-label={lang === 'bn' ? 'সম্পূর্ণ গ্যালারি দেখুন' : 'Explore Gallery'}
             >
-              <Eye size={18} />
-              <span>{lang === 'bn' ? 'সম্পূর্ণ গ্যালারি দেখুন' : 'Explore Gallery'}</span>
-              <ChevronRight size={17} className="gallery-cta-chevron" />
+              <span className="gallery-cta-icon-pill" aria-hidden="true">
+                <Images size={20} />
+              </span>
+              <span className="gallery-cta-text-group">
+                <span className="gallery-cta-main-text">
+                  {lang === 'bn' ? 'সম্পূর্ণ গ্যালারি দেখুন' : 'Explore Gallery'}
+                </span>
+                <span className="gallery-cta-sub-tag">
+                  {lang === 'bn' ? 'সকল প্রজেক্ট ছবি ও ইভেন্ট' : 'All Project Photos & Events'}
+                </span>
+              </span>
+              <span className="gallery-cta-arrow-bubble" aria-hidden="true">
+                <ArrowRight size={16} className="gallery-cta-arrow-icon" />
+              </span>
             </button>
           </div>
         </div>
@@ -3575,6 +3610,9 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* 9B. OFFICIAL LEGAL DOCUMENTS & REGISTRATION SECTION */}
+      <LegalDocumentsSection lang={lang} navigateTo={navigateTo} />
 
       {/* 10. INTERACTIVE PLOT BOOKING & SITE VISIT INQUIRY FORM */}
       <section className="booking-form-section" id="booking-form-section">
@@ -3877,6 +3915,12 @@ function App() {
                   <a href="#gallery" onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>
                     <ChevronRight size={13} className="footer-link-chevron" />
                     <span>{lang === 'bn' ? 'ফটো ও ইভেন্ট গ্যালারি' : 'Photo & Event Gallery'}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#legal-documents" onClick={(e) => { e.preventDefault(); navigateTo('legal-documents'); }}>
+                    <ChevronRight size={13} className="footer-link-chevron" />
+                    <span>{lang === 'bn' ? 'আইনগত ডকুমেন্টস ও অনুমোদন' : 'Legal Documents & Approvals'}</span>
                   </a>
                 </li>
                 <li>

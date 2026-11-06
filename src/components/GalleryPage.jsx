@@ -81,6 +81,32 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit }) {
       locationEn: 'Nafi Tower, Level 10, Gulshan-1 HQ'
     },
     {
+      id: 13,
+      category: 'corporate',
+      image: '/gallery/westin-dhaka-leadership-summit.jpg',
+      titleBn: 'দ্য ওয়েস্টিন ঢাকায় এক্সিকিউটিভ লিডারশিপ সামিট ও কর্পোরেট সম্মেলন',
+      titleEn: 'Executive Leadership Summit & Corporate Conference at The Westin Dhaka',
+      descBn: 'রাজধানীর দ্য ওয়েস্টিন হোটেলে কোম্পানির পরিচালনা পর্ষদ ও ঊর্ধ্বতন কর্মকর্তাদের অংশগ্রহণে ঢাকা আইকন সিটির কৌশলগত সম্প্রসারণ ও গ্রাহক সেবা পর্যালোচনা সম্মেলন।',
+      descEn: 'Elite Iconic Properties board of directors and senior executive leaders gathered at The Westin Dhaka for high-level strategic alignment and real estate roadmap review.',
+      dateBn: 'জুলাই ২০২৬',
+      dateEn: 'July 2026',
+      locationBn: 'গ্র্যান্ড বলরুম, দ্য ওয়েস্টিন ঢাকা, গুলশান',
+      locationEn: 'Grand Ballroom, The Westin Dhaka, Gulshan'
+    },
+    {
+      id: 14,
+      category: 'corporate',
+      image: '/gallery/executive-team-synergy-meeting.jpg',
+      titleBn: 'কোর ম্যানেজমেন্ট টিমের ঐক্য ও কৌশলগত অঙ্গীকার বিনিময়',
+      titleEn: 'Core Management Unity & Strategic Team Synergy Pledge',
+      descBn: 'প্রকল্প বাস্তবায়ন এবং সম্মানিত গ্রাহকদের আস্থা অটুট রাখতে কর্মকর্তা ও ব্যবস্থাপনা পর্ষদের একতাবদ্ধ অঙ্গীকার এবং টিম স্পিরিট জোরদার সভা।',
+      descEn: 'Executive and operational management team joining hands in unity, reaffirming their shared commitment to timely project handover and investor trust.',
+      dateBn: 'জুন ২০২৬',
+      dateEn: 'June 2026',
+      locationBn: 'কর্পোরেট হেডকোয়ার্টার কনফারেন্স রুম',
+      locationEn: 'Corporate HQ Conference Suite'
+    },
+    {
       id: 5,
       category: 'field',
       image: '/gallery/turag-riverfront-sandfield-visit-1.jpg',
