@@ -261,7 +261,7 @@ const translations = {
     officeTitle: "Corporate Headquarters",
     officeAddress: "Nafi Tower, Level 10, 53 Gulshan Avenue, Gulshan-01, Dhaka-1212, Bangladesh",
     regRajuk: "RAJUK Reg: RAJUK/DC/REDMR 001262/24",
-    productBy: "A Product of GOLDENEYE DEVELOPERS LTD",
+    productBy: "A Product of GOLDENEYE HOUSING LTD",
     assocBadge: "Member of DD REG & Premier Real Estate Group",
 
     // Other Projects
@@ -3510,7 +3510,7 @@ function App() {
                 </div>
                 <div>
                   <h4 className="cred-title">{t.productBy}</h4>
-                  <p className="cred-text">{lang === 'bn' ? 'গোল্ডেন আই ডেভেলপার্স লিমিটেডের সুদীর্ঘ অভিজ্ঞতা ও আস্থার স্বাক্ষর।' : 'Backed by the long-standing industry trust of Goldeneye Developers Ltd.'}</p>
+                  <p className="cred-text">{lang === 'bn' ? 'গোল্ডেন আই ডেভেলপার্স লিমিটেডের সুদীর্ঘ অভিজ্ঞতা ও আস্থার স্বাক্ষর।' : 'Backed by the long-standing industry trust of Goldeneye Housing Ltd.'}</p>
                 </div>
               </div>
 
@@ -3954,7 +3954,7 @@ function App() {
               <ul className="footer-partner-list">
                 <li>
                   <span className="partner-bullet"><Award size={13} /></span>
-                  <span>Goldeneye Developers Ltd</span>
+                  <span>Goldeneye Housing Ltd</span>
                 </li>
                 <li>
                   <span className="partner-bullet"><Award size={13} /></span>

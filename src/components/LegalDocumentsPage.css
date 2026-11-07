@@ -792,3 +792,540 @@
   box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45);
 }
 
+
+/* ==========================================================================
+   MOBILE RESPONSIVE ENHANCEMENTS
+   ========================================================================== */
+.legal-page-main {
+  overflow-x: hidden;
+}
+
+.legal-page-main img {
+  max-width: 100%;
+}
+
+/* ---------- Tablet (<= 900px) ---------- */
+@media (max-width: 900px) {
+  .legal-hero-section {
+    padding: 104px 0 44px;
+  }
+
+  .legal-doc-paper-col {
+    max-width: 440px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .legal-doc-paper-frame {
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .legal-directors-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .directors-search-box {
+    width: 100%;
+  }
+}
+
+/* ---------- Mobile (<= 640px) ---------- */
+@media (max-width: 640px) {
+  .legal-page-main {
+    padding-bottom: 48px;
+  }
+
+  .legal-hero-section {
+    padding: 92px 0 38px;
+  }
+
+  .legal-hero-grid {
+    gap: 0;
+  }
+
+  .legal-kicker-row {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .legal-kicker-gold-bar {
+    width: 22px;
+    flex-shrink: 0;
+  }
+
+  .legal-kicker-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+
+  .legal-hero-title {
+    font-size: clamp(24px, 7.4vw, 32px);
+    line-height: 1.3;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+    word-break: break-word;
+  }
+
+  .legal-hero-divider {
+    margin: 10px 0 14px;
+  }
+
+  .legal-hero-subtitle {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* Verification strip */
+  .legal-verification-strip-section {
+    margin-top: -18px;
+    padding-bottom: 26px;
+  }
+
+  .legal-verification-strip {
+    padding: 16px;
+    gap: 0;
+    border-radius: 16px;
+  }
+
+  .verification-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .verification-item:last-of-type {
+    border-bottom: none;
+  }
+
+  .verification-text {
+    min-width: 0;
+  }
+
+  .verification-text strong {
+    font-size: 13px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* Filter tabs: horizontal swipe */
+  .legal-filter-section {
+    padding: 0 0 22px;
+  }
+
+  .legal-filter-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 4px 2px 8px;
+    margin: 0 -2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .legal-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+
+  /* Document cards */
+  .legal-docs-showcase-section {
+    padding-bottom: 34px;
+  }
+
+  .legal-detailed-list {
+    gap: 22px;
+  }
+
+  .legal-detail-card {
+    padding: 16px 14px;
+    border-radius: 18px;
+    gap: 18px;
+  }
+
+  .legal-doc-paper-col {
+    max-width: none;
+  }
+
+  .legal-doc-paper-frame {
+    aspect-ratio: 4 / 4.6;
+    border-radius: 12px;
+  }
+
+  .legal-doc-title {
+    font-size: 19px;
+    margin-bottom: 12px;
+  }
+
+  .legal-doc-topline {
+    gap: 8px;
+  }
+
+  .legal-reg-pill-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .legal-number-box {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .legal-number-box strong {
+    font-size: 13px;
+    word-break: break-all;
+  }
+
+  .legal-doc-summary {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .legal-highlights-grid {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .legal-h-item .h-val {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* Full-width tap-friendly action buttons */
+  .legal-doc-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .legal-primary-btn,
+  .legal-secondary-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 46px;
+  }
+
+  /* Directors section */
+  .legal-directors-table-section {
+    padding: 22px 0 36px;
+  }
+
+  .directors-head-text p {
+    font-size: 13px;
+  }
+
+  .directors-search-box {
+    height: 46px;
+  }
+
+  .directors-search-box input {
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+
+  /* Table -> stacked cards */
+  .legal-table-wrapper {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .legal-directors-table {
+    min-width: 0;
+    display: block;
+  }
+
+  .legal-directors-table thead {
+    display: none;
+  }
+
+  .legal-directors-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .legal-directors-table tr {
+    display: block;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 6px 14px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  }
+
+  .legal-directors-table tr.highlight-row {
+    border-color: #a7f3d0;
+    background: #f6fffb;
+  }
+
+  .legal-directors-table td,
+  .legal-directors-table tr.highlight-row td,
+  .legal-directors-table tr:hover td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    background: transparent;
+    text-align: right;
+    min-width: 0;
+  }
+
+  .legal-directors-table td:last-child {
+    border-bottom: none;
+  }
+
+  .legal-directors-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    text-align: left;
+    padding-top: 2px;
+  }
+
+  .legal-directors-table td.text-center {
+    text-align: right;
+  }
+
+  .address-cell {
+    max-width: none;
+  }
+
+  .director-name-cell {
+    font-size: 14px;
+  }
+
+  .nid-cell,
+  .tin-badge {
+    word-break: break-all;
+  }
+
+  .directors-table-foot {
+    text-align: center;
+    padding: 14px 6px 0;
+    line-height: 1.5;
+  }
+
+  /* Guarantee banner */
+  .legal-guarantee-section {
+    padding-bottom: 10px;
+  }
+
+  .legal-guarantee-card {
+    padding: 24px 18px;
+    gap: 18px;
+    border-radius: 18px;
+  }
+
+  .guarantee-text-col p {
+    font-size: 13.5px;
+  }
+
+  .guarantee-pills-row {
+    gap: 8px;
+  }
+
+  .guarantee-pill {
+    font-size: 11.5px;
+    text-align: left;
+  }
+
+  .guarantee-cta-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .legal-guarantee-btn {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    min-height: 48px;
+    padding: 12px 18px;
+  }
+
+  /* Lightbox */
+  .legal-lightbox-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .legal-lightbox-modal {
+    width: 100%;
+    max-height: 94vh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .legal-lightbox-head {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .legal-lightbox-title-box {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .legal-lightbox-title-box h3 {
+    font-size: 14px;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  .legal-lightbox-actions {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .legal-lightbox-body {
+    padding: 10px;
+  }
+
+  .legal-lightbox-foot {
+    padding: 10px 14px;
+  }
+}
+
+/* ---------- Small phones (<= 380px) ---------- */
+@media (max-width: 380px) {
+  .legal-hero-title {
+    font-size: 23px;
+  }
+
+  .legal-detail-card {
+    padding: 14px 12px;
+  }
+
+  .legal-directors-table td {
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .legal-directors-table td.text-center {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   LIGHTBOX / PREVIEW MODAL - MOBILE POLISH
+   ========================================================================== */
+.legal-lightbox-actions .legal-btn-download {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .legal-lightbox-modal {
+    max-height: 92dvh;
+    max-height: 92vh;
+  }
+
+  /* Header becomes a 2-row grid: [title | close] then [download full width] */
+  .legal-lightbox-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "title close"
+      "dl    dl";
+    align-items: start;
+    gap: 12px 10px;
+    padding: 14px 14px 12px;
+  }
+
+  .legal-lightbox-title-box {
+    grid-area: title;
+    align-items: flex-start;
+  }
+
+  .legal-lightbox-title-box > svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .legal-lightbox-title-box h3 {
+    font-size: 15px;
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+
+  .legal-lightbox-title-box small {
+    font-size: 11.5px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  /* Flatten actions wrapper so children can use grid areas */
+  .legal-lightbox-actions {
+    display: contents;
+  }
+
+  .legal-lightbox-close {
+    grid-area: close;
+    width: 38px;
+    height: 38px;
+    background: #e2e8f0;
+    color: #0f172a;
+    border-radius: 50%;
+  }
+
+  .legal-lightbox-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .legal-lightbox-actions .legal-btn-download,
+  .legal-lightbox-actions .legal-btn-download.mini {
+    grid-area: dl;
+    width: 100%;
+    height: 44px;
+    font-size: 14px;
+    border-radius: 12px;
+    background: #008450;
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 132, 80, 0.25);
+  }
+
+  .legal-lightbox-body {
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .legal-lightbox-img {
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .legal-lightbox-foot {
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 380px) {
+  .legal-lightbox-title-box h3 {
+    font-size: 14px;
+  }
+}

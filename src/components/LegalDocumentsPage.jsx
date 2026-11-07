@@ -412,7 +412,7 @@ export default function LegalDocumentsPage({ lang = 'en', onScheduleVisit, navig
                       className="legal-secondary-btn"
                     >
                       <Download size={16} />
-                      <span>{isBn ? 'অফিসিয়াল PDF ডাউনলোড' : 'Download Original PDF'}</span>
+                      <span>{isBn ? 'ডাউনলোড' : 'Download'}</span>
                     </a>
                   </div>
                 </div>
@@ -471,22 +471,22 @@ export default function LegalDocumentsPage({ lang = 'en', onScheduleVisit, navig
               <tbody>
                 {filteredDirectors.map((d) => (
                   <tr key={d.sl} className={d.sl <= 6 ? 'highlight-row' : ''}>
-                    <td className="text-center font-bold">{d.sl}</td>
-                    <td>
+                    <td className="text-center font-bold" data-label={isBn ? 'ক্রমিক' : 'SL'}>{d.sl}</td>
+                    <td data-label={isBn ? 'পরিচালকের নাম' : 'Director Name'}>
                       <strong className="director-name-cell">{d.name}</strong>
                     </td>
-                    <td>
+                    <td data-label={isBn ? 'কোম্পানি পদবি' : 'Designation'}>
                       <span className={`director-role-tag ${d.sl <= 6 ? 'executive' : 'director'}`}>
                         {isBn ? d.roleBn : d.roleEn}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="TIN">
                       <code className="tin-badge">{d.tin}</code>
                     </td>
-                    <td>
+                    <td data-label="NID">
                       <span className="nid-cell">{d.nid}</span>
                     </td>
-                    <td className="address-cell">{d.address}</td>
+                    <td className="address-cell" data-label={isBn ? 'ঠিকানা' : 'Address'}>{d.address}</td>
                   </tr>
                 ))}
               </tbody>
@@ -569,7 +569,7 @@ export default function LegalDocumentsPage({ lang = 'en', onScheduleVisit, navig
                   className="legal-btn-download mini"
                 >
                   <Download size={15} />
-                  <span>{isBn ? 'মূল PDF ডাউনলোড' : 'Download Original PDF'}</span>
+                  <span>{isBn ? 'ডাউনলোড' : 'Download'}</span>
                 </a>
                 <button
                   type="button"

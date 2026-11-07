@@ -235,7 +235,7 @@ export default function LegalDocumentsSection({ lang = 'en', navigateTo }) {
                   className="legal-btn-download mini"
                 >
                   <Download size={15} />
-                  <span>{isBn ? 'অফিসিয়াল PDF' : 'Download PDF'}</span>
+                  <span>{isBn ? 'ডাউনলোড' : 'Download'}</span>
                 </a>
                 <button
                   type="button"
