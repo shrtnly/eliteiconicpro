@@ -1329,3 +1329,25 @@
     font-size: 14px;
   }
 }
+
+/* Mobile: hide title box in preview modal; show Download + Close in one row */
+@media (max-width: 640px) {
+  .legal-lightbox-title-box {
+    display: none;
+  }
+
+  .legal-lightbox-head {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "dl close";
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+}
+
+/* Force-hide title box on mobile (beats later-loaded Section.css display:flex) */
+@media (max-width: 640px) {
+  .legal-lightbox-backdrop .legal-lightbox-modal .legal-lightbox-head .legal-lightbox-title-box {
+    display: none !important;
+  }
+}
