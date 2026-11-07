@@ -3,82 +3,48 @@ import { createClient } from '@supabase/supabase-js'
 export const SUPABASE_ORIGIN_URL = import.meta.env.VITE_SUPABASE_URL || 'https://isqrtfnpztylatjrkgpi.supabase.co'
 export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzcXJ0Zm5wenR5bGF0anJrZ3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMTY4NzgsImV4cCI6MjEwODg5Mjg3OH0.Tgex5kbNxXi8vb_hh8AyOscGr7RAC4ZZoJ_AmcpQOI0'
 
-/**
- * Dynamically resolves the best endpoint:
- * In browser environments on localhost/127.0.0.1 or same-origin deployments,
- * routes through the `/supabase-api` reverse proxy to eliminate browser ad-blocker
- * blocks (Brave Shields, uBlock Origin, Privacy Badger) and CORS preflight issues.
- */
-export const getEffectiveSupabaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname
-    const isLocal = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')
-    if (isLocal) {
-      return `${window.location.origin}/supabase-api`
-    }
-  }
-  return SUPABASE_ORIGIN_URL
-}
+const PROXY_PREFIX = '/supabase-api'
 
 /**
- * Resilient custom fetcher:
- * Handles direct or proxied requests, cleanly cloning Request bodies if retry is needed.
+ * Resilient fetch:
+ * 1. First try the same-origin proxy (/supabase-api -> Supabase) so ad-blockers,
+ *    firewalls and ISP blocks of *.supabase.co cannot break login (works locally via
+ *    Vite proxy and in production via vercel.json / netlify _redirects rewrite).
+ * 2. If the proxy is not available (network error, or 404 HTML from SPA fallback),
+ *    fall back to the direct Supabase URL.
  */
 const resilientFetch = async (input, init) => {
-  let rawUrl = ''
-  if (typeof input === 'string') {
-    rawUrl = input
-  } else if (input instanceof URL) {
-    rawUrl = input.toString()
-  } else if (input?.url) {
-    rawUrl = input.url
+  if (typeof window === 'undefined') return fetch(input, init)
+
+  const req = input instanceof Request ? input : null
+  const rawUrl = req ? req.url : String(input)
+
+  let parsed
+  try {
+    parsed = new URL(rawUrl)
+  } catch {
+    return fetch(input, init)
   }
 
-  // Pre-clone request in case body stream needs to be re-read on fallback
-  let clonedReq = null
-  if (input instanceof Request) {
-    try {
-      clonedReq = input.clone()
-    } catch {
-      // ignore
-    }
-  }
+  const origin = new URL(SUPABASE_ORIGIN_URL).origin
+  if (parsed.origin !== origin) return fetch(input, init)
+
+  const proxyUrl = `${window.location.origin}${PROXY_PREFIX}${parsed.pathname}${parsed.search}`
+  const directReq = req ? req.clone() : null
 
   try {
-    return await fetch(input, init)
-  } catch (err) {
-    const errMsg = (err?.message || '').toLowerCase()
-    const isFetchErr = err?.name === 'TypeError' || 
-                       errMsg.includes('failed to fetch') || 
-                       errMsg.includes('network') ||
-                       errMsg.includes('blocked')
-
-    if (isFetchErr && typeof window !== 'undefined' && rawUrl && rawUrl.includes('supabase.co')) {
-      try {
-        const parsed = new URL(rawUrl)
-        const proxyUrl = `${window.location.origin}/supabase-api${parsed.pathname}${parsed.search}`
-        
-        if (clonedReq) {
-          const body = await clonedReq.arrayBuffer().catch(() => null)
-          const headers = new Headers(clonedReq.headers)
-          return await fetch(proxyUrl, {
-            method: clonedReq.method,
-            headers,
-            body: ['GET', 'HEAD'].includes(clonedReq.method) ? undefined : body,
-            credentials: clonedReq.credentials
-          })
-        } else {
-          return await fetch(proxyUrl, init)
-        }
-      } catch (proxyErr) {
-        console.warn('Resilient fetch proxy fallback failed:', proxyErr)
-      }
-    }
-    throw err
+    const res = await fetch(req ? new Request(proxyUrl, req) : proxyUrl, init)
+    const type = res.headers.get('content-type') || ''
+    const proxyMissing = res.status === 404 && type.includes('text/html')
+    if (!proxyMissing) return res
+  } catch {
+    // proxy unreachable -> fall back to direct
   }
+
+  return fetch(directReq || input, init)
 }
 
-export const supabase = createClient(getEffectiveSupabaseUrl(), SUPABASE_ANON_KEY, {
+export const supabase = createClient(SUPABASE_ORIGIN_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,

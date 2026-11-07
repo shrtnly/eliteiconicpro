@@ -140,15 +140,6 @@ export default function LoginPage({
                         error.status === 0
 
         if (isFetch) {
-          const targetEmail = email.trim().toLowerCase()
-          // If the user is the administrator and the browser ad-blocker or firewall blocks Supabase,
-          // auto-sign-in immediately in local admin mode so they are never locked out!
-          if (targetEmail === 'freeman.find@gmail.com' || targetEmail.includes('admin')) {
-            console.warn('Supabase auth network blocked by client/ad-blocker. Auto-signing in via local admin mode.')
-            handleEmergencyOfflineLogin()
-            return
-          }
-
           setIsNetworkBlocked(true)
           setErrorMsg(isBn 
             ? 'সার্ভার সংযোগে বাধা (Failed to fetch)। ব্রাউজারের অ্যাড-ব্লকার বা ফায়ারওয়াল ক্লাউড সংযোগ ব্লক করছে।'
@@ -197,12 +188,6 @@ export default function LoginPage({
                          (err?.message || '').toLowerCase().includes('fetch') ||
                          (err?.message || '').toLowerCase().includes('network')
       if (isFetchErr) {
-        const targetEmail = email.trim().toLowerCase()
-        if (targetEmail === 'freeman.find@gmail.com' || targetEmail.includes('admin')) {
-          handleEmergencyOfflineLogin()
-          return
-        }
-
         setIsNetworkBlocked(true)
         setErrorMsg(isBn 
           ? 'সার্ভার সংযোগে বাধা (Failed to fetch)। ব্রাউজারের অ্যাড-ব্লকার বা ফায়ারওয়াল সংযোগ ব্লক করছে।' 
@@ -213,37 +198,6 @@ export default function LoginPage({
     } finally {
       setLoading(false)
     }
-  }
-
-  // Handle Emergency Offline Admin Sign-in (Fail-safe when Supabase is blocked by browser/firewall)
-  const handleEmergencyOfflineLogin = () => {
-    const targetEmail = email.trim() || 'freeman.find@gmail.com'
-    const isSuper = targetEmail.toLowerCase() === 'freeman.find@gmail.com'
-    const emergencyUser = {
-      id: 'emergency-admin-' + Date.now(),
-      email: targetEmail,
-      user_metadata: {
-        full_name: isSuper ? 'Super Admin' : 'Administrator (Offline Mode)',
-        role: isSuper ? 'superadmin' : 'admin'
-      },
-      role: 'authenticated'
-    }
-
-    try {
-      localStorage.setItem('dz_emergency_admin', JSON.stringify(emergencyUser))
-      sessionStorage.setItem('dz_emergency_admin', JSON.stringify(emergencyUser))
-    } catch {
-      // ignore
-    }
-
-    setSuccessMsg(isBn ? 'এডমিন মোডে ড্যাশবোর্ডে প্রবেশ হচ্ছে...' : 'Signing in as Administrator...')
-    if (onLoginSuccess) {
-      onLoginSuccess(emergencyUser)
-    }
-
-    setTimeout(() => {
-      navigateTo('admin')
-    }, 400)
   }
 
   // Handle Forgot Password
@@ -362,18 +316,9 @@ export default function LoginPage({
                       : 'Your browser ad-blocker (Brave Shields, uBlock Origin, Privacy Badger) or firewall blocked the request to Supabase auth.'}
                   </p>
                   <div className="alert-network-tips">
-                    <span>💡 {isBn ? 'সমাধান: নিচের বাটনে ক্লিক করে এই মেসেজের মাধ্যমে সরাসরি এডমিন ড্যাশবোর্ডে প্রবেশ করুন।' : 'Quick Fix: Click the green button below to sign in directly through this message.'}</span>
+                    <span>💡 {isBn ? 'সমাধান: ইন্টারনেট সংযোগ দেখুন, Brave Shields/AdBlock বন্ধ করুন, অথবা পুনরায় চেষ্টা করুন।' : 'Quick Fix: Check your connection, disable Brave Shields/AdBlock for this site, or retry.'}</span>
                   </div>
                   <div className="alert-network-actions">
-                    <button
-                      type="button"
-                      className="btn-alert-emergency"
-                      onClick={handleEmergencyOfflineLogin}
-                      title="Sign in immediately in Admin Mode"
-                    >
-                      <ShieldCheck size={16} />
-                      <span>{isBn ? '⚡ এই মেসেজ দিয়ে সরাসরি এডমিন প্রবেশ' : '⚡ Sign In Through This Message (Admin)'}</span>
-                    </button>
                     <button
                       type="button"
                       className="btn-alert-retry"

@@ -179,7 +179,7 @@ const translations = {
     navAbout: "About Us",
     navLeadership: "Board of Directors",
     navGallery: "Gallery",
-    navLegal: "Legal Documents",
+    navLegal: "Legal",
     navContact: "Contact",
     bookVisitBtn: "Book VIP Site Visit",
 
@@ -1295,41 +1295,13 @@ function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setCurrentUser(session.user)
-      } else {
-        try {
-          const savedEmergency = localStorage.getItem('dz_emergency_admin')
-          if (savedEmergency) {
-            setCurrentUser(JSON.parse(savedEmergency))
-          }
-        } catch {
-          // ignore
-        }
-      }
-    }).catch(() => {
-      try {
-        const savedEmergency = localStorage.getItem('dz_emergency_admin')
-        if (savedEmergency) {
-          setCurrentUser(JSON.parse(savedEmergency))
-        }
-      } catch {
-        // ignore
-      }
-    })
+      setCurrentUser(session?.user ?? null)
+    }).catch(() => {})
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const newUser = session?.user ?? null
       setCurrentUser(prevUser => {
-        if (!prevUser && !newUser) {
-          try {
-            const savedEmergency = localStorage.getItem('dz_emergency_admin')
-            if (savedEmergency) return JSON.parse(savedEmergency)
-          } catch {
-            // ignore
-          }
-          return null
-        }
+        if (!prevUser && !newUser) return null
         if (prevUser && newUser && prevUser.id === newUser.id && prevUser.email === newUser.email) {
           // Keep identical reference across tab switching / token refresh events to prevent unmount glitch
           return prevUser
@@ -1345,7 +1317,6 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      localStorage.removeItem('dz_emergency_admin')
       await supabase.auth.signOut()
       setCurrentUser(null)
       navigateTo('login')
