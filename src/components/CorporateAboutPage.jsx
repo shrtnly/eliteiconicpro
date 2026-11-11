@@ -43,8 +43,8 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
     {
       idx: '03',
       icon: ShieldCheck,
-      valBn: '১০০% অনুমোদিত',
-      valEn: 'RAJUK Verified',
+      valBn: 'রাজউক নিবন্ধিত',
+      valEn: 'RAJUK Registered',
       lblBn: 'নিবন্ধন: RAJUK/DC/REDMR 001262/24',
       lblEn: 'Reg: RAJUK/DC/REDMR 001262/24'
     },
@@ -304,7 +304,7 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
                     <ShieldCheck size={20} />
                   </div>
                   <div className="who-cred-text">
-                    <strong>{isBn ? 'রাজউক নিবন্ধন ও অনুমোদন' : 'Official RAJUK Registration'}</strong>
+                    <strong>{isBn ? 'অফিসিয়াল রাজউক নিবন্ধন' : 'Official RAJUK Registration'}</strong>
                     <span>RAJUK/DC/REDMR 001262/24</span>
                   </div>
                 </div>
@@ -424,7 +424,7 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
               </h3>
               <p className="mv-text">
                 {isBn 
-                  ? 'প্রতিটি প্লট শতভাগ নিষ্কণ্টক আইনি মালিকানায়, অনুমোদিত মাস্টার প্ল্যানে এবং যথাসময়ে গ্রাহকের হাতে তুলে দেওয়া। পাশাপাশি মধ্যবিত্ত থেকে শুরু করে প্রবাসী সকল শ্রেণির মানুষের ক্রয়ক্ষমতার মধ্যে সহজ কিস্তিতে স্বপ্নের প্লট নিশ্চিত করা।'
+                  ? 'প্রতিটি প্লট শতভাগ নিষ্কণ্টক আইনি মালিকানায়, সুপরিকল্পিত মাস্টার প্ল্যানে এবং যথাসময়ে গ্রাহকের হাতে তুলে দেওয়া। পাশাপাশি মধ্যবিত্ত থেকে শুরু করে প্রবাসী সকল শ্রেণির মানুষের ক্রয়ক্ষমতার মধ্যে সহজ কিস্তিতে স্বপ্নের প্লট নিশ্চিত করা।'
                   : 'To deliver 100% dispute-free land ownership with rigorous governmental compliance, timely infrastructure handover, and flexible installment plans accessible to homeowners and NRB investors.'}
               </p>
             </div>

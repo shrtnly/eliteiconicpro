@@ -51,6 +51,7 @@ import './App.css'
 import FounderDirectorSection from './components/FounderDirectorSection'
 import { founderDirectors } from './data/founderDirectorsData'
 import CorporateAboutPage from './components/CorporateAboutPage'
+import MissionVisionPage from './components/MissionVisionPage'
 import GalleryPage from './components/GalleryPage'
 import LegalDocumentsPage from './components/LegalDocumentsPage'
 import LegalDocumentsSection from './components/LegalDocumentsSection'
@@ -94,8 +95,8 @@ const translations = {
     statRoadLbl: "প্রধান এভিনিউ রোড",
     statUni: "১৭টি",
     statUniLbl: "নিকটবর্তী বিশ্ববিদ্যালয়",
-    statLegal: "১০০% অনুমোদিত",
-    statLegalLbl: "রাজউক ও নির্ভেজাল দলিল",
+    statLegal: "রাজউক নিবন্ধিত",
+    statLegalLbl: "নিবন্ধন ও নির্ভেজাল দলিল",
 
     // Pricing Section
     pricingTag: "PHASE 1 বর্তমান অফার মূল্য",
@@ -1228,8 +1229,31 @@ function App() {
   // Header Scroll State
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
+  const aboutDropdownRef = useRef(null)
   const [masterplanModalOpen, setMasterplanModalOpen] = useState(false)
   const [activeGalleryModalImg, setActiveGalleryModalImg] = useState(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (aboutDropdownRef.current && !aboutDropdownRef.current.contains(e.target)) {
+        setAboutDropdownOpen(false)
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setAboutDropdownOpen(false)
+        setMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   // Interactive Plot Calculator State
   const [calcSelectedPlotId, setCalcSelectedPlotId] = useState('residential-corner')
@@ -1325,13 +1349,16 @@ function App() {
     }
   }
 
-  // Routing State ('home' | 'leadership-team' | 'corporate-about' | 'gallery' | 'login' | 'admin')
+  // Routing State ('home' | 'leadership-team' | 'corporate-about' | 'mission-vision' | 'gallery' | 'login' | 'admin')
   const [currentRoute, setCurrentRoute] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase()
       const path = window.location.pathname.toLowerCase()
       if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
         return 'corporate-about'
+      }
+      if (hash === '#mission-vision' || hash === '#/mission-vision' || path === '/mission-vision') {
+        return 'mission-vision'
       }
       if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team' || path === '/leadership' || hash === '#leadership' || hash === '#board-of-directors' || hash === '#founder-director' || hash === '#founder-directors') {
         return 'leadership-team'
@@ -1358,6 +1385,9 @@ function App() {
       const path = window.location.pathname.toLowerCase()
       if (hash === '#corporate-about' || hash === '#/corporate-about' || path === '/corporate-about') {
         setCurrentRoute('corporate-about')
+        window.scrollTo(0, 0)
+      } else if (hash === '#mission-vision' || hash === '#/mission-vision' || path === '/mission-vision') {
+        setCurrentRoute('mission-vision')
         window.scrollTo(0, 0)
       } else if (hash === '#leadership-team' || hash === '#/leadership-team' || path === '/leadership-team' || path === '/leadership' || hash === '#leadership' || hash === '#board-of-directors' || hash === '#founder-director' || hash === '#founder-directors') {
         setCurrentRoute('leadership-team')
@@ -1395,9 +1425,27 @@ function App() {
 
   const navigateTo = (route, targetHash = '') => {
     if (route === 'corporate-about') {
-      window.location.hash = '#corporate-about'
+      window.location.hash = targetHash ? `#${targetHash}` : '#corporate-about'
       setCurrentRoute('corporate-about')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (targetHash) {
+        setTimeout(() => {
+          const el = document.getElementById(targetHash)
+          if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 80)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    } else if (route === 'mission-vision') {
+      window.location.hash = targetHash ? `#${targetHash}` : '#mission-vision'
+      setCurrentRoute('mission-vision')
+      if (targetHash) {
+        setTimeout(() => {
+          const el = document.getElementById(targetHash)
+          if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 80)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
     } else if (route === 'leadership-team') {
       window.location.hash = targetHash ? `#${targetHash}` : '#leadership-team'
       setCurrentRoute('leadership-team')
@@ -1634,8 +1682,66 @@ function App() {
           <nav className="elite-desktop-nav">
             <ul className="elite-nav-list">
               <li><a href="#" className={`nav-link ${currentRoute === 'home' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>{t.navHome}</a></li>
-              <li><a href="#corporate-about" className={`nav-link ${currentRoute === 'corporate-about' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
-              <li><a href="#leadership-team" className={`nav-link ${currentRoute === 'leadership-team' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+              <li
+                className="nav-item-dropdown"
+                ref={aboutDropdownRef}
+                onMouseEnter={() => setAboutDropdownOpen(true)}
+                onMouseLeave={() => setAboutDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={`nav-link nav-link-dropdown ${currentRoute === 'corporate-about' || currentRoute === 'mission-vision' || currentRoute === 'leadership-team' ? 'active' : ''}`}
+                  onClick={() => setAboutDropdownOpen(prev => !prev)}
+                  aria-expanded={aboutDropdownOpen}
+                >
+                  <span>{t.navAbout}</span>
+                  <ChevronDown size={14} className={`nav-dropdown-caret ${aboutDropdownOpen ? 'open' : ''}`} />
+                </button>
+                <ul className={`nav-dropdown-menu ${aboutDropdownOpen ? 'show' : ''}`}>
+                  <li>
+                    <a
+                      href="#corporate-about"
+                      className={`nav-dropdown-item-btn ${currentRoute === 'corporate-about' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setAboutDropdownOpen(false)
+                        navigateTo('corporate-about')
+                      }}
+                    >
+                      Who We Are
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#mission-vision"
+                      className={`nav-dropdown-item-btn ${currentRoute === 'mission-vision' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setAboutDropdownOpen(false)
+                        navigateTo('mission-vision')
+                      }}
+                    >
+                      Mission &amp; Vision
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#leadership-team"
+                      className={`nav-dropdown-item-btn ${currentRoute === 'leadership-team' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setAboutDropdownOpen(false)
+                        navigateTo('leadership-team')
+                      }}
+                    >
+                      Board of Directors
+                    </a>
+                  </li>
+                  <li><button type="button" className="nav-dropdown-item-btn" onClick={() => setAboutDropdownOpen(false)}>Partner</button></li>
+                  <li><button type="button" className="nav-dropdown-item-btn" onClick={() => setAboutDropdownOpen(false)}>Shareholder</button></li>
+                  <li><button type="button" className="nav-dropdown-item-btn" onClick={() => setAboutDropdownOpen(false)}>Our Services</button></li>
+                </ul>
+              </li>
               <li><a href="#legal-documents" className={`nav-link ${currentRoute === 'legal-documents' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('legal-documents'); }}>{t.navLegal}</a></li>
               <li><a href="#gallery" className={`nav-link ${currentRoute === 'gallery' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); navigateTo('gallery'); }}>{t.navGallery}</a></li>
               <li><a href="#booking-form-section" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
@@ -1700,14 +1806,27 @@ function App() {
             {/* Mobile Hamburger Button */}
             <button 
               className={`hamburger-toggle ${mobileMenuOpen ? 'active' : ''}`}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => {
+                setMobileAboutOpen(false)
+                setMobileMenuOpen(prev => !prev)
+              }}
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               <span /><span /><span />
             </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-nav-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Mobile Navigation Drawer (kept outside <header>: header's backdrop-filter
           would otherwise make position:fixed relative to the header) */}
@@ -1726,8 +1845,67 @@ function App() {
 
           <ul className="mobile-nav-links">
             <li><a href="#" className={currentRoute === 'home' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home'); }}>{t.navHome}</a></li>
-            <li><a href="#corporate-about" className={currentRoute === 'corporate-about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('corporate-about'); }}>{t.navAbout}</a></li>
-            <li><a href="#leadership-team" className={currentRoute === 'leadership-team' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('leadership-team'); }}>{t.navLeadership}</a></li>
+            <li className="mobile-nav-dropdown-item">
+              <button
+                type="button"
+                className={`mobile-nav-dropdown-trigger ${currentRoute === 'corporate-about' || currentRoute === 'mission-vision' || currentRoute === 'leadership-team' ? 'active' : ''}`}
+                onClick={() => setMobileAboutOpen(prev => !prev)}
+                aria-expanded={mobileAboutOpen}
+              >
+                <span>{t.navAbout}</span>
+                <ChevronDown size={18} className={`mobile-dropdown-caret ${mobileAboutOpen ? 'open' : ''}`} />
+              </button>
+              <div className={`mobile-sub-nav-collapse ${mobileAboutOpen ? 'open' : ''}`} aria-hidden={!mobileAboutOpen}>
+                <ul className="mobile-sub-nav-list">
+                  <li>
+                    <a
+                      href="#corporate-about"
+                      className={`mobile-sub-nav-btn ${currentRoute === 'corporate-about' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setMobileAboutOpen(false)
+                        setMobileMenuOpen(false)
+                        navigateTo('corporate-about')
+                      }}
+                    >
+                      • Who We Are
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#mission-vision"
+                      className={`mobile-sub-nav-btn ${currentRoute === 'mission-vision' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setMobileAboutOpen(false)
+                        setMobileMenuOpen(false)
+                        navigateTo('mission-vision')
+                      }}
+                    >
+                      • Mission &amp; Vision
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#leadership-team"
+                      className={`mobile-sub-nav-btn ${currentRoute === 'leadership-team' ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setMobileAboutOpen(false)
+                        setMobileMenuOpen(false)
+                        navigateTo('leadership-team')
+                      }}
+                    >
+                      • Board of Directors
+                    </a>
+                  </li>
+                  <li><button type="button" className="mobile-sub-nav-btn" onClick={() => setMobileMenuOpen(false)}>• Partner</button></li>
+                  <li><button type="button" className="mobile-sub-nav-btn" onClick={() => setMobileMenuOpen(false)}>• Shareholder</button></li>
+                  <li><button type="button" className="mobile-sub-nav-btn" onClick={() => setMobileMenuOpen(false)}>• Our Services</button></li>
+                </ul>
+              </div>
+            </li>
+
             <li><a href="#legal-documents" className={currentRoute === 'legal-documents' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('legal-documents'); }}>{t.navLegal}</a></li>
             <li><a href="#gallery" className={currentRoute === 'gallery' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('gallery'); }}>{t.navGallery}</a></li>
             <li><a href="#booking-form-section" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateTo('home', 'booking-form-section'); }}>{t.navContact}</a></li>
@@ -1821,6 +1999,12 @@ function App() {
       {currentRoute === 'corporate-about' ? (
         <CorporateAboutPage 
           lang={lang} 
+          onScheduleVisit={() => setVisitModalOpen(true)}
+          navigateTo={navigateTo}
+        />
+      ) : currentRoute === 'mission-vision' ? (
+        <MissionVisionPage
+          lang={lang}
           onScheduleVisit={() => setVisitModalOpen(true)}
           navigateTo={navigateTo}
         />
@@ -2177,13 +2361,13 @@ function App() {
             {/* Right 6-Feature Card Grid (3x2 Matrix matching user reference) */}
             <div className="why-choose-features-card">
               <div className="why-features-grid">
-                {/* 1. RAJUK Registered & Approved */}
+                {/* 1. RAJUK Registered Developer */}
                 <div className="why-feature-item">
                   <div className="why-icon-circle">
                     <ShieldCheck size={28} strokeWidth={1.8} />
                   </div>
                   <h4 className="why-feature-name">
-                    {lang === 'bn' ? 'রাজউক নিবন্ধিত ও অনুমোদিত' : 'RAJUK Registered & Approved'}
+                    {lang === 'bn' ? 'রাজউক নিবন্ধিত ডেভেলপার' : 'RAJUK Registered Developer'}
                   </h4>
                 </div>
 
@@ -3500,7 +3684,7 @@ function App() {
                 </div>
                 <div>
                   <h4 className="cred-title">{t.regRajuk}</h4>
-                  <p className="cred-text">{lang === 'bn' ? 'প্রকল্পের প্রতিটি প্লট সম্পূর্ণ সরকারি নিয়ম মেনে নিষ্কণ্টক জমিতে অনুমোদিত।' : 'All plots adhere strictly to governmental town planning & ownership standards.'}</p>
+                  <p className="cred-text">{lang === 'bn' ? 'প্রকল্পের প্রতিটি প্লট সম্পূর্ণ সরকারি নিয়ম ও রাজউক বিধিমালা মেনে নিষ্কণ্টক জমিতে সুপরিকল্পিত।' : 'All plots adhere strictly to governmental town planning & ownership standards.'}</p>
                 </div>
               </div>
 
@@ -3857,7 +4041,7 @@ function App() {
                 </span>
                 <div className="footer-rajuk-meta">
                   <span className="footer-rajuk-label">
-                    {lang === 'bn' ? 'রাজউক অনুমোদিত ও নিবন্ধিত' : 'RAJUK Registered Developer'}
+                    {lang === 'bn' ? 'রাজউক নিবন্ধিত ডেভেলপার' : 'RAJUK Registered Developer'}
                   </span>
                   <strong className="footer-rajuk-code">RAJUK/DC/REDMR 001262/24</strong>
                 </div>

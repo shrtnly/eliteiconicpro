@@ -218,8 +218,8 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit }) {
       titleEn: 'Comprehensive Master-Planned Township Layout',
       descBn: 'আবাসিক, বাণিজ্যিক, লেকভিউ পার্ক, বিদ্যালয় ও হাসপাতাল জোনের সুষম বিন্যাসে তৈরি পূর্ণাঙ্গ নকশা।',
       descEn: 'Integrated urban master layout featuring segregated residential, commercial, lake recreation, healthcare, and educational zones.',
-      dateBn: 'অনুমোদিত মাস্টারপ্ল্যান',
-      dateEn: 'Approved Masterplan',
+      dateBn: 'অফিসিয়াল মাস্টারপ্ল্যান',
+      dateEn: 'Official Masterplan',
       locationBn: 'ঢাকা আইকন সিটি মাস্টার জোন',
       locationEn: 'Dhaka Icon City Master Zone'
     }
