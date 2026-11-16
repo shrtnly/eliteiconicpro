@@ -1947,8 +1947,8 @@ function App() {
               <Calendar size={16} /> {t.bookVisitBtn}
             </a>
 
-            <a href="tel:+8801815311232" className="mobile-call-btn">
-              <Phone size={16} /> +880 1815-311232
+            <a href="tel:0960002000" className="mobile-call-btn">
+              <Phone size={16} /> 0960002000
             </a>
             <div className="mobile-address-note">
               📍 নাফি টাওয়ার, লেভেল ১০, ৫৩ গুলশান এভিনিউ, ঢাকা-১২১২
@@ -1959,7 +1959,7 @@ function App() {
 
       {/* MOBILE STICKY FLOATING BOTTOM QUICK ACTION BAR */}
       <div className="mobile-bottom-quick-bar">
-        <a href="tel:+8801815311232" className="mobile-bar-action call">
+        <a href="tel:0960002000" className="mobile-bar-action call">
           <Phone size={18} />
           <span>{lang === 'bn' ? 'কল করুন' : 'Call'}</span>
         </a>
@@ -3729,7 +3729,7 @@ function App() {
                   <Phone size={18} className="text-emerald" />
                   <div>
                     <span className="lbl">Hotline:</span>
-                    <a href="tel:+8801815311232" className="val">+880 1815-311232</a>
+                    <a href="tel:0960002000" className="val">0960002000</a>
                   </div>
                 </div>
 
@@ -3844,7 +3844,7 @@ function App() {
                     <span className="hl-label">
                       {lang === 'bn' ? 'সরাসরি সেলস ও অ্যাডভাইজরি হটলাইন' : 'Direct Sales & Advisory Desk'}
                     </span>
-                    <a href="tel:+8801815311232" className="hl-number">+880 1815-311232</a>
+                    <a href="tel:0960002000" className="hl-number">0960002000</a>
                   </div>
                 </div>
                 <div className="hotline-hours-pill">
@@ -4115,9 +4115,9 @@ function App() {
                 </p>
               </div>
               <div className="footer-contact-links">
-                <a href="tel:+8801815311232" className="footer-contact-pill">
+                <a href="tel:0960002000" className="footer-contact-pill">
                   <span className="footer-contact-icon"><Phone size={13} /></span>
-                  <span>+880 1815-311232</span>
+                  <span>0960002000</span>
                 </a>
                 <a href="mailto:info@eliteiconic.com" className="footer-contact-pill">
                   <span className="footer-contact-icon"><Mail size={13} /></span>

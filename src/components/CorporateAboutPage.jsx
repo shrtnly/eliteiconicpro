@@ -544,7 +544,7 @@ export default function CorporateAboutPage({ lang = 'en', onScheduleVisit, navig
                   </div>
                   <div>
                     <span className="hq-lbl">{isBn ? 'সরাসরি হটলাইন' : 'Direct Advisory Hotline'}</span>
-                    <a href="tel:+8801815311232" className="hq-val">+880 1815-311232</a>
+                    <a href="tel:0960002000" className="hq-val">0960002000</a>
                   </div>
                 </div>
 

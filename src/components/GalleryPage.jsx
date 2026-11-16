@@ -423,11 +423,11 @@ export default function GalleryPage({ lang = 'en', onScheduleVisit }) {
                   <ChevronRight size={17} />
                 </button>
                 <a
-                  href="tel:+8801815311232"
+                  href="tel:0960002000"
                   className="gallery-btn-secondary"
                 >
                   <Phone size={16} />
-                  <span>+880 1815-311232</span>
+                  <span>0960002000</span>
                 </a>
               </div>
             </div>
